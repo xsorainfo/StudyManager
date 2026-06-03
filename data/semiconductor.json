@@ -1,0 +1,218 @@
+{
+  "materials": [
+    {
+      "id": 1,
+      "name": "光刻胶",
+      "priority": 5,
+      "stocks": [
+        {
+          "symbol": "4186.T",
+          "name": "Tokyo Ohka Kogyo",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 4
+        },
+        {
+          "symbol": "4185.T",
+          "name": "JSR",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 4
+        },
+        {
+          "symbol": "4063.T",
+          "name": "Shin-Etsu Chemical",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 4
+        },
+        {
+          "symbol": "603650.SH",
+          "name": "彤程新材",
+          "country": "China",
+          "exchange": "SSE",
+          "nvidiaScore": 2
+        },
+        {
+          "symbol": "300346.SZ",
+          "name": "南大光电",
+          "country": "China",
+          "exchange": "SZSE",
+          "nvidiaScore": 3
+        },
+        {
+          "symbol": "DD",
+          "name": "DuPont",
+          "country": "USA",
+          "exchange": "NYSE",
+          "nvidiaScore": 3
+        }
+      ]
+    },
+
+    {
+      "id": 2,
+      "name": "高纯气体",
+      "priority": 4,
+      "stocks": [
+        {
+          "symbol": "4091.T",
+          "name": "Taiyo Nippon Sanso",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 3
+        },
+        {
+          "symbol": "688268.SH",
+          "name": "华特气体",
+          "country": "China",
+          "exchange": "SSE",
+          "nvidiaScore": 2
+        },
+        {
+          "symbol": "002549.SZ",
+          "name": "凯美特气",
+          "country": "China",
+          "exchange": "SZSE",
+          "nvidiaScore": 2
+        },
+        {
+          "symbol": "LIN",
+          "name": "Linde",
+          "country": "USA",
+          "exchange": "NASDAQ",
+          "nvidiaScore": 3
+        }
+      ]
+    },
+
+    {
+      "id": 3,
+      "name": "PCB载板",
+      "priority": 5,
+      "stocks": [
+        {
+          "symbol": "6787.T",
+          "name": "Meiko",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 5
+        },
+        {
+          "symbol": "6958.T",
+          "name": "CMK",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 3
+        },
+        {
+          "symbol": "5803.T",
+          "name": "Fujikura",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 5
+        },
+        {
+          "symbol": "002463.SZ",
+          "name": "沪电股份",
+          "country": "China",
+          "exchange": "SZSE",
+          "nvidiaScore": 5
+        },
+        {
+          "symbol": "002916.SZ",
+          "name": "深南电路",
+          "country": "China",
+          "exchange": "SZSE",
+          "nvidiaScore": 5
+        },
+        {
+          "symbol": "300476.SZ",
+          "name": "胜宏科技",
+          "country": "China",
+          "exchange": "SZSE",
+          "nvidiaScore": 5
+        },
+        {
+          "symbol": "TTMI",
+          "name": "TTM Technologies",
+          "country": "USA",
+          "exchange": "NASDAQ",
+          "nvidiaScore": 4
+        }
+      ]
+    },
+
+    {
+      "id": 11,
+      "name": "ABF载板",
+      "priority": 5,
+      "stocks": [
+        {
+          "symbol": "4062.T",
+          "name": "Ibiden",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 5
+        },
+        {
+          "symbol": "6967.T",
+          "name": "Shinko Electric",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 5
+        },
+        {
+          "symbol": "6971.T",
+          "name": "Kyocera",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 4
+        },
+        {
+          "symbol": "002436.SZ",
+          "name": "兴森科技",
+          "country": "China",
+          "exchange": "SZSE",
+          "nvidiaScore": 2
+        }
+      ]
+    },
+
+    {
+      "id": 13,
+      "name": "硅片",
+      "priority": 5,
+      "stocks": [
+        {
+          "symbol": "4063.T",
+          "name": "Shin-Etsu Chemical",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 4
+        },
+        {
+          "symbol": "3436.T",
+          "name": "SUMCO",
+          "country": "Japan",
+          "exchange": "TSE",
+          "nvidiaScore": 4
+        },
+        {
+          "symbol": "688126.SH",
+          "name": "沪硅产业",
+          "country": "China",
+          "exchange": "SSE",
+          "nvidiaScore": 2
+        },
+        {
+          "symbol": "002129.SZ",
+          "name": "TCL中环",
+          "country": "China",
+          "exchange": "SZSE",
+          "nvidiaScore": 2
+        }
+      ]
+    }
+  ]
+}
