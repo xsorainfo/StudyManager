@@ -25,21 +25,19 @@ jobs:
         run: |
           mkdir -p scripts
           
-          # 对 Token 进行 Base64 编码
-          ENCODED_TOKEN=$(echo -n '${{ secrets.STUDYAPP }}' | base64 | tr -d '\n')
+          # 对 Token 进行 Base64 编码（去掉换行）
+          ENCODED_TOKEN=$(echo -n '${{ secrets.STUDYAPP }}' | base64 -w 0)
           
-          # 使用 JSON.stringify 确保特殊字符被正确转义
-          cat > scripts/config.js << EOF
-          // 自動生成ファイル
-          window.GITHUB_CONFIG = {
-              tokenEncoded: ${ENCODED_TOKEN | tojson},
-              owner: '${{ github.repository_owner }}',
-              repo: '${{ github.event.repository.name }}',
-              path: 'data/data.json',
-              branch: 'main'
-          };
-          console.log('✅ GitHub Config loaded');
-          EOF
+          # 使用 printf 和 echo 组合生成文件
+          printf '// 自動生成ファイル\n' > scripts/config.js
+          printf 'window.GITHUB_CONFIG = {\n' >> scripts/config.js
+          printf '    tokenEncoded: "%s",\n' "$ENCODED_TOKEN" >> scripts/config.js
+          printf '    owner: "%s",\n' "${{ github.repository_owner }}" >> scripts/config.js
+          printf '    repo: "%s",\n' "${{ github.event.repository.name }}" >> scripts/config.js
+          printf '    path: "data/data.json",\n' >> scripts/config.js
+          printf '    branch: "main"\n' >> scripts/config.js
+          printf '};\n' >> scripts/config.js
+          printf 'console.log("✅ GitHub Config loaded");\n' >> scripts/config.js
           
           echo "=== config.js content ==="
           cat scripts/config.js
