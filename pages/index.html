@@ -9,11 +9,13 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
     body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
     .app-wrapper { max-width: 1400px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
-    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 32px; color: #f0ebe3; }
+    
+    /* 导航样式（同上） */
+    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 20px; color: #f0ebe3; }
     .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
     .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
     .nav-links { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 500; }
-    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
     .nav-links a:hover { background: #3f352b; color: #fff; }
     .nav-links a.active { background: #5f4b38; color: #fff2e0; }
     .nav-right { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; flex-wrap: wrap; }
@@ -28,53 +30,12 @@
     .status-dot.saving { background: #ff9800; animation: pulse 0.8s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-    /* Token 设置栏（可直接输入） */
-    .token-bar {
-      background: #f0ebe4;
-      border-radius: 20px;
-      padding: 12px 20px;
-      margin-bottom: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-    }
-    .token-bar .label {
-      font-weight: 600;
-      color: #3d3229;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .token-bar input {
-      flex: 1;
-      min-width: 200px;
-      padding: 8px 16px;
-      border: 2px solid #d8cdbf;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      outline: none;
-      background: white;
-      font-family: monospace;
-    }
+    .token-bar { background: #f0ebe4; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .token-bar .label { font-weight: 600; color: #3d3229; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
+    .token-bar input { flex: 1; min-width: 200px; padding: 8px 16px; border: 2px solid #d8cdbf; border-radius: 40px; font-size: 0.85rem; outline: none; background: white; font-family: monospace; }
     .token-bar input:focus { border-color: #8f735b; }
-    .token-bar .token-status {
-      font-size: 0.8rem;
-      color: #6b5d4e;
-      white-space: nowrap;
-    }
-    .token-bar .btn-set {
-      background: #2c241c;
-      border: none;
-      color: white;
-      padding: 6px 20px;
-      border-radius: 40px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 600;
-      transition: 0.15s;
-    }
+    .token-bar .token-status { font-size: 0.8rem; color: #6b5d4e; white-space: nowrap; }
+    .token-bar .btn-set { background: #2c241c; border: none; color: white; padding: 6px 20px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.15s; }
     .token-bar .btn-set:hover { background: #4d3b2c; }
 
     .dashboard-grid { display: grid; grid-template-columns: 2fr 1.2fr; gap: 28px; margin-top: 10px; }
@@ -144,38 +105,11 @@
 <body>
 
 <div class="app-wrapper">
+  <!-- ===== 导航容器 ===== -->
+  <div id="navbarContainer"></div>
 
-  <nav class="navbar">
-    <div class="nav-brand"><i class="fas fa-compass"></i><span>学び航路</span></div>
-    <div class="nav-links">
-      <a class="active" data-tab="dashboard"><i class="fas fa-graduation-cap"></i> ダッシュボード</a>
-      <a data-tab="scores"><i class="fas fa-chart-line"></i> 成績</a>
-      <a data-tab="exams"><i class="fas fa-calendar-alt"></i> 試験範囲</a>
-      <a data-tab="tetsu"><i class="fas fa-flag"></i> 鉄律会</a>
-    </div>
-    <div class="nav-right">
-      <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
-      <div class="data-actions">
-        <span id="statusInfo"><span class="status-dot offline" id="statusDot"></span><span id="statusText">オフライン</span></span>
-        <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
-        <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
-        <button onclick="exportData()"><i class="fas fa-file-export"></i></button>
-        <button onclick="document.getElementById('fileInput').click()"><i class="fas fa-file-import"></i></button>
-        <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
-      </div>
-    </div>
-  </nav>
-
-  <!-- ===== Token 输入栏 ===== -->
-  <div class="token-bar">
-    <span class="label"><i class="fab fa-github"></i> Token:</span>
-    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx を入力" autocomplete="off">
-    <button class="btn-set" onclick="setTokenFromInput()">設定</button>
-    <span class="token-status" id="tokenStatus">🔑 未設定</span>
-    <span style="font-size:0.75rem; color:#8f735b; margin-left:auto;">
-      <i class="fas fa-info-circle"></i> 入力後「設定」をタップ
-    </span>
-  </div>
+  <!-- ===== Token 栏容器 ===== -->
+  <div id="tokenBarContainer"></div>
 
   <div id="dashboardView">
     <div class="dashboard-grid">
