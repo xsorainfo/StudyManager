@@ -21,15 +21,61 @@
     .nav-right .data-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
     .nav-right .data-actions button { background: #3f352b; border: none; color: #e8dfd5; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; transition: 0.15s; display: flex; align-items: center; gap: 5px; }
     .nav-right .data-actions button:hover { background: #5f4b38; color: #fff; }
+    .nav-right .data-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
     .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
     .status-dot.online { background: #4CAF50; }
     .status-dot.offline { background: #f44336; }
     .status-dot.saving { background: #ff9800; animation: pulse 0.8s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-    .token-bar { background: #f0ebe4; border-radius: 20px; padding: 10px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .token-bar .left { display: flex; align-items: center; gap: 12px; }
-    .token-bar .right { font-size: 0.8rem; color: #6b5d4e; }
+    /* Token 设置栏（可直接输入） */
+    .token-bar {
+      background: #f0ebe4;
+      border-radius: 20px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+    .token-bar .label {
+      font-weight: 600;
+      color: #3d3229;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .token-bar input {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px 16px;
+      border: 2px solid #d8cdbf;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      outline: none;
+      background: white;
+      font-family: monospace;
+    }
+    .token-bar input:focus { border-color: #8f735b; }
+    .token-bar .token-status {
+      font-size: 0.8rem;
+      color: #6b5d4e;
+      white-space: nowrap;
+    }
+    .token-bar .btn-set {
+      background: #2c241c;
+      border: none;
+      color: white;
+      padding: 6px 20px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: 0.15s;
+    }
+    .token-bar .btn-set:hover { background: #4d3b2c; }
 
     .dashboard-grid { display: grid; grid-template-columns: 2fr 1.2fr; gap: 28px; margin-top: 10px; }
     .card { background: #fffffffa; border-radius: 28px; padding: 22px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid #ede8e0; margin-bottom: 24px; }
@@ -92,7 +138,7 @@
     .mt-2 { margin-top: 16px; }
 
     @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } .year-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 600px) { .app-wrapper { padding: 16px; } .navbar { flex-direction: column; gap: 12px; } .nav-links { justify-content: center; } .nav-right { justify-content: center; } }
+    @media (max-width: 600px) { .app-wrapper { padding: 16px; } .navbar { flex-direction: column; gap: 12px; } .nav-links { justify-content: center; } .nav-right { justify-content: center; } .token-bar input { min-width: 150px; } }
   </style>
 </head>
 <body>
@@ -111,8 +157,8 @@
       <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
       <div class="data-actions">
         <span id="statusInfo"><span class="status-dot offline" id="statusDot"></span><span id="statusText">オフライン</span></span>
-        <button onclick="saveToGitHub()" id="saveBtn"><i class="fab fa-github"></i> GitHub保存</button>
-        <button onclick="loadFromGitHub()" id="loadBtn"><i class="fas fa-download"></i> 読込</button>
+        <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
+        <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
         <button onclick="exportData()"><i class="fas fa-file-export"></i></button>
         <button onclick="document.getElementById('fileInput').click()"><i class="fas fa-file-import"></i></button>
         <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
@@ -120,17 +166,15 @@
     </div>
   </nav>
 
+  <!-- ===== Token 输入栏 ===== -->
   <div class="token-bar">
-    <div class="left">
-      <i class="fab fa-github"></i>
-      <strong>GitHub:</strong>
-      <span id="tokenStatus">🔑 未設定</span>
-    </div>
-    <div class="right">
-      <span id="dataSize">0KB</span>
-      <span style="margin-left:12px;">|</span>
-      <span style="margin-left:12px;" id="lastUpdate">2026-06-28</span>
-    </div>
+    <span class="label"><i class="fab fa-github"></i> Token:</span>
+    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx を入力" autocomplete="off">
+    <button class="btn-set" onclick="setTokenFromInput()">設定</button>
+    <span class="token-status" id="tokenStatus">🔑 未設定</span>
+    <span style="font-size:0.75rem; color:#8f735b; margin-left:auto;">
+      <i class="fas fa-info-circle"></i> 入力後「設定」をタップ
+    </span>
   </div>
 
   <div id="dashboardView">
@@ -142,6 +186,10 @@
             <span class="badge">6年間</span>
           </div>
           <div class="year-grid" id="yearGrid"></div>
+          <div class="flex" style="justify-content: flex-end; margin-top: 10px;">
+            <span class="text-muted"><i class="far fa-clock"></i> 更新: <span id="lastUpdate">2026-06-28</span></span>
+            <span class="text-muted" style="margin-left:12px;"><i class="fas fa-database"></i> <span id="dataSize">0KB</span></span>
+          </div>
         </div>
 
         <div class="card">
@@ -197,7 +245,7 @@
           <div style="display: flex; gap: 12px; align-items: center; font-size:0.9rem;">
             <i class="fas fa-github" style="color:#5f4b38; font-size:1.4rem;"></i>
             <div>
-              <strong>GitHub 保存</strong><br>
+              <strong>GitHub 保存先</strong><br>
               <span style="font-size:0.8rem; color:#4d3f31;">
                 main 分支 · data/data.json
               </span>
@@ -235,8 +283,28 @@ function getToken() {
 }
 
 function setToken(token) {
-    localStorage.setItem('github_token', token);
-    updateStatus();
+    if (token && token.trim()) {
+        localStorage.setItem('github_token', token.trim());
+        document.getElementById('tokenInput').value = '';
+        updateStatus();
+        showToast('✅ Token を設定しました');
+        return true;
+    }
+    return false;
+}
+
+function setTokenFromInput() {
+    const input = document.getElementById('tokenInput');
+    const token = input.value.trim();
+    if (!token) {
+        showToast('❌ Token を入力してください');
+        return;
+    }
+    if (!token.startsWith('ghp_')) {
+        showToast('❌ Token は ghp_ で始まる必要があります');
+        return;
+    }
+    setToken(token);
 }
 
 function getHeaders() {
@@ -254,19 +322,21 @@ function updateStatus() {
     const dot = document.getElementById('statusDot');
     const text = document.getElementById('statusText');
     const status = document.getElementById('tokenStatus');
+    const saveBtn = document.getElementById('saveBtn');
+    const loadBtn = document.getElementById('loadBtn');
     
     if (token) {
         dot.className = 'status-dot online';
         text.textContent = 'オンライン';
         status.textContent = '✅ ' + token.substring(0, 8) + '...';
-        document.getElementById('saveBtn').disabled = false;
-        document.getElementById('loadBtn').disabled = false;
+        saveBtn.disabled = false;
+        loadBtn.disabled = false;
     } else {
         dot.className = 'status-dot offline';
         text.textContent = 'オフライン';
-        status.textContent = '🔑 未設定（F12 → Console で設定）';
-        document.getElementById('saveBtn').disabled = true;
-        document.getElementById('loadBtn').disabled = true;
+        status.textContent = '🔑 未設定';
+        saveBtn.disabled = true;
+        loadBtn.disabled = true;
     }
 }
 
@@ -362,7 +432,6 @@ async function saveToGitHub() {
         return;
     }
     
-    // 先保存本地
     saveData();
     
     const dot = document.getElementById('statusDot');
@@ -376,7 +445,6 @@ async function saveToGitHub() {
         const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
         const headers = getHeaders();
         
-        // 获取当前文件 SHA
         let sha = null;
         const checkRes = await fetch(url, { headers });
         if (checkRes.ok) {
@@ -441,7 +509,6 @@ async function loadFromGitHub() {
         const content = decodeURIComponent(escape(atob(fileData.content)));
         const loaded = JSON.parse(content);
         
-        // 保存到 localStorage
         Object.keys(loaded).forEach(key => {
             localStorage.setItem('study_' + key, JSON.stringify(loaded[key]));
         });
@@ -773,17 +840,26 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
 });
 
+// Enter キーで Token 設定
+document.getElementById('tokenInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        setTokenFromInput();
+    }
+});
+
 // ==================== 初期化 ====================
 loadData();
 renderAll();
 updateStatus();
-showToast('🚀 起動しました');
 
-// 检查是否有 Token
-if (!getToken()) {
-    console.log('🔑 Token を設定してください:');
-    console.log('   localStorage.setItem("github_token", "ghp_xxxxxxxxxxxx")');
+// ローカルに Token があれば表示
+const savedToken = getToken();
+if (savedToken) {
+    document.getElementById('tokenStatus').textContent = '✅ ' + savedToken.substring(0, 8) + '...';
 }
+
+showToast('🚀 起動しました');
+console.log('📌 Token は画面上部の入力欄から設定できます');
 </script>
 </body>
 </html>
