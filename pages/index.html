@@ -333,7 +333,7 @@
       <div class="data-actions">
         <span id="serverStatus" title="GitHub接続状態">
           <span class="status-dot offline" id="statusDot"></span>
-          <span id="statusText">未設定</span>
+          <span id="statusText">読込中...</span>
         </span>
         <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
         <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
@@ -344,12 +344,12 @@
     </div>
   </nav>
 
-  <!-- ===== Token 设置 ===== -->
-  <div class="token-setup">
-    <label><i class="fab fa-github"></i> GitHub Token:</label>
-    <input type="password" id="githubToken" placeholder="ghp_xxxx を入力" onchange="saveToken()">
-    <span class="token-status" id="tokenStatus">🔑 未設定</span>
-    <button class="btn btn-sm btn-outline" onclick="setupGitHub()"><i class="fas fa-check"></i> 設定</button>
+  <!-- ===== Token 状态显示（只读） ===== -->
+  <div class="token-status-bar" style="background: #f0ebe4; border-radius: 20px; padding: 10px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+    <span><i class="fab fa-github"></i> <strong>Token 状態:</strong> <span id="tokenStatus">読込中...</span></span>
+    <span style="font-size:0.8rem; color:#6b5d4e;">
+      <i class="fas fa-info-circle"></i> TokenはGitHub Actionsから自動設定されます
+    </span>
   </div>
 
   <!-- ===== 仪表板 ===== -->
@@ -447,6 +447,8 @@
 </div>
 
 <!-- ===== JavaScript ===== -->
+<!-- config.js 由 GitHub Actions 自动生成 -->
+<script src="../scripts/config.js"></script>
 <script src="../scripts/app.js"></script>
 </body>
 </html>
