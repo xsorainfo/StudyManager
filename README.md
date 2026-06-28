@@ -2,10 +2,11 @@
 
 project/
 ├── data/
-│   └── data.json          # 服务器保存的数据文件
+│   └── data.json          # 自动生成，保存所有数据
 ├── pages/
-│   └── index.html         # 主页面
+│   └── index.html         # 主页面 (HTML)
 ├── scripts/
-│   └── app.js             # 前端JavaScript
+│   └── app.js             # 所有JavaScript逻辑
 ├── server.js              # 后端服务器
-└── package.json           # Node.js 依赖
+├── package.json           # 依赖配置
+└── package-lock.json      # (自动生成)
