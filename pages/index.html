@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>学びの航路 · 中学六年学习管理系统</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
     body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
     .app-wrapper { max-width: 1400px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
-    
-    /* 导航样式（同上） */
-    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 20px; color: #f0ebe3; }
+
+    /* 导航 */
+    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 32px; color: #f0ebe3; }
     .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
     .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
     .nav-links { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 500; }
-    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; cursor: pointer; }
     .nav-links a:hover { background: #3f352b; color: #fff; }
     .nav-links a.active { background: #5f4b38; color: #fff2e0; }
     .nav-right { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; flex-wrap: wrap; }
@@ -30,6 +30,7 @@
     .status-dot.saving { background: #ff9800; animation: pulse 0.8s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
+    /* Token 栏 */
     .token-bar { background: #f0ebe4; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
     .token-bar .label { font-weight: 600; color: #3d3229; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
     .token-bar input { flex: 1; min-width: 200px; padding: 8px 16px; border: 2px solid #d8cdbf; border-radius: 40px; font-size: 0.85rem; outline: none; background: white; font-family: monospace; }
@@ -96,7 +97,6 @@
     #fileInput { display: none; }
     .flex { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .text-muted { color: #6b5d4e; font-size: 0.85rem; }
-    .mt-2 { margin-top: 16px; }
 
     @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } .year-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 600px) { .app-wrapper { padding: 16px; } .navbar { flex-direction: column; gap: 12px; } .nav-links { justify-content: center; } .nav-right { justify-content: center; } .token-bar input { min-width: 150px; } }
@@ -105,14 +105,51 @@
 <body>
 
 <div class="app-wrapper">
-  <!-- ===== 导航容器 ===== -->
-  <div id="navbarContainer"></div>
 
-  <!-- ===== Token 栏容器 ===== -->
-  <div id="tokenBarContainer"></div>
+  <!-- ===== 导航（修改后的共通导航条） ===== -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <i class="fas fa-compass"></i>
+      <span>学び航路</span>
+    </div>
+    <div class="nav-links">
+      <a class="active" href="index.html"><i class="fas fa-home"></i> ダッシュボード</a>
+      <a href="tetsu.html"><i class="fas fa-flag"></i> 鉄律会</a>
+      <a href="sakura.html"><i class="fas fa-cherry-blossom"></i> 桜蔭</a>
+      <a href="schedule.html"><i class="fas fa-calendar-alt"></i> 年間予定</a>
+      <a href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
+    </div>
+    <div class="nav-right">
+      <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
+      <div class="data-actions">
+        <span id="statusInfo">
+          <span class="status-dot offline" id="statusDot"></span>
+          <span id="statusText">オフライン</span>
+        </span>
+        <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
+        <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
+        <button onclick="exportData()"><i class="fas fa-file-export"></i></button>
+        <button onclick="document.getElementById('fileInput').click()"><i class="fas fa-file-import"></i></button>
+        <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
+      </div>
+    </div>
+  </nav>
 
+  <!-- ===== Token 栏 ===== -->
+  <div class="token-bar">
+    <span class="label"><i class="fab fa-github"></i> Token:</span>
+    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx を入力" autocomplete="off">
+    <button class="btn-set" onclick="setTokenFromInput()">設定</button>
+    <span class="token-status" id="tokenStatus">🔑 未設定</span>
+    <span style="font-size:0.75rem; color:#8f735b; margin-left:auto;">
+      <i class="fas fa-info-circle"></i> 入力後「設定」をタップ
+    </span>
+  </div>
+
+  <!-- ===== 仪表板（以下全部保持不变） ===== -->
   <div id="dashboardView">
     <div class="dashboard-grid">
+      <!-- 左列 -->
       <div class="left-col">
         <div class="card">
           <div class="card-header">
@@ -143,6 +180,7 @@
         </div>
       </div>
 
+      <!-- 右列 -->
       <div class="right-col">
         <div class="card">
           <div class="card-header">
@@ -190,6 +228,7 @@
     </div>
   </div>
 
+  <!-- ===== 模态框 ===== -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box">
       <h3 id="modalTitle"><i class="fas fa-edit"></i> 項目追加</h3>
@@ -205,52 +244,24 @@
 </div>
 
 <script>
-// ==================== 配置 ====================
-const GITHUB_OWNER = 'xsorainfo';
-const GITHUB_REPO = 'StudyManager';
-const GITHUB_PATH = 'data/data.json';
-const GITHUB_BRANCH = 'main';
+// ==================== 以下全部保持不变 ====================
 
 // ==================== Token 管理 ====================
 function getToken() {
     return localStorage.getItem('github_token') || '';
 }
 
-function setToken(token) {
-    if (token && token.trim()) {
-        localStorage.setItem('github_token', token.trim());
-        document.getElementById('tokenInput').value = '';
-        updateStatus();
-        showToast('✅ Token を設定しました');
-        return true;
-    }
-    return false;
-}
-
 function setTokenFromInput() {
     const input = document.getElementById('tokenInput');
     const token = input.value.trim();
-    if (!token) {
-        showToast('❌ Token を入力してください');
-        return;
-    }
-    if (!token.startsWith('ghp_')) {
-        showToast('❌ Token は ghp_ で始まる必要があります');
-        return;
-    }
-    setToken(token);
+    if (!token) { showToast('❌ Token を入力してください'); return; }
+    if (!token.startsWith('ghp_')) { showToast('❌ Token は ghp_ で始まる必要があります'); return; }
+    localStorage.setItem('github_token', token);
+    input.value = '';
+    updateStatus();
+    showToast('✅ Token を設定しました');
 }
 
-function getHeaders() {
-    const token = getToken();
-    if (!token) return null;
-    return {
-        'Authorization': `token ${token}`,
-        'Accept': 'application/vnd.github.v3+json'
-    };
-}
-
-// ==================== 状态更新 ====================
 function updateStatus() {
     const token = getToken();
     const dot = document.getElementById('statusDot');
@@ -258,7 +269,6 @@ function updateStatus() {
     const status = document.getElementById('tokenStatus');
     const saveBtn = document.getElementById('saveBtn');
     const loadBtn = document.getElementById('loadBtn');
-    
     if (token) {
         dot.className = 'status-dot online';
         text.textContent = 'オンライン';
@@ -365,40 +375,25 @@ async function saveToGitHub() {
         showToast('❌ Token が設定されていません');
         return;
     }
-    
     saveData();
-    
     const dot = document.getElementById('statusDot');
     const text = document.getElementById('statusText');
     dot.className = 'status-dot saving';
     text.textContent = '保存中...';
-    
     try {
         const content = JSON.stringify(data, null, 2);
         const encoded = btoa(unescape(encodeURIComponent(content)));
-        const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
-        const headers = getHeaders();
-        
+        const url = `https://api.github.com/repos/xsorainfo/StudyManager/contents/data/data.json`;
+        const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
         let sha = null;
         const checkRes = await fetch(url, { headers });
         if (checkRes.ok) {
             const fileData = await checkRes.json();
             sha = fileData.sha;
         }
-        
-        const body = {
-            message: `📝 データ更新: ${new Date().toISOString()}`,
-            content: encoded,
-            branch: GITHUB_BRANCH
-        };
+        const body = { message: `📝 データ更新: ${new Date().toISOString()}`, content: encoded, branch: 'main' };
         if (sha) body.sha = sha;
-        
-        const response = await fetch(url, {
-            method: 'PUT',
-            headers: headers,
-            body: JSON.stringify(body)
-        });
-        
+        const response = await fetch(url, { method: 'PUT', headers: headers, body: JSON.stringify(body) });
         if (response.ok) {
             dot.className = 'status-dot online';
             text.textContent = 'オンライン';
@@ -420,17 +415,14 @@ async function loadFromGitHub() {
         showToast('❌ Token が設定されていません');
         return;
     }
-    
     const dot = document.getElementById('statusDot');
     const text = document.getElementById('statusText');
     dot.className = 'status-dot saving';
     text.textContent = '読込中...';
-    
     try {
-        const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
-        const headers = getHeaders();
+        const url = `https://api.github.com/repos/xsorainfo/StudyManager/contents/data/data.json`;
+        const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
         const response = await fetch(url, { headers });
-        
         if (response.status === 404) {
             showToast('📭 GitHub にデータがありません');
             dot.className = 'status-dot online';
@@ -438,15 +430,12 @@ async function loadFromGitHub() {
             return;
         }
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        
         const fileData = await response.json();
         const content = decodeURIComponent(escape(atob(fileData.content)));
         const loaded = JSON.parse(content);
-        
         Object.keys(loaded).forEach(key => {
             localStorage.setItem('study_' + key, JSON.stringify(loaded[key]));
         });
-        
         loadData();
         renderAll();
         dot.className = 'status-dot online';
@@ -459,15 +448,15 @@ async function loadFromGitHub() {
     }
 }
 
-// ==================== インポート/エクスポート ====================
+// ==================== バックアップ / 復元 ====================
 function exportData() {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `study_data_${new Date().toISOString().slice(0,10)}.json`;
+    a.download = `study_backup_${new Date().toISOString().slice(0,10)}.json`;
     a.click();
     URL.revokeObjectURL(a.href);
-    showToast('📁 エクスポートしました');
+    showToast('📁 バックアップしました');
 }
 
 function importData(event) {
@@ -488,7 +477,7 @@ function importData(event) {
                 data = imported;
                 saveData();
                 renderAll();
-                showToast('📁 インポートしました');
+                showToast('📁 復元しました');
             }
         } catch(err) {
             showToast('❌ ファイル読み込み失敗');
@@ -645,9 +634,7 @@ function openModal(type, id = null) {
     const body = document.getElementById('modalBody');
     const title = document.getElementById('modalTitle');
     currentModal = { type, id };
-    
     const item = id ? data[type === 'score' ? 'scores' : type === 'review' ? 'reviews' : type === 'tetsu' ? 'tetsu' : type === 'schedule' ? 'schedules' : 'exams']?.find(i => i.id === id) : null;
-    
     let html = '';
     switch(type) {
         case 'score':
