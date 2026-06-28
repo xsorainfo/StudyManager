@@ -128,34 +128,22 @@
       50% { opacity: 0.3; }
     }
 
-    /* Token 设置区域 */
-    .token-setup {
+    .token-status-bar {
       background: #f0ebe4;
       border-radius: 20px;
-      padding: 14px 20px;
+      padding: 10px 20px;
       margin-bottom: 20px;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
       flex-wrap: wrap;
+    }
+    .token-status-bar .left {
+      display: flex;
       align-items: center;
       gap: 12px;
     }
-    .token-setup label {
-      font-weight: 600;
-      color: #3d3229;
-      font-size: 0.9rem;
-    }
-    .token-setup input {
-      flex: 1;
-      min-width: 200px;
-      padding: 8px 16px;
-      border: 2px solid #d8cdbf;
-      border-radius: 40px;
-      font-size: 0.9rem;
-      outline: none;
-      background: white;
-    }
-    .token-setup input:focus { border-color: #8f735b; }
-    .token-setup .token-status {
+    .token-status-bar .right {
       font-size: 0.8rem;
       color: #6b5d4e;
     }
@@ -344,18 +332,29 @@
     </div>
   </nav>
 
-  <!-- ===== Token 状态显示（只读） ===== -->
-  <div class="token-status-bar" style="background: #f0ebe4; border-radius: 20px; padding: 10px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-    <span><i class="fab fa-github"></i> <strong>Token 状態:</strong> <span id="tokenStatus">読込中...</span></span>
-    <span style="font-size:0.8rem; color:#6b5d4e;">
-      <i class="fas fa-info-circle"></i> TokenはGitHub Actionsから自動設定されます
-    </span>
+  <!-- ===== Token 状态 ===== -->
+  <div class="token-status-bar">
+    <div class="left">
+      <i class="fab fa-github"></i>
+      <strong>Token 状態:</strong>
+      <span id="tokenStatus">読込中...</span>
+    </div>
+    <div class="right">
+      <i class="fas fa-info-circle"></i>
+      Token は GitHub Actions から自動設定されます
+      <span style="margin-left:12px; color:#8f735b;">|</span>
+      <span id="dataSize" style="margin-left:12px;">0KB</span>
+    </div>
   </div>
 
   <!-- ===== 仪表板 ===== -->
   <div id="dashboardView">
     <div class="dashboard-grid">
+
+      <!-- 左列 -->
       <div class="left-col">
+
+        <!-- 学年大纲 -->
         <div class="card">
           <div class="card-header">
             <h2><i class="fas fa-layer-group"></i> 学年学習大纲</h2>
@@ -364,10 +363,10 @@
           <div class="year-grid" id="yearGrid"></div>
           <div class="flex" style="justify-content: flex-end; margin-top: 10px;">
             <span class="text-muted"><i class="far fa-clock"></i> 更新: <span id="lastUpdate">2026-06-28</span></span>
-            <span class="text-muted" style="margin-left:12px;"><i class="fas fa-database"></i> <span id="dataSize">0KB</span></span>
           </div>
         </div>
 
+        <!-- 考前复习 -->
         <div class="card">
           <div class="card-header">
             <h2><i class="fas fa-book-open"></i> 考前复习</h2>
@@ -376,6 +375,7 @@
           <div id="reviewList"></div>
         </div>
 
+        <!-- 成绩 -->
         <div class="card">
           <div class="card-header">
             <h2><i class="fas fa-save"></i> 成績登録</h2>
@@ -385,7 +385,10 @@
         </div>
       </div>
 
+      <!-- 右列 -->
       <div class="right-col">
+
+        <!-- 铁律会 -->
         <div class="card">
           <div class="card-header">
             <h2><i class="fas fa-flag"></i> 鉄律会 学習大纲</h2>
@@ -398,6 +401,7 @@
           </div>
         </div>
 
+        <!-- 学习进度 -->
         <div class="card">
           <div class="card-header">
             <h2><i class="fas fa-calendar-check"></i> 鉄律会 学習進度</h2>
@@ -406,23 +410,28 @@
           <div id="scheduleList"></div>
         </div>
 
+        <!-- 考试范围 -->
         <div class="card" style="background: #f4efe8;">
           <div style="display: flex; gap: 12px; align-items: center;">
             <i class="fas fa-pencil-alt" style="font-size:1.6rem; color:#6f5d4b;"></i>
-            <div><strong>直近試験範囲</strong><br>
-              <span style="font-size:0.8rem; color:#4d3f31;" id="recentExams">読み込み中...</span>
+            <div>
+              <strong>直近試験範囲</strong>
+              <div style="font-size:0.85rem; color:#4d3f31;" id="recentExams">読み込み中...</div>
             </div>
+            <button class="btn btn-sm btn-outline" onclick="openModal('exam')" style="margin-left:auto;">
+              <i class="fas fa-plus"></i> 追加
+            </button>
           </div>
         </div>
 
+        <!-- 说明 -->
         <div class="card" style="background: #e8e0d6; border: 2px dashed #8f735b;">
           <div style="display: flex; gap: 12px; align-items: center; font-size:0.9rem;">
-            <i class="fab fa-github" style="color:#5f4b38; font-size:1.4rem;"></i>
+            <i class="fas fa-github" style="color:#5f4b38; font-size:1.4rem;"></i>
             <div>
-              <strong>GitHub 保存</strong><br>
+              <strong>💾 データ保存先</strong><br>
               <span style="font-size:0.8rem; color:#4d3f31;">
-                Token 設定後、「保存」で data/data.json に同期<br>
-                「読込」で GitHub から復元
+                main 分支 · data/data.json
               </span>
             </div>
           </div>
@@ -443,11 +452,11 @@
     </div>
   </div>
 
+  <!-- ===== Toast ===== -->
   <div class="toast-msg" id="toast"></div>
 </div>
 
 <!-- ===== JavaScript ===== -->
-<!-- config.js 由 GitHub Actions 自动生成 -->
 <script src="../scripts/config.js"></script>
 <script src="../scripts/app.js"></script>
 </body>
