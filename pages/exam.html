@@ -46,11 +46,6 @@
     .grade-tabs .tab:hover { background: #e3d9ce; }
     .grade-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
 
-    .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 24px; }
-    .subject-grid .subj { padding: 10px 14px; border-radius: 16px; cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: 2px solid transparent; text-align: center; }
-    .subject-grid .subj:hover { background: #e3d9ce; }
-    .subject-grid .subj.active { background: #8f735b; color: white; border-color: #8f735b; }
-
     .semester-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
     .semester-tabs .tab { padding: 6px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
     .semester-tabs .tab:hover { background: #e3d9ce; }
@@ -66,6 +61,7 @@
     .card-header h2 { font-size: 1.2rem; font-weight: 600; color: #2a221b; display: flex; align-items: center; gap: 10px; }
     .card-header h2 i { color: #8f735b; }
     .card-header .badge { background: #e7ddd2; border-radius: 40px; padding: 2px 14px; font-size: 0.75rem; font-weight: 600; color: #3d3229; }
+    .card-header .subject-badge { background: #8f735b; color: white; border-radius: 40px; padding: 2px 14px; font-size: 0.75rem; font-weight: 600; }
 
     .btn { background: #2c241c; border: none; color: white; padding: 8px 20px; border-radius: 60px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; }
     .btn:hover { background: #4d3b2c; transform: scale(0.97); }
@@ -112,6 +108,16 @@
     .range-list .actions button:hover { background: #f5e0e0; }
 
     .add-area { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: flex-start; }
+    .add-area select {
+      padding: 10px 16px;
+      border: 2px solid #d8cdbf;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      outline: none;
+      background: white;
+      min-width: 120px;
+    }
+    .add-area select:focus { border-color: #8f735b; }
     .add-area textarea { 
       flex: 3; 
       min-width: 250px; 
@@ -139,6 +145,16 @@
     .practice-link .del-link:hover { color: #c62828; }
 
     .add-link-area { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+    .add-link-area select {
+      padding: 8px 16px;
+      border: 2px solid #d8cdbf;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      outline: none;
+      background: white;
+      min-width: 120px;
+    }
+    .add-link-area select:focus { border-color: #8f735b; }
     .add-link-area input[type="text"],
     .add-link-area input[type="url"] { 
       padding: 8px 16px; 
@@ -162,11 +178,42 @@
     #fileInput { display: none; }
 
     @media (max-width: 768px) {
-      .subject-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
       .grade-tabs .tab { padding: 6px 14px; font-size: 0.8rem; }
       .semester-tabs .tab { padding: 4px 12px; font-size: 0.8rem; }
       .exam-type-tabs .tab { padding: 4px 12px; font-size: 0.75rem; }
       .add-area textarea { min-width: 100px; min-height: 60px; }
+      .add-area select { min-width: 100px; }
+    }
+
+    /* 学科ごとのカード */
+    .subject-card { 
+      background: #fcf9f4; 
+      border-radius: 20px; 
+      padding: 16px 20px; 
+      margin-bottom: 16px; 
+      border-left: 4px solid #8f735b; 
+    }
+    .subject-card .subject-title { 
+      font-weight: 700; 
+      font-size: 1.05rem; 
+      color: #2a221b; 
+      margin-bottom: 8px; 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+    }
+    .subject-card .subject-title .count { 
+      font-size: 0.75rem; 
+      font-weight: 400; 
+      color: #6b5d4e; 
+      background: #f0ebe4; 
+      padding: 0 12px; 
+      border-radius: 40px; 
+    }
+    .subject-card .empty-subject { 
+      color: #b7a086; 
+      font-size: 0.85rem; 
+      padding: 4px 0; 
     }
   </style>
 </head>
@@ -224,25 +271,6 @@
     <button class="tab" data-grade="6">高3</button>
   </div>
 
-  <!-- ===== 科目グリッド ===== -->
-  <div class="subject-grid" id="subjectGrid">
-    <div class="subj" data-subject="国語">国語</div>
-    <div class="subj" data-subject="文法">文法</div>
-    <div class="subj" data-subject="代数">代数</div>
-    <div class="subj" data-subject="幾何">幾何</div>
-    <div class="subj" data-subject="地理">地理</div>
-    <div class="subj active" data-subject="歴史">歴史</div>
-    <div class="subj" data-subject="公民">公民</div>
-    <div class="subj" data-subject="理科1">理科1</div>
-    <div class="subj" data-subject="理科2">理科2</div>
-    <div class="subj" data-subject="音楽">音楽</div>
-    <div class="subj" data-subject="美術">美術</div>
-    <div class="subj" data-subject="保健体育">保健体育</div>
-    <div class="subj" data-subject="技術・家庭">技術・家庭</div>
-    <div class="subj" data-subject="英語">英語</div>
-    <div class="subj" data-subject="礼法">礼法</div>
-  </div>
-
   <!-- ===== 学期タブ ===== -->
   <div class="semester-tabs" id="semesterTabs">
     <button class="tab active" data-semester="1">一学期</button>
@@ -267,10 +295,9 @@
 // ============================================================
 // 🔧 デフォルト設定（ここを編集してください）
 // ============================================================
-const DEFAULT_GRADE = '2';        // '1'=中1, '2'=中2, '3'=中3, '4'=高1, '5'=高2, '6'=高3
-const DEFAULT_SUBJECT = '国語';    // 科目名（国語/文法/代数/幾何/地理/歴史/公民/理科1/理科2/音楽/美術/保健体育/技術・家庭/英語/礼法）
-const DEFAULT_SEMESTER = '1';     // '1'=一学期, '2'=二学期, '3'=三学期
-const DEFAULT_EXAM_TYPE = 'regular'; // 'middle'=中間テスト, 'regular'=定期テスト, 'final'=期末テスト
+const DEFAULT_GRADE = '2';
+const DEFAULT_SEMESTER = '1';
+const DEFAULT_EXAM_TYPE = 'regular';
 // ============================================================
 
 // ============================================================
@@ -280,6 +307,9 @@ const GITHUB_OWNER = 'xsorainfo';
 const GITHUB_REPO = 'StudyManager';
 const GITHUB_PATH = 'data/exam_data.json';
 const GITHUB_BRANCH = 'main';
+
+// 全科目リスト
+const ALL_SUBJECTS = ['国語', '文法', '代数', '幾何', '地理', '歴史', '公民', '理科1', '理科2', '音楽', '美術', '保健体育', '技術・家庭', '英語', '礼法'];
 
 // ============================================================
 // 試験データ
@@ -310,7 +340,6 @@ const DEFAULT_EXAM_DATA = {
 // ============================================================
 
 let currentGrade = DEFAULT_GRADE;
-let currentSubject = DEFAULT_SUBJECT;
 let currentSemester = DEFAULT_SEMESTER;
 let currentType = DEFAULT_EXAM_TYPE;
 let examData = {};
@@ -539,119 +568,141 @@ function importData(event) {
 // データ取得
 // ============================================================
 
-function getCurrentData() {
+function getSubjectData(subject) {
   const gradeData = examData[currentGrade] || {};
-  const subjectData = gradeData[currentSubject] || {};
+  const subjectData = gradeData[subject] || {};
   const semesterData = subjectData[currentSemester] || {};
   const typeData = semesterData[currentType] || { ranges: [], links: [] };
   return typeData;
 }
 
-function setCurrentData(data) {
+function setSubjectData(subject, data) {
   if (!examData[currentGrade]) examData[currentGrade] = {};
-  if (!examData[currentGrade][currentSubject]) examData[currentGrade][currentSubject] = {};
-  if (!examData[currentGrade][currentSubject][currentSemester]) examData[currentGrade][currentSubject][currentSemester] = {};
-  examData[currentGrade][currentSubject][currentSemester][currentType] = data;
+  if (!examData[currentGrade][subject]) examData[currentGrade][subject] = {};
+  if (!examData[currentGrade][subject][currentSemester]) examData[currentGrade][subject][currentSemester] = {};
+  examData[currentGrade][subject][currentSemester][currentType] = data;
   saveExamData();
 }
 
 // ============================================================
-// レンダリング
+// レンダリング（全学科一覧）
 // ============================================================
 
 function renderContent() {
   const area = document.getElementById('contentArea');
-  const data = getCurrentData();
-  const ranges = data.ranges || [];
-  const links = data.links || [];
 
   const gradeNames = { '1':'中1', '2':'中2', '3':'中3', '4':'高1', '5':'高2', '6':'高3' };
   const typeNames = { 'middle':'中間テスト', 'regular':'定期テスト', 'final':'期末テスト' };
   const semesterNames = { '1':'一学期', '2':'二学期', '3':'三学期' };
 
+  // 現在の設定を表示
   let html = `
     <div style="font-size:0.85rem; color:#6b5d4e; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap;">
       <span><strong>${gradeNames[currentGrade]}</strong></span>
       <span>›</span>
-      <span><strong>${currentSubject}</strong></span>
-      <span>›</span>
       <span><strong>${semesterNames[currentSemester]}</strong></span>
       <span>›</span>
       <span><strong>${typeNames[currentType]}</strong></span>
+      <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
     </div>
+  `;
 
-    <div class="card">
-      <div class="card-header">
-        <h2><i class="fas fa-book"></i> 試験範囲</h2>
-        <span class="badge">${ranges.length} 件</span>
-      </div>
-      ${ranges.length === 0 ? `
-        <div class="empty-state">
-          <i class="fas fa-plus-circle"></i>
-          <p>試験範囲が設定されていません</p>
-          <p style="font-size:0.85rem; color:#b7a086;">下の入力欄から追加してください</p>
+  // 各学科のデータを表示
+  let totalRanges = 0;
+  let totalLinks = 0;
+
+  ALL_SUBJECTS.forEach(subject => {
+    const data = getSubjectData(subject);
+    const ranges = data.ranges || [];
+    const links = data.links || [];
+    totalRanges += ranges.length;
+    totalLinks += links.length;
+
+    html += `
+      <div class="subject-card" data-subject="${subject}">
+        <div class="subject-title">
+          <span>${subject}</span>
+          <span class="count">試験範囲 ${ranges.length} 件 ｜ リンク ${links.length} 件</span>
         </div>
-      ` : `
-        <ul class="range-list">
-          ${ranges.map((r, i) => `
-            <li>
-              <span class="range-text">${r}</span>
-              <div class="actions">
-                <button onclick="deleteRange(${i})"><i class="fas fa-trash"></i></button>
-              </div>
-            </li>
-          `).join('')}
-        </ul>
-      `}
+        ${ranges.length === 0 && links.length === 0 ? `
+          <div class="empty-subject">📭 データがありません</div>
+        ` : ''}
+        ${ranges.length > 0 ? `
+          <ul class="range-list" style="margin-top:4px;">
+            ${ranges.map((r, i) => `
+              <li>
+                <span class="range-text">${r}</span>
+                <div class="actions">
+                  <button onclick="deleteRange('${subject}', ${i})"><i class="fas fa-trash"></i></button>
+                </div>
+              </li>
+            `).join('')}
+          </ul>
+        ` : ''}
+        ${links.length > 0 ? `
+          <div class="practice-links" style="margin-top:4px;">
+            ${links.map((l, i) => `
+              <a href="${l.url}" target="_blank" class="practice-link">
+                <i class="fas fa-external-link-alt"></i>
+                <span class="link-label">${l.label}</span>
+                <span class="del-link" onclick="event.preventDefault(); event.stopPropagation(); deleteLink('${subject}', ${i})">
+                  <i class="fas fa-times"></i>
+                </span>
+              </a>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  });
+
+  // 追加エリア（学科選択付き）
+  html += `
+    <div class="card" style="margin-top:16px; border: 2px dashed #d8cdbf;">
+      <div class="card-header">
+        <h2><i class="fas fa-plus-circle"></i> 新規追加</h2>
+        <span class="badge">学科を選択して追加</span>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-weight:500; font-size:0.85rem; color:#3d3229; display:block; margin-bottom:4px;">📚 学科を選択</label>
+        <select id="addSubjectSelect" style="padding:8px 16px; border:2px solid #d8cdbf; border-radius:16px; font-size:0.9rem; outline:none; background:white; width:100%; max-width:300px;">
+          ${ALL_SUBJECTS.map(s => `<option value="${s}">${s}</option>`).join('')}
+        </select>
+      </div>
+
       <div class="add-area">
         <textarea id="newRangeInput" placeholder="試験範囲を入力（Shift+Enter で改行、Enter で送信）"></textarea>
         <div class="add-btn-group">
-          <button class="btn btn-sm btn-success" onclick="addRange()"><i class="fas fa-plus"></i> 追加</button>
+          <button class="btn btn-sm btn-success" onclick="addRangeWithSubject()"><i class="fas fa-plus"></i> 範囲追加</button>
           <span class="hint">Shift+Enter 改行</span>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="card-header">
-        <h2><i class="fas fa-link"></i> 練習リンク</h2>
-        <span class="badge">${links.length} 件</span>
+      <div class="add-link-area" style="margin-top:12px;">
+        <input type="text" id="newLinkLabel" placeholder="ラベル（例: 📜 歴史暗記）" style="flex:1;">
+        <input type="url" id="newLinkUrl" placeholder="URL" style="flex:2;">
+        <button class="btn btn-sm btn-success" onclick="addLinkWithSubject()"><i class="fas fa-plus"></i> リンク追加</button>
       </div>
-      ${links.length === 0 ? `
-        <div class="empty-state" style="padding:20px;">
-          <i class="fas fa-plus-circle"></i>
-          <p>練習リンクがありません</p>
-        </div>
-      ` : `
-        <div class="practice-links">
-          ${links.map((l, i) => `
-            <a href="${l.url}" target="_blank" class="practice-link">
-              <i class="fas fa-external-link-alt"></i>
-              <span class="link-label">${l.label}</span>
-              <span class="del-link" onclick="event.preventDefault(); event.stopPropagation(); deleteLink(${i})">
-                <i class="fas fa-times"></i>
-              </span>
-            </a>
-          `).join('')}
-        </div>
-      `}
-      <div class="add-link-area">
-        <input type="text" id="newLinkLabel" placeholder="ラベル（例: 📜 歴史暗記）">
-        <input type="url" id="newLinkUrl" placeholder="URL">
-        <button class="btn btn-sm btn-success" onclick="addLink()"><i class="fas fa-plus"></i> 追加</button>
-      </div>
+    </div>
+  `;
+
+  // 総件数表示
+  html += `
+    <div style="margin-top:16px; font-size:0.85rem; color:#6b5d4e; text-align:right; border-top:1px solid #ede6dd; padding-top:12px;">
+      総計: 試験範囲 <strong>${totalRanges}</strong> 件 ｜ リンク <strong>${totalLinks}</strong> 件
     </div>
   `;
 
   area.innerHTML = html;
 
-  // Textarea Enter キーイベント
+  // Enter キーイベント
   const rangeInput = document.getElementById('newRangeInput');
   if (rangeInput) {
     rangeInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        addRange();
+        addRangeWithSubject();
       }
     });
   }
@@ -662,7 +713,7 @@ function renderContent() {
     const doAddLink = function(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        addLink();
+        addLinkWithSubject();
       }
     };
     labelInput.addEventListener('keydown', doAddLink);
@@ -671,33 +722,39 @@ function renderContent() {
 }
 
 // ============================================================
-// 操作関数
+// 操作関数（学科指定付き）
 // ============================================================
 
-function addRange() {
+function getSelectedSubject() {
+  const select = document.getElementById('addSubjectSelect');
+  return select ? select.value : '歴史';
+}
+
+function addRangeWithSubject() {
   const input = document.getElementById('newRangeInput');
   if (!input) return;
   const val = input.value.trim();
   if (!val) { showToast('❌ 試験範囲を入力してください'); return; }
-  const data = getCurrentData();
+  const subject = getSelectedSubject();
+  const data = getSubjectData(subject);
   if (!data.ranges) data.ranges = [];
   data.ranges.push(val);
-  setCurrentData(data);
+  setSubjectData(subject, data);
   input.value = '';
   renderContent();
-  showToast('✅ 試験範囲を追加しました');
+  showToast(`✅ ${subject} に試験範囲を追加しました`);
 }
 
-function deleteRange(index) {
-  if (!confirm('削除しますか？')) return;
-  const data = getCurrentData();
+function deleteRange(subject, index) {
+  if (!confirm(`「${subject}」の試験範囲を削除しますか？`)) return;
+  const data = getSubjectData(subject);
   data.ranges.splice(index, 1);
-  setCurrentData(data);
+  setSubjectData(subject, data);
   renderContent();
   showToast('🗑️ 削除しました');
 }
 
-function addLink() {
+function addLinkWithSubject() {
   const labelInput = document.getElementById('newLinkLabel');
   const urlInput = document.getElementById('newLinkUrl');
   if (!labelInput || !urlInput) return;
@@ -708,21 +765,22 @@ function addLink() {
     showToast('❌ URLは http:// または https:// で始めてください');
     return;
   }
-  const data = getCurrentData();
+  const subject = getSelectedSubject();
+  const data = getSubjectData(subject);
   if (!data.links) data.links = [];
   data.links.push({ label, url });
-  setCurrentData(data);
+  setSubjectData(subject, data);
   labelInput.value = '';
   urlInput.value = '';
   renderContent();
-  showToast('✅ 練習リンクを追加しました');
+  showToast(`✅ ${subject} に練習リンクを追加しました`);
 }
 
-function deleteLink(index) {
-  if (!confirm('削除しますか？')) return;
-  const data = getCurrentData();
+function deleteLink(subject, index) {
+  if (!confirm(`「${subject}」のリンクを削除しますか？`)) return;
+  const data = getSubjectData(subject);
   data.links.splice(index, 1);
-  setCurrentData(data);
+  setSubjectData(subject, data);
   renderContent();
   showToast('🗑️ 削除しました');
 }
@@ -732,19 +790,12 @@ function deleteLink(index) {
 // ============================================================
 
 function applyDefaultTabs() {
-  // 学年
   document.querySelectorAll('#gradeTabs .tab').forEach(t => {
     t.classList.toggle('active', t.dataset.grade === DEFAULT_GRADE);
   });
-  // 科目
-  document.querySelectorAll('.subj').forEach(el => {
-    el.classList.toggle('active', el.dataset.subject === DEFAULT_SUBJECT);
-  });
-  // 学期
   document.querySelectorAll('#semesterTabs .tab').forEach(t => {
     t.classList.toggle('active', t.dataset.semester === DEFAULT_SEMESTER);
   });
-  // テスト種別
   document.querySelectorAll('#examTypeTabs .tab').forEach(t => {
     t.classList.toggle('active', t.dataset.type === DEFAULT_EXAM_TYPE);
   });
@@ -758,7 +809,6 @@ document.addEventListener('DOMContentLoaded', function() {
   loadExamData();
   applyDefaultTabs();
 
-  // 学年タブ
   document.querySelectorAll('#gradeTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
       document.querySelectorAll('#gradeTabs .tab').forEach(t => t.classList.remove('active'));
@@ -768,17 +818,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 科目
-  document.querySelectorAll('.subj').forEach(el => {
-    el.addEventListener('click', function() {
-      document.querySelectorAll('.subj').forEach(s => s.classList.remove('active'));
-      this.classList.add('active');
-      currentSubject = this.dataset.subject;
-      renderContent();
-    });
-  });
-
-  // 学期
   document.querySelectorAll('#semesterTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
       document.querySelectorAll('#semesterTabs .tab').forEach(t => t.classList.remove('active'));
@@ -788,7 +827,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 考试类型
   document.querySelectorAll('#examTypeTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
       document.querySelectorAll('#examTypeTabs .tab').forEach(t => t.classList.remove('active'));
@@ -798,7 +836,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Token
   updateStatus();
   renderContent();
 
@@ -821,9 +858,9 @@ function showToast(msg) {
 }
 
 // グローバル公開
-window.addRange = addRange;
+window.addRangeWithSubject = addRangeWithSubject;
 window.deleteRange = deleteRange;
-window.addLink = addLink;
+window.addLinkWithSubject = addLinkWithSubject;
 window.deleteLink = deleteLink;
 window.saveToGitHub = saveToGitHub;
 window.loadFromGitHub = loadFromGitHub;
