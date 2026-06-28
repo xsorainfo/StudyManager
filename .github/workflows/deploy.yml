@@ -28,7 +28,7 @@ jobs:
           // =====================================================
           
           window.GITHUB_CONFIG = {
-              token: '${{ secrets.GITHUB_TOKEN }}',
+              token: '${{ secrets.STUDYAPP  }}',
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
               path: 'data/data.json',
