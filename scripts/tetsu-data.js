@@ -1,0 +1,501 @@
+// ============================================================
+// tetsu-data.js - 鉄律会 全データ
+// ============================================================
+
+// ==================== テストの状態 ====================
+// status: 'done' = 実施済み, 'pending' = 実施予定, 'upcoming' = 未実施
+
+// ==================== 中1 数学 ====================
+const TETSU_DATA = {
+  '1': {
+    math: {
+      name: '中1 数学',
+      curriculum: [
+        { week: '前期第01週', date: '4月3日', content: '正負の数(1)', test: null },
+        { week: '前期第02週', date: '4月10日', content: '正負の数(2)', test: null },
+        { week: '前期第03週', date: '4月17日', content: '式の計算Ⅰ(1)', test: null },
+        { week: '前期第04週', date: '4月24日', content: '式の計算Ⅰ(2)', test: '正負の数' },
+        { week: '前期第05週', date: '5月8日', content: '式の計算Ⅰ(3)', test: null },
+        { week: '前期第06週', date: '5月15日', content: '方程式(1)', test: null },
+        { week: '前期第07週', date: '5月22日', content: '方程式(2)', test: '式の計算Ⅰ' },
+        { week: '前期第08週', date: '5月29日', content: '方程式(3)', test: null },
+        { week: '前期第09週', date: '6月5日', content: '方程式(4)', test: null },
+        { week: '前期第10週', date: '6月12日', content: '方程式(5)', test: null },
+        { week: '前期第11週', date: '6月19日', content: '不等式(1)', test: null },
+        { week: '前期第12週', date: '6月26日', content: '不等式(2)', test: '方程式' },
+        { week: '前期第13週W1', date: '7月3日', content: '平行と合同(1)', test: null },
+        { week: '前期第13週W2', date: '7月10日', content: '平行と合同(2)', test: null },
+        { week: '前期第14週', date: '7月17日', content: '平行と合同(3)', test: '不等式' },
+        { week: '前期第15週', date: '7月24日', content: '平行と合同(4)', test: null },
+        { week: '前期第16週', date: '7月31日', content: '平行と合同(5)', test: null },
+        { week: '前期第17週', date: '8月7日', content: '平行四边形(1)', test: null },
+        { week: '前期第18週', date: '8月28日', content: '平行四边形(2)', test: '平行と合同' },
+        { week: '前期第19週', date: '9月4日', content: '1次関数(1)', test: null },
+        { week: '前期第20週', date: '9月11日', content: '1次関数(2)', test: '平行四边形' },
+        { week: '前期第21週', date: '9月18日', content: '1次関数(3)', test: null },
+        { week: '前期第22週', date: '9月25日', content: '1次関数(4)', test: null },
+        // 後期
+        { week: '後期第01週', date: '10月2日', content: '相似(1)', test: null },
+        { week: '後期第02週', date: '10月9日', content: '相似(2)', test: '1次関数' },
+        { week: '後期第03週', date: '10月16日', content: '相似(3)', test: null },
+        { week: '後期第04週', date: '10月23日', content: '式の計算Ⅱ(1)', test: null },
+        { week: '後期第05週', date: '10月30日', content: '式の計算Ⅱ(2)', test: '相似' },
+        { week: '後期第06週', date: '11月6日', content: '式の計算Ⅱ(3)', test: null },
+        { week: '後期第07週', date: '11月13日', content: '式の計算Ⅱ(4)', test: null },
+        { week: '後期第08週', date: '11月20日', content: '円(1)', test: null },
+        { week: '後期第09週', date: '11月27日', content: '円(2)', test: '式の計算Ⅱ' },
+        { week: '後期第10週W1', date: '12月4日', content: '円(3)', test: null },
+        { week: '後期第10週W2', date: '12月11日', content: '円(4)', test: null },
+        { week: '後期第11週', date: '12月18日', content: '円(5)', test: null },
+        { week: '後期第12週', date: '12月25日', content: '無理数(1)', test: null },
+        { week: '後期第13週', date: '1月8日', content: '無理数(2)', test: '円' },
+        { week: '後期第14週', date: '1月15日', content: '2次方程式(1)', test: null },
+        { week: '後期第15週', date: '1月22日', content: '2次方程式(2)', test: null },
+        { week: '後期第16週', date: '1月29日', content: '三平方の定理(1)', test: null },
+        { week: '後期第17週', date: '2月5日', content: '三平方の定理(2)', test: '無理数・2次方程式' },
+        { week: '後期第18週', date: '2月12日', content: '2次関数(1)', test: null },
+        { week: '後期第19週', date: '2月26日', content: '2次関数(2)', test: '三平方の定理' },
+        { week: '後期第20週W1', date: '3月5日', content: '2次関数(3)', test: null },
+        { week: '後期第20週W2', date: '3月12日', content: '円(6)', test: null },
+        { week: '後期第21週', date: '3月19日', content: '総括', test: '2次関数' }
+      ],
+      // 各テストの詳細（点数・平均・偏差値）
+      tests: {
+        review: [
+          { 
+            id: 'r1', name: '正負の数', date: '4月24日', 
+            status: 'done', 
+            score: 85, avg: 72, deviation: 58,
+            note: '計算ミスが目立つ'
+          },
+          { 
+            id: 'r2', name: '式の計算Ⅰ', date: '5月22日', 
+            status: 'done', 
+            score: 92, avg: 68, deviation: 65,
+            note: '良くできている'
+          },
+          { 
+            id: 'r3', name: '方程式', date: '6月26日', 
+            status: 'done', 
+            score: 78, avg: 65, deviation: 54,
+            note: '文章問題の立式が課題'
+          },
+          { 
+            id: 'r4', name: '不等式', date: '7月17日', 
+            status: 'done', 
+            score: 88, avg: 70, deviation: 60,
+            note: ''
+          },
+          { 
+            id: 'r5', name: '平行と合同', date: '8月28日', 
+            status: 'done', 
+            score: 65, avg: 62, deviation: 50,
+            note: '証明問題を要復習'
+          },
+          { 
+            id: 'r6', name: '平行四边形', date: '9月11日', 
+            status: 'done', 
+            score: 70, avg: 58, deviation: 56,
+            note: ''
+          },
+          { 
+            id: 'r7', name: '1次関数', date: '10月9日', 
+            status: 'pending', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          },
+          { 
+            id: 'r8', name: '相似', date: '10月30日', 
+            status: 'pending', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          },
+          { 
+            id: 'r9', name: '式の計算Ⅱ', date: '11月27日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          },
+          { 
+            id: 'r10', name: '円', date: '1月8日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          },
+          { 
+            id: 'r11', name: '無理数・2次方程式', date: '2月5日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          },
+          { 
+            id: 'r12', name: '三平方の定理', date: '2月26日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          },
+          { 
+            id: 'r13', name: '2次関数', date: '3月19日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          }
+        ],
+        test: [
+          { 
+            id: 't1', name: '復習テスト①', date: '5月22日', 
+            status: 'done', 
+            score: 82, avg: 70, deviation: 56,
+            note: ''
+          },
+          { 
+            id: 't2', name: '復習テスト②', date: '6月26日', 
+            status: 'done', 
+            score: 75, avg: 65, deviation: 53,
+            note: ''
+          },
+          { 
+            id: 't3', name: '復習テスト③', date: '7月24日', 
+            status: 'done', 
+            score: 90, avg: 68, deviation: 64,
+            note: ''
+          },
+          { 
+            id: 't4', name: '復習テスト④', date: '9月18日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          }
+        ],
+        calc: [
+          { 
+            id: 'c1', name: '計算テスト 第1回', date: '4月10日', 
+            status: 'done', 
+            score: 95, avg: 80, deviation: 60,
+            note: ''
+          },
+          { 
+            id: 'c2', name: '計算テスト 第2回', date: '5月15日', 
+            status: 'done', 
+            score: 88, avg: 75, deviation: 57,
+            note: ''
+          },
+          { 
+            id: 'c3', name: '計算テスト 第3回', date: '6月19日', 
+            status: 'done', 
+            score: 70, avg: 68, deviation: 51,
+            note: '計算速度が課題'
+          },
+          { 
+            id: 'c4', name: '計算テスト 第4回', date: '7月17日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          }
+        ]
+      }
+    },
+    english: {
+      name: '中1 英語',
+      curriculum: [
+        { week: '前期 1', date: '4月3日', content: 'be動詞Ⅰ 肯定文', test: null },
+        { week: '前期 2', date: '4月10日', content: 'be動詞Ⅱ 否定文・疑問文', test: null },
+        { week: '前期 3', date: '4月17日', content: 'be動詞Ⅲ 複数', test: null },
+        { week: '前期 4', date: '4月24日', content: '前期1～3週のまとめ', test: null },
+        { week: '前期 5', date: '5月8日', content: 'be動詞Ⅳ 形容詞', test: '前期1～4週' },
+        { week: '前期 6', date: '5月15日', content: 'be動詞Ⅴ 疑問詞', test: null },
+        { week: '前期 7', date: '5月22日', content: '一般動詞Ⅰ', test: null },
+        { week: '前期 8', date: '5月29日', content: '前期5～7週のまとめ', test: null },
+        { week: '前期 9', date: '6月5日', content: '一般動詞Ⅱ 疑問詞', test: '前期5～8週' },
+        { week: '前期10', date: '6月12日', content: '比較Ⅰ', test: null },
+        { week: '前期11', date: '6月19日', content: '比較Ⅱ', test: null },
+        { week: '前期12', date: '6月26日', content: '前期9～11週のまとめ', test: null },
+        { week: '前期13', date: '7月3日', content: '現在進行形', test: '前期9～12週' },
+        { week: '前期14', date: '7月10日', content: '過去', test: null },
+        { week: '前期15', date: '7月17日', content: '未来', test: null },
+        { week: '前期16', date: '7月24日', content: '前期13～15週のまとめ', test: null },
+        { week: '前期17', date: '7月31日', content: '助動詞Ⅰ', test: '前期13～16週' },
+        { week: '前期18', date: '8月7日', content: '助動詞Ⅱ', test: null },
+        { week: '前期19', date: '8月28日', content: '名詞節・副詞節Ⅰ', test: null },
+        { week: '前期20', date: '9月4日', content: '前期17～19週のまとめ', test: null },
+        { week: '前期21', date: '9月11日', content: 'There is の文', test: '前期17～20週' },
+        { week: '前期22', date: '9月18日', content: '不定詞Ⅰ', test: null },
+        // 後期
+        { week: '後期 1', date: '10月2日', content: '不定詞Ⅱ', test: null },
+        { week: '後期 2', date: '10月9日', content: '前期21週～後期1週のまとめ', test: null },
+        { week: '後期 3', date: '10月16日', content: '動名詞', test: '前期21～後期2' },
+        { week: '後期 4', date: '10月23日', content: '5文型Ⅰ (SVC・SVOO)', test: null },
+        { week: '後期 5', date: '10月30日', content: '5文型Ⅱ (SVOC・SVO to do)', test: null },
+        { week: '後期 6', date: '11月6日', content: '後期3～5週のまとめ', test: null },
+        { week: '後期 7', date: '11月13日', content: '使役動詞・知覚動詞', test: '後期3～6週' },
+        { week: '後期 8', date: '11月20日', content: '受動態', test: null },
+        { week: '後期 9', date: '11月27日', content: '分詞・感嘆文', test: null },
+        { week: '後期10W1', date: '12月4日', content: '後期7～9週のまとめ', test: null },
+        { week: '後期10W2', date: '12月11日', content: '〃', test: null },
+        { week: '後期11', date: '12月18日', content: '現在完了Ⅰ', test: '後期7～10週' },
+        { week: '後期12', date: '12月25日', content: '現在完了Ⅱ', test: null },
+        { week: '後期13', date: '1月8日', content: '副詞節Ⅱ', test: null },
+        { week: '後期14', date: '1月15日', content: '後期11～13週のまとめ', test: null },
+        { week: '後期15', date: '1月22日', content: '助動詞Ⅲ', test: '後期11～14週' },
+        { week: '後期16', date: '1月29日', content: 'so～that ... to～to ... 構文', test: null },
+        { week: '後期17', date: '2月5日', content: '間接疑問', test: null },
+        { week: '後期18', date: '2月12日', content: '後期15～17週のまとめ', test: null },
+        { week: '後期19', date: '2月26日', content: '関係代名詞Ⅰ', test: '後期15～18週' },
+        { week: '後期20W1', date: '3月5日', content: '関係代名詞Ⅱ', test: null },
+        { week: '後期20W2', date: '3月12日', content: '〃', test: null },
+        { week: '後期21', date: '3月19日', content: '関係代名詞Ⅲ', test: null }
+      ],
+      tests: {
+        review: [
+          { 
+            id: 'r1', name: '前期1～4週', date: '5月8日', 
+            status: 'done', 
+            score: 88, avg: 70, deviation: 60,
+            note: ''
+          },
+          { 
+            id: 'r2', name: '前期5～8週', date: '6月5日', 
+            status: 'done', 
+            score: 75, avg: 65, deviation: 53,
+            note: ''
+          },
+          { 
+            id: 'r3', name: '前期9～12週', date: '7月3日', 
+            status: 'done', 
+            score: 92, avg: 68, deviation: 64,
+            note: ''
+          },
+          { 
+            id: 'r4', name: '前期13～16週', date: '7月31日', 
+            status: 'done', 
+            score: 80, avg: 62, deviation: 58,
+            note: ''
+          },
+          { 
+            id: 'r5', name: '前期17～20週', date: '9月11日', 
+            status: 'done', 
+            score: 85, avg: 66, deviation: 60,
+            note: ''
+          },
+          { 
+            id: 'r6', name: '前期21～後期2', date: '10月16日', 
+            status: 'pending', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          },
+          { 
+            id: 'r7', name: '後期3～6週', date: '11月13日', 
+            status: 'pending', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          },
+          { 
+            id: 'r8', name: '後期7～10週', date: '12月18日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          },
+          { 
+            id: 'r9', name: '後期11～14週', date: '1月22日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          },
+          { 
+            id: 'r10', name: '後期15～18週', date: '2月26日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          }
+        ],
+        test: [
+          { 
+            id: 't1', name: '復習テスト①', date: '5月22日', 
+            status: 'done', 
+            score: 78, avg: 65, deviation: 55,
+            note: ''
+          },
+          { 
+            id: 't2', name: '復習テスト②', date: '6月26日', 
+            status: 'done', 
+            score: 85, avg: 68, deviation: 59,
+            note: ''
+          },
+          { 
+            id: 't3', name: '復習テスト③', date: '7月24日', 
+            status: 'done', 
+            score: 70, avg: 60, deviation: 53,
+            note: ''
+          },
+          { 
+            id: 't4', name: '復習テスト④', date: '9月18日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          }
+        ],
+        calc: [
+          { 
+            id: 'c1', name: '計算テスト 第1回', date: '4月10日', 
+            status: 'done', 
+            score: 90, avg: 75, deviation: 58,
+            note: ''
+          },
+          { 
+            id: 'c2', name: '計算テスト 第2回', date: '5月15日', 
+            status: 'done', 
+            score: 82, avg: 70, deviation: 56,
+            note: ''
+          },
+          { 
+            id: 'c3', name: '計算テスト 第3回', date: '6月19日', 
+            status: 'done', 
+            score: 95, avg: 72, deviation: 64,
+            note: ''
+          },
+          { 
+            id: 'c4', name: '計算テスト 第4回', date: '7月17日', 
+            status: 'upcoming', 
+            score: null, avg: null, deviation: null,
+            note: ''
+          }
+        ]
+      }
+    }
+  },
+
+  // ==================== 中2 数学 ====================
+  '2': {
+    math: {
+      name: '中2 数学',
+      curriculum: [
+        { week: '前期第01週', date: '4月2日', content: '幾何(1)', test: null },
+        { week: '前期第02週', date: '4月9日', content: '幾何(2)', test: null },
+        { week: '前期第03週', date: '4月16日', content: '幾何(3)', test: null },
+        { week: '前期第04週', date: '4月23日', content: '幾何(4)', test: null },
+        { week: '前期第05週', date: '5月7日', content: '幾何(5)', test: null },
+        { week: '前期第06週', date: '5月14日', content: '個数の処理・確率(1)', test: null },
+        { week: '前期第07週', date: '5月21日', content: '個数の処理・確率(2)', test: '幾何' },
+        { week: '前期第08週', date: '5月28日', content: '個数の処理・確率(3)', test: null },
+        { week: '前期第09週', date: '6月4日', content: '個数の処理・確率(4)', test: null },
+        { week: '前期第10週', date: '6月11日', content: '個数の処理・確率(5)', test: null },
+        { week: '前期第11週', date: '6月18日', content: '数と式(1)', test: null },
+        { week: '前期第12週', date: '6月25日', content: '数と式(2)', test: '個数の処理・確率' },
+        { week: '前期第13週W1', date: '7月2日', content: '数と式(3)', test: null },
+        { week: '前期第13週W2', date: '7月9日', content: '数と式(3)', test: null },
+        { week: '前期第14週', date: '7月16日', content: '数と式(4)', test: null },
+        { week: '前期第15週', date: '7月23日', content: '数と式(5)', test: null },
+        { week: '前期第16週', date: '7月30日', content: '数と式(6)', test: null },
+        { week: '前期第17週', date: '8月6日', content: '2次方程式(1)', test: null },
+        { week: '前期第18週', date: '8月27日', content: '2次方程式(2)', test: '数と式' },
+        { week: '前期第19週', date: '9月3日', content: '2次方程式(3)', test: null },
+        { week: '前期第20週', date: '9月10日', content: '2次方程式(4)', test: null },
+        { week: '前期第21週', date: '9月17日', content: '2次方程式(5)', test: null },
+        { week: '前期第22週', date: '9月24日', content: '2次方程式(6)', test: null }
+      ],
+      tests: {
+        review: [
+          { 
+            id: 'r1', name: '幾何', date: '5月21日', 
+            status: 'done', 
+            score: 80, avg: 65, deviation: 58,
+            note: ''
+          },
+          { 
+            id: 'r2', name: '個数の処理・確率', date: '6月25日', 
+            status: 'done', 
+            score: 72, avg: 60, deviation: 54,
+            note: ''
+          },
+          { 
+            id: 'r3', name: '数と式', date: '8月27日', 
+            status: 'done', 
+            score: 88, avg: 62, deviation: 63,
+            note: ''
+          }
+        ],
+        test: [],
+        calc: []
+      }
+    },
+    english: {
+      name: '中2 英語',
+      curriculum: [
+        { week: '前期第01週', date: '4月1日', content: '文の種類', test: null },
+        { week: '前期第02週', date: '4月8日', content: '時制Ⅰ', test: null },
+        { week: '前期第03週', date: '4月15日', content: '時制Ⅱ', test: null },
+        { week: '前期第04週', date: '4月22日', content: '時制Ⅲ', test: null },
+        { week: '前期第05週', date: '5月6日', content: '前期1～4週のまとめ', test: null },
+        { week: '前期第06週', date: '5月13日', content: '助動詞Ⅰ', test: '前期1～4' },
+        { week: '前期第07週', date: '5月20日', content: '助動詞Ⅱ', test: null },
+        { week: '前期第08週', date: '5月27日', content: '仮定法', test: null },
+        { week: '前期第09週', date: '6月3日', content: '受動態Ⅰ', test: null },
+        { week: '前期第10週', date: '6月10日', content: '受動態Ⅱ', test: null },
+        { week: '前期第11週', date: '6月17日', content: '前期6～10週のまとめ', test: null },
+        { week: '前期第12週', date: '6月24日', content: '不定詞Ⅰ', test: '前期6～10' },
+        { week: '前期第13週W1', date: '7月1日', content: '不定詞Ⅱ', test: null },
+        { week: '前期第13週W2', date: '7月8日', content: '不定詞Ⅲ', test: null },
+        { week: '前期第14週', date: '7月15日', content: '不定詞Ⅲ', test: null },
+        { week: '前期第15週', date: '7月22日', content: '動名詞Ⅰ', test: null },
+        { week: '前期第16週', date: '7月29日', content: '動名詞Ⅱ', test: null },
+        { week: '前期第17週', date: '8月5日', content: '前期12～16週のまとめ', test: null },
+        { week: '前期第18週', date: '8月26日', content: '分詞', test: '前期12～16' },
+        { week: '前期第19週', date: '9月2日', content: '文型Ⅰ', test: null },
+        { week: '前期第20週', date: '9月9日', content: '文型Ⅱ', test: null },
+        { week: '前期第21週', date: '9月16日', content: '名詞・冠詞Ⅰ', test: null },
+        { week: '前期第22週', date: '9月23日', content: '名詞・冠詞Ⅱ', test: null }
+      ],
+      tests: {
+        review: [
+          { 
+            id: 'r1', name: '前期1～4週', date: '5月13日', 
+            status: 'done', 
+            score: 85, avg: 68, deviation: 59,
+            note: ''
+          },
+          { 
+            id: 'r2', name: '前期6～10週', date: '6月24日', 
+            status: 'done', 
+            score: 78, avg: 62, deviation: 56,
+            note: ''
+          },
+          { 
+            id: 'r3', name: '前期12～16週', date: '8月26日', 
+            status: 'done', 
+            score: 90, avg: 65, deviation: 64,
+            note: ''
+          }
+        ],
+        test: [],
+        calc: []
+      }
+    }
+  },
+
+  // ==================== 中3（準備中） ====================
+  '3': {
+    math: { name: '中3 数学', curriculum: [], tests: { review: [], test: [], calc: [] } },
+    english: { name: '中3 英語', curriculum: [], tests: { review: [], test: [], calc: [] } }
+  },
+
+  // ==================== 高1（準備中） ====================
+  '4': {
+    math: { name: '高1 数学', curriculum: [], tests: { review: [], test: [], calc: [] } },
+    english: { name: '高1 英語', curriculum: [], tests: { review: [], test: [], calc: [] } }
+  },
+
+  // ==================== 高2（準備中） ====================
+  '5': {
+    math: { name: '高2 数学', curriculum: [], tests: { review: [], test: [], calc: [] } },
+    english: { name: '高2 英語', curriculum: [], tests: { review: [], test: [], calc: [] } }
+  },
+
+  // ==================== 高3（準備中） ====================
+  '6': {
+    math: { name: '高3 数学', curriculum: [], tests: { review: [], test: [], calc: [] } },
+    english: { name: '高3 英語', curriculum: [], tests: { review: [], test: [], calc: [] } }
+  }
+};
+
+// データをグローバルに公開
+window.TETSU_DATA = TETSU_DATA;
