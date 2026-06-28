@@ -610,11 +610,19 @@ function renderContent() {
   // 各学科のデータを表示
   let totalRanges = 0;
   let totalLinks = 0;
+  let hasData = false;
 
   ALL_SUBJECTS.forEach(subject => {
     const data = getSubjectData(subject);
     const ranges = data.ranges || [];
     const links = data.links || [];
+
+    // ★ データがない学科はスキップ ★
+    if (ranges.length === 0 && links.length === 0) {
+      return;
+    }
+
+    hasData = true;
     totalRanges += ranges.length;
     totalLinks += links.length;
 
@@ -624,9 +632,6 @@ function renderContent() {
           <span>${subject}</span>
           <span class="count">試験範囲 ${ranges.length} 件 ｜ リンク ${links.length} 件</span>
         </div>
-        ${ranges.length === 0 && links.length === 0 ? `
-          <div class="empty-subject">📭 データがありません</div>
-        ` : ''}
         ${ranges.length > 0 ? `
           <ul class="range-list" style="margin-top:4px;">
             ${ranges.map((r, i) => `
@@ -655,6 +660,17 @@ function renderContent() {
       </div>
     `;
   });
+
+  // ★ データが1件もない場合のメッセージ ★
+  if (!hasData) {
+    html += `
+      <div class="empty-state" style="padding:60px 20px;">
+        <i class="fas fa-inbox"></i>
+        <p>データがありません</p>
+        <p style="font-size:0.85rem; color:#b7a086;">下の追加エリアから試験範囲やリンクを追加してください</p>
+      </div>
+    `;
+  }
 
   // 追加エリア（学科選択付き）
   html += `
@@ -687,12 +703,14 @@ function renderContent() {
     </div>
   `;
 
-  // 総件数表示
-  html += `
-    <div style="margin-top:16px; font-size:0.85rem; color:#6b5d4e; text-align:right; border-top:1px solid #ede6dd; padding-top:12px;">
-      総計: 試験範囲 <strong>${totalRanges}</strong> 件 ｜ リンク <strong>${totalLinks}</strong> 件
-    </div>
-  `;
+  // 総件数表示（データがある場合のみ）
+  if (hasData) {
+    html += `
+      <div style="margin-top:16px; font-size:0.85rem; color:#6b5d4e; text-align:right; border-top:1px solid #ede6dd; padding-top:12px;">
+        総計: 試験範囲 <strong>${totalRanges}</strong> 件 ｜ リンク <strong>${totalLinks}</strong> 件
+      </div>
+    `;
+  }
 
   area.innerHTML = html;
 
