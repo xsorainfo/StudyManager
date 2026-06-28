@@ -1,12 +1,14 @@
 # StudyManage
 
-project/
+your-repo/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # GitHub Actions 工作流
 ├── data/
-│   └── data.json          # 自动生成，保存所有数据
+│   └── data.json               # 数据文件
 ├── pages/
-│   └── index.html         # 主页面 (HTML)
+│   └── index.html              # 主页面
 ├── scripts/
-│   └── app.js             # 所有JavaScript逻辑
-├── server.js              # 后端服务器
-├── package.json           # 依赖配置
-└── package-lock.json      # (自动生成)
+│   ├── config.js               # 由 Actions 自动生成（不要手动编辑）
+│   └── app.js                  # 主要逻辑
+└── README.md
