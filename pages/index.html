@@ -747,13 +747,17 @@ function showToast(msg) {
 // ==================== ナビゲーション ====================
 document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', function(e) {
-        e.preventDefault();
+        // 只有 data-tab 存在时才阻止跳转（功能按钮）
+        const tab = this.dataset.tab;
+        if (tab) {
+            e.preventDefault();
+            if (tab === 'scores') openModal('score');
+            else if (tab === 'exams') openModal('exam');
+            else if (tab === 'tetsu') openModal('tetsu');
+        }
+        // 没有 data-tab 的链接正常跳转
         document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
         this.classList.add('active');
-        const tab = this.dataset.tab;
-        if (tab === 'scores') openModal('score');
-        else if (tab === 'exams') openModal('exam');
-        else if (tab === 'tetsu') openModal('tetsu');
     });
 });
 
