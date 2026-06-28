@@ -76,6 +76,7 @@
       align-items: center;
       gap: 14px;
       font-size: 0.9rem;
+      flex-wrap: wrap;
     }
     .nav-right .user-badge {
       background: #3f352b;
@@ -84,6 +85,28 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+    .nav-right .data-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .nav-right .data-actions button {
+      background: #3f352b;
+      border: none;
+      color: #e8dfd5;
+      padding: 6px 14px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .nav-right .data-actions button:hover {
+      background: #5f4b38;
+      color: #fff;
     }
 
     /* 布局 */
@@ -147,6 +170,8 @@
     .btn-danger:hover { background: #6d3838; }
     .btn-outline { background: transparent; color: #2c241c; border: 2px solid #d8cdbf; }
     .btn-outline:hover { background: #f0ebe4; }
+    .btn-success { background: #3d6b4a; }
+    .btn-success:hover { background: #2d5238; }
 
     /* 学年大纲 */
     .year-grid {
@@ -256,6 +281,9 @@
     .score-table .delete-btn { color: #8f4a4a; cursor: pointer; padding: 2px 8px; border-radius: 20px; }
     .score-table .delete-btn:hover { background: #f5e0e0; }
 
+    /* 隐藏的文件输入 */
+    #fileInput { display: none; }
+
     @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } .year-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 600px) { .app-wrapper { padding: 16px; } .navbar { flex-direction: column; gap: 12px; } .nav-links { justify-content: center; } .nav-right { justify-content: center; } }
     .flex { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -280,7 +308,12 @@
     </div>
     <div class="nav-right">
       <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
-      <i class="fas fa-bell" style="opacity:0.6; cursor:pointer;"></i>
+      <div class="data-actions">
+        <button onclick="exportData()" title="データをエクスポート（JSONファイル）"><i class="fas fa-download"></i>  export</button>
+        <button onclick="document.getElementById('fileInput').click()" title="データをインポート（JSONファイル）"><i class="fas fa-upload"></i>  import</button>
+        <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
+        <button onclick="syncData()" title="クラウド同期（デモ）"><i class="fas fa-cloud-upload-alt"></i>  同期</button>
+      </div>
     </div>
   </nav>
 
@@ -297,7 +330,8 @@
           </div>
           <div class="year-grid" id="yearGrid"></div>
           <div class="flex" style="justify-content: flex-end; margin-top: 10px;">
-            <span class="text-muted"><i class="far fa-clock"></i> 進捗更新: <span id="lastUpdate">2026-06-28</span></span>
+            <span class="text-muted"><i class="far fa-clock"></i> 更新: <span id="lastUpdate">2026-06-28</span></span>
+            <span class="text-muted" style="margin-left:12px;"><i class="fas fa-database"></i> <span id="dataSize">0KB</span></span>
           </div>
         </div>
 
@@ -347,6 +381,20 @@
             <i class="fas fa-pencil-alt" style="font-size:1.6rem; color:#6f5d4b;"></i>
             <div><strong>直近試験範囲</strong><br>
               <span style="font-size:0.8rem; color:#4d3f31;" id="recentExams">読み込み中...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 数据迁移提示 -->
+        <div class="card" style="background: #e8e0d6; border: 2px dashed #8f735b;">
+          <div style="display: flex; gap: 12px; align-items: center; font-size:0.9rem;">
+            <i class="fas fa-exchange-alt" style="color:#5f4b38; font-size:1.4rem;"></i>
+            <div>
+              <strong>データ移行</strong><br>
+              <span style="font-size:0.8rem; color:#4d3f31;">
+                export → 他デバイスで import で移行可能<br>
+                <span class="text-muted">※ クラウド同期はデモ機能です</span>
+              </span>
             </div>
           </div>
         </div>
@@ -439,6 +487,7 @@ function loadData() {
       DB.set(key, data[key]);
     }
   }
+  updateDataSize();
 }
 
 function saveData() {
@@ -446,10 +495,73 @@ function saveData() {
     DB.set(key, data[key]);
   }
   document.getElementById('lastUpdate').textContent = new Date().toISOString().slice(0,10);
+  updateDataSize();
   showToast('データを保存しました');
 }
 
+function updateDataSize() {
+  const allData = JSON.stringify(data);
+  const size = (new Blob([allData]).size / 1024).toFixed(1);
+  document.getElementById('dataSize').textContent = size + 'KB';
+}
+
 function generateId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+// ===================== 数据导入/导出 =====================
+function exportData() {
+  const allData = JSON.stringify(data, null, 2);
+  const blob = new Blob([allData], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `study_data_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('データをエクスポートしました');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      // 验证数据结构
+      const keys = ['years','scores','reviews','tetsu','schedules','exams'];
+      for (let key of keys) {
+        if (!Array.isArray(imported[key])) {
+          showToast('データ形式が正しくありません');
+          return;
+        }
+      }
+      if (confirm('現在のデータをインポートデータで上書きしますか？')) {
+        data = imported;
+        saveData();
+        renderAll();
+        showToast('データをインポートしました');
+      }
+    } catch(err) {
+      showToast('ファイルの読み込みに失敗しました');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // リセット
+}
+
+// ===================== クラウド同期（デモ） =====================
+let syncCount = 0;
+function syncData() {
+  syncCount++;
+  showToast(`🔄 クラウド同期中... (${syncCount}回目)`);
+  // 実際のクラウド同期はここに実装（API呼び出しなど）
+  // デモ: 5秒後に成功メッセージ
+  setTimeout(() => {
+    showToast(`✅ クラウド同期完了 (${syncCount}回目) · データは最新です`);
+  }, 1500);
+}
 
 // ===================== 渲染函数 =====================
 function renderAll() {
@@ -745,9 +857,11 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     e.preventDefault();
     document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
     this.classList.add('active');
-    // 简单切换视图 - 所有数据都在dashboard显示
-    // 这里可以扩展为不同页面，目前全部显示
-    showToast(this.textContent.trim() + ' を表示');
+    const tab = this.dataset.tab;
+    if (tab === 'scores') openModal('score');
+    else if (tab === 'exams') openModal('exam');
+    else if (tab === 'tetsu') openModal('tetsu');
+    else showToast(this.textContent.trim() + ' を表示');
   });
 });
 
@@ -759,26 +873,7 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 // ===================== 初始化 =====================
 loadData();
 renderAll();
-showToast('学び航路 起動しました');
-
-// 扩展：在导航中点击"試験範囲"可以添加考试
-document.querySelector('.nav-links a[data-tab="exams"]')?.addEventListener('click', function(e) {
-  e.preventDefault();
-  openModal('exam');
-});
-
-// 扩展：点击"成績"可以快速添加成绩
-document.querySelector('.nav-links a[data-tab="scores"]')?.addEventListener('click', function(e) {
-  e.preventDefault();
-  openModal('score');
-});
-
-// 扩展：点击"鉄律会"可以快速添加铁律会项目
-document.querySelector('.nav-links a[data-tab="tetsu"]')?.addEventListener('click', function(e) {
-  e.preventDefault();
-  openModal('tetsu');
-});
-
+showToast('学び航路 起動しました · データはローカル保存 + インポート/エクスポート可能');
 console.log('学び航路 全機能有効');
 </script>
 </body>
