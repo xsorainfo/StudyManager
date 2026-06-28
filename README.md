@@ -12,3 +12,14 @@ your-repo/
 │   ├── config.js               # 由 Actions 自动生成（不要手动编辑）
 │   └── app.js                  # 主要逻辑
 └── README.md
+┌──────────────────────────────────────┐
+│  Pages                                │
+│                                       │
+│  Source                               │
+│  [Deploy from a branch ▼]            │
+│                                       │
+│  Branch                               │
+│  [gh-pages ▼]  [/(root) ▼]          │
+│                                       │
+│  [Save]                               │
+└──────────────────────────────────────┘
