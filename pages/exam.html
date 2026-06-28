@@ -592,32 +592,15 @@ function setSubjectData(subject, data) {
 }
 
 // ============================================================
-// レンダリング（全学科一覧）
+// 🗓️ 時間割表（ここを編集すればOK）
 // ============================================================
-
-function renderContent() {
-  const area = document.getElementById('contentArea');
-
-  const gradeNames = { '1':'中1', '2':'中2', '3':'中3', '4':'高1', '5':'高2', '6':'高3' };
-  const typeNames = { 'middle':'中間テスト', 'regular':'定期テスト', 'final':'期末テスト' };
-  const semesterNames = { '1':'一学期', '2':'二学期', '3':'三学期' };
-
-  // ★ 現在の設定表示 + 時間割表 ★
-  let html = `
-    <div style="font-size:0.85rem; color:#6b5d4e; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap;">
-      <span><strong>${gradeNames[currentGrade]}</strong></span>
-      <span>›</span>
-      <span><strong>${semesterNames[currentSemester]}</strong></span>
-      <span>›</span>
-      <span><strong>${typeNames[currentType]}</strong></span>
-      <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
-    </div>
-
+function renderSchedule() {
+  return `
     <!-- ===== 時間割表 ===== -->
     <div class="card" style="background: #f8f4ef; border-left: 6px solid #8f735b;">
       <div class="card-header">
         <h2><i class="fas fa-clock"></i> 定期試験時間割</h2>
-        <span class="badge">${gradeNames[currentGrade]} · ${semesterNames[currentSemester]}</span>
+        <span class="badge">中2 · 一学期</span>
       </div>
       <div style="overflow-x:auto;">
         <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:500px;">
@@ -673,6 +656,33 @@ function renderContent() {
         <span>📙 幾何問題集ノート</span>
       </div>
     </div>
+  `;
+}
+
+// ============================================================
+// レンダリング（全学科一覧）
+// ============================================================
+
+function renderContent() {
+  const area = document.getElementById('contentArea');
+
+  const gradeNames = { '1':'中1', '2':'中2', '3':'中3', '4':'高1', '5':'高2', '6':'高3' };
+  const typeNames = { 'middle':'中間テスト', 'regular':'定期テスト', 'final':'期末テスト' };
+  const semesterNames = { '1':'一学期', '2':'二学期', '3':'三学期' };
+
+  // ★ 現在の設定表示 + 時間割表 ★
+  let html = `
+    <div style="font-size:0.85rem; color:#6b5d4e; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap;">
+      <span><strong>${gradeNames[currentGrade]}</strong></span>
+      <span>›</span>
+      <span><strong>${semesterNames[currentSemester]}</strong></span>
+      <span>›</span>
+      <span><strong>${typeNames[currentType]}</strong></span>
+      <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
+    </div>
+
+    <!-- ===== 時間割表 ===== -->
+    ${renderSchedule()}
   `;
 
   // 各学科のデータを表示
