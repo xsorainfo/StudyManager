@@ -41,54 +41,6 @@
     .page-title i { color: #8f735b; }
     .page-title .sub { font-size: 0.9rem; font-weight: 400; color: #6b5d4e; margin-left: 12px; }
 
-    /* ===== 默认值设置栏 ===== */
-    .default-bar {
-      background: #e8e0d6;
-      border-radius: 20px;
-      padding: 14px 20px;
-      margin-bottom: 24px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px;
-    }
-    .default-bar .label {
-      font-weight: 600;
-      color: #3d3229;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .default-bar select {
-      padding: 6px 14px;
-      border: 2px solid #d8cdbf;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      outline: none;
-      background: white;
-      cursor: pointer;
-      min-width: 100px;
-    }
-    .default-bar select:focus { border-color: #8f735b; }
-    .default-bar .btn-set-default {
-      background: #2c241c;
-      border: none;
-      color: white;
-      padding: 6px 20px;
-      border-radius: 40px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 600;
-      transition: 0.15s;
-    }
-    .default-bar .btn-set-default:hover { background: #4d3b2c; }
-    .default-bar .default-hint {
-      font-size: 0.75rem;
-      color: #6b5d4e;
-      margin-left: auto;
-    }
-
     .grade-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; }
     .grade-tabs .tab { padding: 8px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
     .grade-tabs .tab:hover { background: #e3d9ce; }
@@ -215,7 +167,6 @@
       .semester-tabs .tab { padding: 4px 12px; font-size: 0.8rem; }
       .exam-type-tabs .tab { padding: 4px 12px; font-size: 0.75rem; }
       .add-area textarea { min-width: 100px; min-height: 60px; }
-      .default-bar select { min-width: 80px; font-size: 0.75rem; }
     }
   </style>
 </head>
@@ -263,52 +214,10 @@
     <span class="sub">試験範囲・練習リンク管理</span>
   </div>
 
-  <!-- ===== 默认值设置栏 ===== -->
-  <div class="default-bar">
-    <span class="label"><i class="fas fa-sliders-h"></i> デフォルト:</span>
-    <select id="defaultGrade">
-      <option value="1">中1</option>
-      <option value="2" selected>中2</option>
-      <option value="3">中3</option>
-      <option value="4">高1</option>
-      <option value="5">高2</option>
-      <option value="6">高3</option>
-    </select>
-    <select id="defaultSubject">
-      <option value="国語">国語</option>
-      <option value="文法">文法</option>
-      <option value="代数">代数</option>
-      <option value="幾何">幾何</option>
-      <option value="地理">地理</option>
-      <option value="歴史" selected>歴史</option>
-      <option value="公民">公民</option>
-      <option value="理科1">理科1</option>
-      <option value="理科2">理科2</option>
-      <option value="音楽">音楽</option>
-      <option value="美術">美術</option>
-      <option value="保健体育">保健体育</option>
-      <option value="技術・家庭">技術・家庭</option>
-      <option value="英語">英語</option>
-      <option value="礼法">礼法</option>
-    </select>
-    <select id="defaultSemester">
-      <option value="1" selected>一学期</option>
-      <option value="2">二学期</option>
-      <option value="3">三学期</option>
-    </select>
-    <select id="defaultType">
-      <option value="middle">中間テスト</option>
-      <option value="regular" selected>定期テスト</option>
-      <option value="final">期末テスト</option>
-    </select>
-    <button class="btn-set-default" onclick="applyDefaults()"><i class="fas fa-check"></i> 適用</button>
-    <span class="default-hint"><i class="fas fa-info-circle"></i> 設定を保存して切り替え</span>
-  </div>
-
   <!-- ===== 学年タブ ===== -->
   <div class="grade-tabs" id="gradeTabs">
-    <button class="tab active" data-grade="1">中1</button>
-    <button class="tab" data-grade="2">中2</button>
+    <button class="tab" data-grade="1">中1</button>
+    <button class="tab active" data-grade="2">中2</button>
     <button class="tab" data-grade="3">中3</button>
     <button class="tab" data-grade="4">高1</button>
     <button class="tab" data-grade="5">高2</button>
@@ -317,12 +226,12 @@
 
   <!-- ===== 科目グリッド ===== -->
   <div class="subject-grid" id="subjectGrid">
-    <div class="subj active" data-subject="国語">国語</div>
+    <div class="subj" data-subject="国語">国語</div>
     <div class="subj" data-subject="文法">文法</div>
     <div class="subj" data-subject="代数">代数</div>
     <div class="subj" data-subject="幾何">幾何</div>
     <div class="subj" data-subject="地理">地理</div>
-    <div class="subj" data-subject="歴史">歴史</div>
+    <div class="subj active" data-subject="歴史">歴史</div>
     <div class="subj" data-subject="公民">公民</div>
     <div class="subj" data-subject="理科1">理科1</div>
     <div class="subj" data-subject="理科2">理科2</div>
@@ -343,8 +252,8 @@
 
   <!-- ===== 考试类型タブ ===== -->
   <div class="exam-type-tabs" id="examTypeTabs">
-    <button class="tab active" data-type="middle">中間テスト</button>
-    <button class="tab" data-type="regular">定期テスト</button>
+    <button class="tab" data-type="middle">中間テスト</button>
+    <button class="tab active" data-type="regular">定期テスト</button>
     <button class="tab" data-type="final">期末テスト</button>
   </div>
 
@@ -355,6 +264,15 @@
 </div>
 
 <script>
+// ============================================================
+// 🔧 デフォルト設定（ここを編集してください）
+// ============================================================
+const DEFAULT_GRADE = '2';        // '1'=中1, '2'=中2, '3'=中3, '4'=高1, '5'=高2, '6'=高3
+const DEFAULT_SUBJECT = '国語';    // 科目名（国語/文法/代数/幾何/地理/歴史/公民/理科1/理科2/音楽/美術/保健体育/技術・家庭/英語/礼法）
+const DEFAULT_SEMESTER = '1';     // '1'=一学期, '2'=二学期, '3'=三学期
+const DEFAULT_EXAM_TYPE = 'regular'; // 'middle'=中間テスト, 'regular'=定期テスト, 'final'=期末テスト
+// ============================================================
+
 // ============================================================
 // 設定
 // ============================================================
@@ -391,66 +309,11 @@ const DEFAULT_EXAM_DATA = {
 // 状態管理
 // ============================================================
 
-let currentGrade = '2';
-let currentSubject = '歴史';
-let currentSemester = '1';
-let currentType = 'regular';
+let currentGrade = DEFAULT_GRADE;
+let currentSubject = DEFAULT_SUBJECT;
+let currentSemester = DEFAULT_SEMESTER;
+let currentType = DEFAULT_EXAM_TYPE;
 let examData = {};
-
-// ===== デフォルト値の読み込み/保存 =====
-function loadDefaults() {
-  const saved = localStorage.getItem('exam_defaults');
-  if (saved) {
-    try {
-      const def = JSON.parse(saved);
-      document.getElementById('defaultGrade').value = def.grade || '2';
-      document.getElementById('defaultSubject').value = def.subject || '歴史';
-      document.getElementById('defaultSemester').value = def.semester || '1';
-      document.getElementById('defaultType').value = def.type || 'regular';
-    } catch(e) {}
-  }
-}
-
-function saveDefaults() {
-  const def = {
-    grade: document.getElementById('defaultGrade').value,
-    subject: document.getElementById('defaultSubject').value,
-    semester: document.getElementById('defaultSemester').value,
-    type: document.getElementById('defaultType').value
-  };
-  localStorage.setItem('exam_defaults', JSON.stringify(def));
-}
-
-function applyDefaults() {
-  const grade = document.getElementById('defaultGrade').value;
-  const subject = document.getElementById('defaultSubject').value;
-  const semester = document.getElementById('defaultSemester').value;
-  const type = document.getElementById('defaultType').value;
-
-  document.querySelectorAll('#gradeTabs .tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.grade === grade);
-  });
-  currentGrade = grade;
-
-  document.querySelectorAll('.subj').forEach(el => {
-    el.classList.toggle('active', el.dataset.subject === subject);
-  });
-  currentSubject = subject;
-
-  document.querySelectorAll('#semesterTabs .tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.semester === semester);
-  });
-  currentSemester = semester;
-
-  document.querySelectorAll('#examTypeTabs .tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.type === type);
-  });
-  currentType = type;
-
-  saveDefaults();
-  renderContent();
-  showToast('✅ デフォルト設定を適用しました');
-}
 
 function loadExamData() {
   const saved = localStorage.getItem('exam_data');
@@ -537,7 +400,6 @@ async function saveToGitHub() {
     return;
   }
 
-  // まずローカルに保存
   saveExamData();
 
   const dot = document.getElementById('statusDot');
@@ -551,7 +413,6 @@ async function saveToGitHub() {
     const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
     const headers = getHeaders();
 
-    // ファイルの存在確認とSHA取得
     let sha = null;
     const checkRes = await fetch(url, { headers });
     if (checkRes.ok) {
@@ -616,7 +477,6 @@ async function loadFromGitHub() {
     const content = decodeURIComponent(escape(atob(fileData.content)));
     const loadedData = JSON.parse(content);
 
-    // データ構造の検証
     const keys = ['1','2','3','4','5','6'];
     for (let key of keys) {
       if (!loadedData[key]) loadedData[key] = {};
@@ -868,12 +728,35 @@ function deleteLink(index) {
 }
 
 // ============================================================
+// 初期表示時にデフォルトを適用
+// ============================================================
+
+function applyDefaultTabs() {
+  // 学年
+  document.querySelectorAll('#gradeTabs .tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.grade === DEFAULT_GRADE);
+  });
+  // 科目
+  document.querySelectorAll('.subj').forEach(el => {
+    el.classList.toggle('active', el.dataset.subject === DEFAULT_SUBJECT);
+  });
+  // 学期
+  document.querySelectorAll('#semesterTabs .tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.semester === DEFAULT_SEMESTER);
+  });
+  // テスト種別
+  document.querySelectorAll('#examTypeTabs .tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.type === DEFAULT_EXAM_TYPE);
+  });
+}
+
+// ============================================================
 // イベントハンドラ
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
   loadExamData();
-  loadDefaults();
+  applyDefaultTabs();
 
   // 学年タブ
   document.querySelectorAll('#gradeTabs .tab').forEach(tab => {
@@ -947,7 +830,6 @@ window.loadFromGitHub = loadFromGitHub;
 window.exportData = exportData;
 window.importData = importData;
 window.setTokenFromInput = setTokenFromInput;
-window.applyDefaults = applyDefaults;
 </script>
 </body>
 </html>
