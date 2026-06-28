@@ -89,6 +89,7 @@
       display: flex;
       gap: 6px;
       align-items: center;
+      flex-wrap: wrap;
     }
     .nav-right .data-actions button {
       background: #3f352b;
@@ -107,6 +108,10 @@
       background: #5f4b38;
       color: #fff;
     }
+    .nav-right .data-actions button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
     .status-dot {
       display: inline-block;
       width: 10px;
@@ -121,6 +126,38 @@
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
+    }
+
+    /* Token 设置区域 */
+    .token-setup {
+      background: #f0ebe4;
+      border-radius: 20px;
+      padding: 14px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+    .token-setup label {
+      font-weight: 600;
+      color: #3d3229;
+      font-size: 0.9rem;
+    }
+    .token-setup input {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px 16px;
+      border: 2px solid #d8cdbf;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      outline: none;
+      background: white;
+    }
+    .token-setup input:focus { border-color: #8f735b; }
+    .token-setup .token-status {
+      font-size: 0.8rem;
+      color: #6b5d4e;
     }
 
     .dashboard-grid {
@@ -294,18 +331,26 @@
     <div class="nav-right">
       <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
       <div class="data-actions">
-        <span id="serverStatus" title="サーバー接続状態">
+        <span id="serverStatus" title="GitHub接続状態">
           <span class="status-dot offline" id="statusDot"></span>
-          <span id="statusText">オフライン</span>
+          <span id="statusText">未設定</span>
         </span>
-        <button onclick="saveToServer()" title="サーバーに保存"><i class="fas fa-server"></i> 保存</button>
-        <button onclick="loadFromServer()" title="サーバーから読み込み"><i class="fas fa-download"></i> 読込</button>
+        <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
+        <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
         <button onclick="exportData()" title="JSONファイルにエクスポート"><i class="fas fa-file-export"></i></button>
         <button onclick="document.getElementById('fileInput').click()" title="JSONファイルからインポート"><i class="fas fa-file-import"></i></button>
         <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
       </div>
     </div>
   </nav>
+
+  <!-- ===== Token 设置 ===== -->
+  <div class="token-setup">
+    <label><i class="fab fa-github"></i> GitHub Token:</label>
+    <input type="password" id="githubToken" placeholder="ghp_xxxx を入力" onchange="saveToken()">
+    <span class="token-status" id="tokenStatus">🔑 未設定</span>
+    <button class="btn btn-sm btn-outline" onclick="setupGitHub()"><i class="fas fa-check"></i> 設定</button>
+  </div>
 
   <!-- ===== 仪表板 ===== -->
   <div id="dashboardView">
@@ -372,12 +417,12 @@
 
         <div class="card" style="background: #e8e0d6; border: 2px dashed #8f735b;">
           <div style="display: flex; gap: 12px; align-items: center; font-size:0.9rem;">
-            <i class="fas fa-server" style="color:#5f4b38; font-size:1.4rem;"></i>
+            <i class="fab fa-github" style="color:#5f4b38; font-size:1.4rem;"></i>
             <div>
-              <strong>サーバー保存</strong><br>
+              <strong>GitHub 保存</strong><br>
               <span style="font-size:0.8rem; color:#4d3f31;">
-                「保存」で data/data.json に同期<br>
-                「読込」でサーバーから復元
+                Token 設定後、「保存」で data/data.json に同期<br>
+                「読込」で GitHub から復元
               </span>
             </div>
           </div>
@@ -401,7 +446,7 @@
   <div class="toast-msg" id="toast"></div>
 </div>
 
-<!-- ===== JavaScript (外部ファイル) ===== -->
+<!-- ===== JavaScript ===== -->
 <script src="../scripts/app.js"></script>
 </body>
 </html>
