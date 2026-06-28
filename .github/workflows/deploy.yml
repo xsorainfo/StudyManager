@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -24,7 +26,7 @@ jobs:
           ENCODED_TOKEN=$(echo -n '${{ secrets.STUDYAPP }}' | base64)
           
           # 生成 config.js 文件
-          cat > scripts/config.js << 'EOF'
+          cat > scripts/config.js << EOF
           // =====================================================
           // 自動生成ファイル - 手動編集しないでください
           // 生成時間: $(date -u '+%Y-%m-%d %H:%M:%S UTC') 
@@ -48,22 +50,20 @@ jobs:
       - name: Debug - Check config.js exists
         run: |
           ls -la scripts/
-          head -n 5 scripts/config.js
+          cat scripts/config.js | head -n 10
+
+      # 使用 GitHub 官方的 Pages 部署（不需要 Personal Token）
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.STUDYAPP }}
-          publish_dir: ./
-          publish_branch: gh-pages
-          keep_files: false
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: '🚀 Deploy with config ${{ github.sha }}'
-          # 禁用 Jekyll
-          enable_jekyll: false
-          # 强制推送
-          force_orphan: true
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Output deployment info
         run: |
