@@ -415,7 +415,54 @@ const TETSU_DATA = {
           }
         ],
         test: [],
-        calc: []
+        // ===== 更新：計算テスト（前期・後期 全22週） =====
+        calc: [
+          // ---- 前期 ----
+          { id: 'c1', name: '計算テスト 前期①', week: 1, date: '4月9日', range: '式の計算', status: 'done', score: 85, avg: 72, deviation: 56, note: '' },
+          { id: 'c2', name: '計算テスト 前期②', week: 2, date: '4月16日', range: '無理数', status: 'done', score: 78, avg: 68, deviation: 53, note: '' },
+          { id: 'c3', name: '計算テスト 前期③', week: 3, date: '4月23日', range: '式の計算', status: 'done', score: 90, avg: 70, deviation: 62, note: '' },
+          { id: 'c4', name: '計算テスト 前期④', week: 4, date: '4月30日', range: '無理数', status: 'done', score: 82, avg: 65, deviation: 58, note: '' },
+          { id: 'c5', name: '計算テスト 前期⑤', week: 5, date: '5月7日', range: '2次方程式', status: 'done', score: 75, avg: 62, deviation: 54, note: '' },
+          { id: 'c6', name: '計算テスト 前期⑥', week: 6, date: '5月14日', range: '総合', status: 'done', score: 88, avg: 66, deviation: 62, note: '' },
+          { id: 'c7', name: '計算テスト 前期⑦', week: 7, date: '5月21日', range: '式の計算', status: 'done', score: 92, avg: 68, deviation: 66, note: '良好' },
+          { id: 'c8', name: '計算テスト 前期⑧', week: 8, date: '5月28日', range: '2次方程式', status: 'done', score: 70, avg: 60, deviation: 52, note: '' },
+          { id: 'c9', name: '計算テスト 前期⑨', week: 9, date: '6月4日', range: '2次方程式', status: 'done', score: 76, avg: 63, deviation: 54, note: '' },
+          { id: 'c10', name: '計算テスト 前期⑩', week: 10, date: '6月11日', range: '連立方程式・不等式', status: 'done', score: 84, avg: 67, deviation: 58, note: '' },
+          { id: 'c11', name: '計算テスト 前期⑪', week: 11, date: '6月18日', range: '2次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c12', name: '計算テスト 前期⑫', week: 12, date: '6月25日', range: '連立方程式・不等式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c13', name: '計算テスト 前期⑬', week: 13, date: '7月2日', range: '2次関数', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c14', name: '計算テスト 前期⑭', week: 14, date: '7月9日', range: '2次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c15', name: '計算テスト 前期⑮', week: 15, date: '7月16日', range: '2次関数', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c16', name: '計算テスト 前期⑯', week: 16, date: '7月23日', range: '数と式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c17', name: '計算テスト 前期⑰', week: 17, date: '7月30日', range: '2次関数', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c18', name: '計算テスト 前期⑱', week: 18, date: '8月6日', range: '数と式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c19', name: '計算テスト 前期⑲', week: 19, date: '8月27日', range: '2次関数', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c20', name: '計算テスト 前期⑳', week: 20, date: '9月3日', range: '2次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c21', name: '計算テスト 前期㉑', week: 21, date: '9月10日', range: '数と式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c22', name: '計算テスト 前期㉒', week: 22, date: '9月17日', range: '2次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          // ---- 後期 ----
+          { id: 'c23', name: '計算テスト 後期①', week: 1, date: '10月1日', range: '数と式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c24', name: '計算テスト 後期②', week: 2, date: '10月8日', range: '2次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c25', name: '計算テスト 後期③', week: 3, date: '10月15日', range: '数と式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c26', name: '計算テスト 後期④', week: 4, date: '10月22日', range: '高次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c27', name: '計算テスト 後期⑤', week: 5, date: '10月29日', range: '数と式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c28', name: '計算テスト 後期⑥', week: 6, date: '11月5日', range: '2次方程式・高次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c29', name: '計算テスト 後期⑦', week: 7, date: '11月12日', range: '2次方程式・高次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c30', name: '計算テスト 後期⑧', week: 8, date: '11月19日', range: '個数の処理・確率', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c31', name: '計算テスト 後期⑨', week: 9, date: '11月26日', range: '関数', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c32', name: '計算テスト 後期⑩', week: 10, date: '12月3日', range: '2次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c33', name: '計算テスト 後期⑪', week: 11, date: '12月10日', range: '関数', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c34', name: '計算テスト 後期⑫', week: 12, date: '12月17日', range: '関数', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c35', name: '計算テスト 後期⑬', week: 13, date: '1月7日', range: '個数の処理・確率', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c36', name: '計算テスト 後期⑭', week: 14, date: '1月14日', range: '2次方程式・高次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c37', name: '計算テスト 後期⑮', week: 15, date: '1月21日', range: '2次方程式・高次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c38', name: '計算テスト 後期⑯', week: 16, date: '1月28日', range: '関数', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c39', name: '計算テスト 後期⑰', week: 17, date: '2月4日', range: '2次方程式・高次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c40', name: '計算テスト 後期⑱', week: 18, date: '2月11日', range: '2次方程式・高次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c41', name: '計算テスト 後期⑲', week: 19, date: '2月25日', range: '個数の処理・確率', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c42', name: '計算テスト 後期⑳', week: 20, date: '3月4日', range: '総合', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 'c43', name: '計算テスト 後期㉑', week: 21, date: '3月11日', range: '総合', status: 'pending', score: null, avg: null, deviation: null, note: '' }
+        ]
       }
     },
     english: {
