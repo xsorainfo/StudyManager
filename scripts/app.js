@@ -3,7 +3,7 @@
 const CONFIG = window.GITHUB_CONFIG || {
     owner: '',
     repo: '',
-    token: '',
+    tokenEncoded: '',
     path: 'data/data.json',
     branch: 'main'
 };
@@ -14,13 +14,27 @@ const GITHUB_PATH = CONFIG.path;
 const GITHUB_BRANCH = CONFIG.branch;
 
 // ===================== Token 管理 =====================
+function decodeToken() {
+    if (CONFIG.tokenEncoded && CONFIG.tokenEncoded !== '') {
+        try {
+            const decoded = atob(CONFIG.tokenEncoded);
+            return decoded;
+        } catch(e) {
+            console.error('Failed to decode token:', e);
+            return '';
+        }
+    }
+    return '';
+}
+
 function getToken() {
-    // 1. 从 config.js 获取（部署时由 Actions 注入）
-    if (CONFIG.token && CONFIG.token !== '') {
-        return CONFIG.token;
+    // 1. 从 encoded token 解码（部署时）
+    const decoded = decodeToken();
+    if (decoded && decoded.startsWith('ghp_')) {
+        return decoded;
     }
     
-    // 2. 用户手动输入的（本地开发或覆盖）
+    // 2. 用户手动输入的（本地开发）
     const manualToken = localStorage.getItem('github_token_manual');
     if (manualToken) return manualToken;
     
