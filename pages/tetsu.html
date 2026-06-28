@@ -356,6 +356,8 @@ function renderTests(area, data) {
   testData.forEach(item => {
     const status = statusMap[item.status] || statusMap.upcoming;
     const hasResult = item.status === 'done' && item.score !== null;
+    // ★★★ 出題範囲（range）を表示 ★★★
+    const rangeDisplay = item.range ? `<div style="font-size:0.8rem; color:#8f735b; margin-top:2px;">📖 ${item.range}</div>` : '';
 
     let scoreHtml = '';
     if (hasResult) {
@@ -377,6 +379,7 @@ function renderTests(area, data) {
         <div>
           <div class="name">${item.name}</div>
           <div class="date">${item.date || '日程未定'}</div>
+          ${rangeDisplay}  <!-- ★ 出題範囲を表示 ★ -->
           ${scoreHtml}
         </div>
         <span class="status ${status.class}">${status.label}</span>
