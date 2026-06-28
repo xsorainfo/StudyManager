@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暗記用・中2歴史（赤字入り）p.36-39</title>
+  <style><!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暗記用・中2歴史（赤字入り）p.36-39</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #f5f0e8;
+      font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', sans-serif;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      background: #fffcf7;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      border-radius: 24px;
+      padding: 30px 35px;
+      transition: 0.2s;
+    }
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border-bottom: 3px solid #b31b1b;
+      padding-bottom: 12px;
+      margin-bottom: 28px;
+      color: #2c2c2c;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    h1 small {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #6b4f3c;
+      margin-left: 8px;
+      background: #eee7de;
+      padding: 2px 16px;
+      border-radius: 40px;
+    }
+    .memo-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: #5a4a3a;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f3ede6;
+      padding: 6px 18px 6px 14px;
+      border-radius: 40px;
+    }
+    .legend-swatch {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: #b31b1b;
+      border-radius: 4px;
+    }
+    .toggle-all-btn {
+      background: #3a2c1e;
+      border: none;
+      color: white;
+      padding: 8px 22px;
+      border-radius: 60px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.15s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      letter-spacing: 0.5px;
+    }
+    .toggle-all-btn:hover {
+      background: #5d4a34;
+      transform: scale(0.97);
+    }
+    .toggle-all-btn:active {
+      background: #1e150e;
+    }
+
+    /* 主要内容区块 */
+    .content {
+      line-height: 1.7;
+      color: #1e1e1e;
+      font-size: 1rem;
+    }
+    /* 段落、卡片样式 */
+    .content p {
+      margin: 0.8rem 0;
+    }
+    .content .block {
+      background: #fcf9f4;
+      padding: 14px 20px;
+      border-radius: 20px;
+      margin: 18px 0;
+      border-left: 6px solid #b31b1b20;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .content .block-title {
+      font-weight: 600;
+      font-size: 1.08rem;
+      color: #3d2b1a;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .content .block-title span {
+      background: #d8cdbc;
+      padding: 0 14px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: #1f1a14;
+    }
+    .content .sub {
+      margin-left: 10px;
+      color: #3d342b;
+    }
+    .content ul, .content ol {
+      padding-left: 24px;
+      margin: 8px 0 12px;
+    }
+    .content li {
+      margin: 6px 0;
+    }
+    .content .indent {
+      margin-left: 18px;
+    }
+
+    /* ===== 【共通空白工具】用于文本对齐 ===== */
+    .spacer {
+      display: inline-block;
+      width: 0;
+      min-width: 0;
+      margin-left: 2.2em;   /* 约等于2个汉字宽度 */
+      flex-shrink: 0;
+    }
+    /* 预设几种常用宽度，方便直接使用 */
+    .spacer-sm { margin-left: 1.2em; }
+    .spacer-md { margin-left: 2.8em; }
+    .spacer-lg { margin-left: 4.2em; }
+    .spacer-xl { margin-left: 6em; }
+
+    /* 行首专用：在段落开头使用，强制产生缩进效果 */
+    .spacer-first {
+      display: inline-block;
+      width: 0;
+      margin-left: 2.2em;
+      flex-shrink: 0;
+    }
+    .spacer-first-sm { margin-left: 1.2em; }
+    .spacer-first-md { margin-left: 2.8em; }
+    .spacer-first-lg { margin-left: 4.2em; }
+    .spacer-first-xl { margin-left: 6em; }
+
+    /* 红色隐藏词 - 核心 */
+    .redact {
+      background: #b31b1b;
+      color: #b31b1b;
+      padding: 0 6px;
+      border-radius: 6px;
+      transition: background 0.08s ease, color 0.1s ease;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-block;
+      letter-spacing: 0.3px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      border: 1px solid transparent;
+    }
+    .redact.revealed {
+      background: transparent !important;
+      color: #b31b1b !important;
+      border-color: #b31b1b40;
+      padding: 0 6px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    /* 特殊：有些红色词本身带背景，保留强调 */
+    .redact.revealed strong, .redact.revealed b {
+      color: #b31b1b;
+    }
+
+    /* 其他辅助样式 */
+    .highlight-box {
+      background: #f2eee9;
+      padding: 12px 20px;
+      border-radius: 40px;
+      margin: 20px 0 10px;
+      font-size: 0.95rem;
+    }
+    .center {
+      text-align: center;
+    }
+    .caption {
+      font-size: 0.9rem;
+      color: #4d3f32;
+      background: #efe8df;
+      display: inline-block;
+      padding: 2px 20px;
+      border-radius: 40px;
+    }
+    hr {
+      border: 0;
+      border-top: 2px dashed #d8cdbc;
+      margin: 28px 0 18px;
+    }
+    .flex-images {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px 40px;
+      margin: 24px 0 16px;
+    }
+    .img-placeholder {
+      background: #e6ddd2;
+      border-radius: 28px;
+      padding: 18px 25px;
+      font-size: 0.9rem;
+      color: #3b332a;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+      border: 1px solid #cdbfb0;
+      min-width: 180px;
+      text-align: center;
+    }
+    .img-placeholder i {
+      font-style: normal;
+      background: #b31b1b10;
+      padding: 2px 12px;
+      border-radius: 40px;
+    }
+    .img-placeholder .art-title {
+      font-weight: 500;
+      display: block;
+      margin: 6px 0 2px;
+    }
+    .small-note {
+      font-size: 0.85rem;
+      color: #5e4e3a;
+      background: #f3ede6;
+      padding: 2px 14px;
+      border-radius: 30px;
+      display: inline-block;
+    }
+
+    /* 响应式 */
+    @media (max-width: 650px) {
+      .container { padding: 20px 16px; }
+      h1 { font-size: 1.6rem; }
+      .memo-bar { flex-direction: column; align-items: flex-start; }
+    }
+    /* 点击提示 */
+    .click-hint {
+      font-size: 0.8rem;
+      color: #8f7b66;
+      background: #f0ebe4;
+      padding: 2px 14px;
+      border-radius: 40px;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>
+    📜 中2歴史（赤字入り）p.36–39
+    <small>暗記用・タップで表示/非表示</small>
+  </h1>
+  <div class="memo-bar">
+    <div class="legend">
+      <span class="legend-swatch"></span> <span>赤字＝暗記箇所</span>
+    </div>
+    <button class="toggle-all-btn" id="toggleAllBtn">🔁 すべて表示/非表示</button>
+  </div>
+
+  <div class="content" id="contentRoot">
+
+    <!-- ===== ページ1 内容 ===== -->
+    <div class="block">
+      <div class="block-title">🚢 海上交通・河川舟運 <span>p.36</span></div>
+      <p><strong><span class="redact">南海路</span></strong>（大坂－江戸） <span class="redact">菱垣廻船</span>（17世紀前半～）・<span class="redact">樽廻船</span>（18世紀前半～）<br>
+      <strong><span class="redact">東廻り航路</span></strong> 東北－太平洋－江戸　 　 　 　 　  <span class="redact">河村瑞賢</span>（江戸商人）<br>
+      <strong><span class="redact">西廻り航路</span></strong> 東北－日本海－瀬戸内海－江戸　<br> 
+      <span class="spacer-first-xl"></span>→ 蝦夷地（<span class="redact">北前船</span>）</p>
+      <p>・河川舟運</p>
+      <p>
+        <span class="redact">河岸(港町)</span>の成立（陸上交通と舟運とを結ぶ流通の拠点） 
+        <span class="redact">角倉了以</span> →富士川 ・<span class="redact">高瀬川・保津川・天竜川</span>の開削<br>
+        淀川(大坂～伏見)、<span class="redact">高瀬川（京都～伏見）</span>　高瀬舟
+      </p>
+    </div>
+
+    <div class="block">
+      <div class="block-title">💰 幕府と藩の経済 <span>商品経済・流通</span></div>
+      <p>
+        武士（幕府・藩）の収入＝米　米を貨幣にかえて商品を買う → <span class="redact">商品経済</span> の発達→流通の分業化<br>
+        <span class="spacer-first"></span><span class="redact">問屋</span> …三都や城下町で仕入れ　
+        <span class="spacer"></span><span class="redact">仲買</span> …問屋からの卸売り　
+        <span class="spacer"></span><span class="redact">小売</span> …消費者への販売
+      </p>
+      <p>
+        全国的都市の発達　<span class="redact">城下町</span> <span class="spacer-sm"></span>
+        <span class="redact">港町</span> <span class="spacer-sm"></span>
+        <span class="redact">宿場町</span> <span class="spacer-sm"></span>
+        <span class="redact">門前町</span>
+      </p>
+      <p>
+        <span class="redact">仲間（同業者組合）</span>の結成→営業権 の独占(<span class="redact">株仲間</span>)
+      </p>
+      <p>
+        大商人…<span class="redact">三井</span>や<span class="redact">鴻池</span>など→大きな経済力 ＊政治には関わらず
+      </p>
+      <p>
+        <strong>三井</strong> （伊勢松坂）→ 兩替商　<span class="redact">越後屋（江戸）</span> 「現金掛け値なし」 薄利多売<br>
+        <strong>鴻池</strong> （摂津伊丹）→酒造 兩替商
+      </p>
+    </div>
+
+    <div class="block">
+      <div class="block-title">🏯 三都 <span>大坂・江戸・京都</span></div>
+      <p>
+        <span class="spacer-first"></span><strong>大坂</strong> <span class="spacer"></span><span class="redact">天下の台所</span> 物資の集散地←西廻り航路　商業金融の中心　各藩の蔵屋敷 ＊<span class="redact">町人</span>の町
+      </p>
+      <p>
+        <span class="spacer-first"></span><strong>江戸</strong> <span class="spacer"></span>將軍の膝元 大消費地 人口約100万人 ＊<span class="redact">武士</span>の町
+      </p>
+      <p>
+        <span class="spacer-first"></span><strong>京都</strong> <span class="spacer"></span>豪商 伝統と高度な技術 <span class="redact">西陣織</span> <span class="redact">京焼（清水焼が有名）</span>など
+      </p>
+      <p style="margin-top:10px;">
+        <span class="small-note">📍 江戸時代の物流の大きな流れ</span><br>
+        西廻り航路を通じて日本海沿岸と瀬戸内海沿岸の生産物が天下の台所大坂へ運ばれ、 そこから南海路で最大の消費都市である江戸に運ばれた。江戸周辺には江戸の消費を賄うだけの生産量がなかったため。
+      </p>
+    </div>
+
+    <hr>
+
+    <!-- ===== ページ2 内容 ===== -->
+    <div class="block">
+      <div class="block-title">⚔️ 文治政治・武断政治 <span>p.37</span></div>
+      <p>
+        <span class="spacer-first"></span>① 文治政治への転換 ② <span class="redact">守人問題</span> ③ <span class="redact">武断政治</span> ④ 家康～家光 大名に対する厳しい統制<br>
+        <span class="spacer-first"></span>⑤ <span class="redact">改易</span> → 守人・かぶき者 の増加 ⑥ 1651年 家光の死→4代将軍徳川家綱<br>
+        <span class="spacer-first"></span>⑦ <span class="redact">由井正雪の乱（慶安の変）</span> ⑧ 軍学者由井正雪と守人丸橋忠弥の反乱未遂事件 ⑨ 守人問題の深刻化<br>
+        <span class="spacer-first"></span>⑩ <span class="redact">殉死</span> の禁止　家光の死の際にも側近殉死　<span class="redact">忠臣二君にまみえず</span><br>
+        <span class="spacer-first"></span>⑪ <span class="redact">末期養子の禁止の緩和</span> ⑫ 末期養子…嗣子のない武家が死にのぞんで急に養子を決めること
+      </p>
+      <p>
+        <span class="spacer-first"></span><span class="redact">末期養子の禁止を緩和したのはなぜだろう</span><br>
+        <span class="spacer-first"></span>末期養子の禁止が改易の大きな原因だった。末期養子をある程度認めることで改易を減らし、守人を減らして治安を改善するため。
+      </p>
+      <p>
+        <span class="spacer-first"></span><strong>文治政治</strong> への転換…<span class="redact">忠孝</span>・<span class="redact">儀礼</span> にもとづく支配。武力で諸大名を従わせるのではなく、徳で従わせる。実際には儀礼を通じて、将軍の徳を演出。
+      </p>
+      <p>
+        <span class="spacer-first"></span><span class="redact">文治政治への転換が必要だったのはなぜだろう</span><br>
+        <span class="spacer-first"></span>カリスマ性を持った有能な指導者ではなく、病弱であったり若年の将軍でも 支配ができるような体制づくり。将軍個人ではなく将軍の地位そのものに権威をもたせる。
+      </p>
+      <p>
+        ＊<span class="redact">明暦の大火(1657)</span>→江戸城天守閣 焼失 ＊天守閣は以後復旧せず
+      </p>
+    </div>
+
+    <hr>
+
+    <!-- ===== ページ3 内容 ===== -->
+    <div class="block">
+      <div class="block-title">👑 元禄時代・正徳の治 <span>p.38</span></div>
+      <p>
+        <strong>元禄時代（17世紀末）</strong> 5代将軍徳川綱吉　文治政治　<span class="redact">儒教</span> 思想と儀礼 を重視<br>
+        <span class="spacer-first"></span><span class="redact">湯島聖堂</span> <span class="spacer"></span><span class="redact">聖堂学問所</span> （朱子学重視）<br>
+        <span class="spacer-first"></span><span class="redact">側用人柳沢吉保</span>の登用→将軍権力の強化<br>
+        側用人 ：将軍の命を老中に伝え、老中からの上申を将軍に伝達する。将軍の相談役。老中に準じる待遇。<br>
+        <span class="redact">生類憐みの令</span> 都市の繁栄→ぜいたくな生活 浪費 → 幕府の財政悪化<br>
+        <span class="redact">護国寺</span> 建築　<span class="redact">鉱山収入</span> の減少　<span class="redact">貨幣改鋳</span> <span class="redact">元禄小判</span> （質を悪くする）→物価高 →武士の生活苦
+      </p>
+      <p>
+        <span class="spacer-first"></span><span class="redact">貨幣改鋳を行うと、どうして物価は変動するのだろう</span><br>
+        <span class="spacer-first"></span>貨幣の質を下げる＝金貨の金の含有量が減る＝貨幣価値が下がる＝物価上昇。 貨幣の質を上げる＝金貨の金の含有量が増える＝貨幣価値が上がる＝物価下落。
+      </p>
+      <p>
+        <strong>1701年 赤穂事件</strong> <span class="redact">浅野内匠頭長矩</span>→<span class="redact">吉良上野介義央</span>に刃傷→赤穂藩改易 浅野切腹<br>
+        1702年 <span class="redact">赤穂藩浪士47士</span>の討ち入り 吉良殺害 『<span class="redact">仮名手本忠臣蔵</span>』（竹田出雲）
+      </p>
+    </div>
+
+    <div class="block">
+      <div class="block-title">📜 正徳の治 (1709～16) <span>新井白石</span></div>
+      <p>
+        <span class="spacer-first"></span><span class="redact">新井白石</span> ６代将軍徳川家宣 ・７代将軍徳川家継 の侍講<br>
+        <span class="spacer-first"></span>元禄政治の否定：<span class="redact">生類憐みの令の廃止</span> 柳沢吉保を罷免<br>
+        <span class="spacer-first"></span>朝鮮からの国書で将軍を「日本国大君殿下」→「<span class="redact">日本国王</span>」に変更させる ＊８代吉宗→「大君」（祖法尊重）<br>
+        <span class="spacer-first"></span><span class="redact">閑院宮家</span>の創設→天皇家との結びつきを強化　朝鮮通信使の待遇簡素化<br>
+        <span class="spacer-first"></span>貨幣の改鋳 <span class="redact">正徳小判</span>（質を良くする）→物価下落 ・経済混乱<br>
+        <span class="spacer-first"></span>長崎貿易の制限 <span class="redact">海舶互市新例 (1715)</span> 貿易額の制限（金銀の流出を防ぐため）<br>
+        <span class="spacer-first"></span>1716 家継死去→白石失脚
+      </p>
+    </div>
+
+    <div class="block">
+      <div class="block-title">📖 学問の発達 <span>儒教・朱子学・陽明学など</span></div>
+      <p>公家・僧＋武士・庶民→学問研究</p>
+      <p>
+        ・儒学 幕藩体制を支える思想<br>
+        <span class="spacer-first"></span><span class="redact">朱子学</span> （上下関係を重視）→身分制・主従制の正当化<br>
+        <span class="spacer-first"></span><span class="redact">林羅山</span> 家康に仕える 以後林家が幕府の保護を受ける<br>
+        <span class="spacer-first"></span>徳川綱吉 <span class="redact">湯島聖堂</span> 建設（孔子をまつる）
+      </p>
+      <p>
+        ・<span class="redact">陽明学</span> …実行を重んじる 社会を批判する傾向 <span class="redact">中江藤樹</span>
+      </p>
+      <p>
+        ・諸学問<br>
+        <span class="spacer-first"></span>歴史 <span class="redact">徳川光圀</span>（水戸藩）→「<span class="redact">大日本史</span>」の編纂<br>
+        <span class="spacer-first"></span>地理 <span class="redact">新井白石</span>→「<span class="redact">西洋紀間</span>」 ＊イタリア人宣教師シドッチを尋問<br>
+        <span class="spacer-first"></span>数学 <span class="redact">関孝和</span> →和算
+      </p>
+    </div>
+
+    <hr>
+
+    <!-- ===== ページ4 内容 ===== -->
+    <div class="block">
+      <div class="block-title">🎎 元禄文化 <span>17C末~18Cはじめ 上方の町人中心</span></div>
+      <p>
+        <strong>文学</strong><br>
+        <span class="spacer-first"></span>浮世草子 (小说) <span class="redact">井原西鶴</span> (大坂) 町人物: 「<span class="redact">日本永代蔵</span>」 「<span class="redact">世間胸算用</span>」 好色物: 「<span class="redact">好色一代男</span>」<br>
+        <span class="spacer-first"></span>人形浄瑠璃・歌舞伎の脚本 <span class="redact">近松門左衛門</span> 世話物: 「<span class="redact">曽根崎心中</span>」 時代物: 「<span class="redact">国姓爺合戟</span>」 鄭成功<br>
+        <span class="spacer-first"></span>俳譜 <span class="redact">松尾芭蕉</span> 紀行文「<span class="redact">奥の細道</span>」
+      </p>
+      <p>
+        <strong>演劇</strong><br>
+        <span class="spacer-first"></span>歌舞伎 演劇として発達 役者 (上方) <span class="redact">坂田藤十郎</span> 和事　 (江戸) <span class="redact">市川团十郎</span> 荒事
+      </p>
+      <p>
+        <strong>美術</strong><br>
+        <span class="spacer-first"></span>装飾画 <span class="redact">狩野探幽</span> <span class="redact">俵屋宗達</span> 「<span class="redact">風神雷神図屏風</span>」<br>
+        <span class="spacer-first"></span><span class="redact">尾形光琳</span> 「<span class="redact">紅白梅図屏風</span>」 「<span class="redact">燕子花図屏風</span>」 「<span class="redact">八橋蒔絵硯箱</span>」(工芸)<br>
+        <span class="spacer-first"></span>浮世絵 <span class="redact">菱川師宣</span> 「<span class="redact">見返り美人図</span>」(肉筆画) 版画(墨一色)
+      </p>
+      <p>
+        <strong>庶民の生活</strong><br>
+        <span class="spacer-first"></span><span class="redact">木綿の服</span>の普及　<span class="redact">菜種油と行灯</span>の使用
+      </p>
+    </div>
+
+    <!-- 画像部分（参考） -->
+    <div class="flex-images">
+      <div class="img-placeholder"><span class="art-title">俵屋宗達『風神雷神図屏風』</span> <i>⛩️ 国宝</i></div>
+      <div class="img-placeholder"><span class="art-title">尾形光琳『紅白梅図屏風』</span> <i>🌸 琳派</i></div>
+      <div class="img-placeholder"><span class="art-title">尾形光琳『八橋蒔絵硯箱』</span> <i>✒️ 工芸</i></div>
+    </div>
+    <div class="center" style="margin: 6px 0 16px;"><span class="caption">※ 赤文字をタップすると表示/非表示</span></div>
+  </div>
+  <!-- end content -->
+</div>
+<!-- end container -->
+
+<script>
+  (function() {
+    const redactElements = document.querySelectorAll('.redact');
+    const toggleAllBtn = document.getElementById('toggleAllBtn');
+
+    // 点击单个词切换
+    redactElements.forEach(el => {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.classList.toggle('revealed');
+      });
+    });
+
+    // 全切替
+    let allRevealed = false;
+    toggleAllBtn.addEventListener('click', function() {
+      allRevealed = !allRevealed;
+      redactElements.forEach(el => {
+        if (allRevealed) {
+          el.classList.add('revealed');
+        } else {
+          el.classList.remove('revealed');
+        }
+      });
+      // ボタン表記微調整
+      this.textContent = allRevealed ? '🙈 すべて非表示' : '🔁 すべて表示/非表示';
+    });
+
+    // 任意: 初期はすべて隠れた状態 (デフォルト)
+    // ただし、すでに redact クラスは visible なし
+    // もし一部を最初から表示したい場合は .revealed を付与
+    // 今回はすべて hidden スタート
+  })();
+</script>
+
+</body>
+</html>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #f5f0e8;
+      font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', sans-serif;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      background: #fffcf7;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      border-radius: 24px;
+      padding: 30px 35px;
+      transition: 0.2s;
+    }
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      border-bottom: 3px solid #b31b1b;
+      padding-bottom: 12px;
+      margin-bottom: 28px;
+      color: #2c2c2c;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    h1 small {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #6b4f3c;
+      margin-left: 8px;
+      background: #eee7de;
+      padding: 2px 16px;
+      border-radius: 40px;
+    }
+    .memo-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: #5a4a3a;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f3ede6;
+      padding: 6px 18px 6px 14px;
+      border-radius: 40px;
+    }
+    .legend-swatch {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: #b31b1b;
+      border-radius: 4px;
+    }
+    .toggle-all-btn {
+      background: #3a2c1e;
+      border: none;
+      color: white;
+      padding: 8px 22px;
+      border-radius: 60px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.15s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      letter-spacing: 0.5px;
+    }
+    .toggle-all-btn:hover {
+      background: #5d4a34;
+      transform: scale(0.97);
+    }
+    .toggle-all-btn:active {
+      background: #1e150e;
+    }
+
+    /* 主要内容区块 */
+    .content {
+      line-height: 1.7;
+      color: #1e1e1e;
+      font-size: 1rem;
+    }
+    /* 段落、卡片样式 */
+    .content p {
+      margin: 0.8rem 0;
+    }
+    .content .block {
+      background: #fcf9f4;
+      padding: 14px 20px;
+      border-radius: 20px;
+      margin: 18px 0;
+      border-left: 6px solid #b31b1b20;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .content .block-title {
+      font-weight: 600;
+      font-size: 1.08rem;
+      color: #3d2b1a;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .content .block-title span {
+      background: #d8cdbc;
+      padding: 0 14px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: #1f1a14;
+    }
+    .content .sub {
+      margin-left: 10px;
+      color: #3d342b;
+    }
+    .content ul, .content ol {
+      padding-left: 24px;
+      margin: 8px 0 12px;
+    }
+    t li {
+      margin: 6px 0;
+    }
+    .content .indent {
+      margin-left: 18px;
+    }
+
+    /* ===== 【共通空白工具】用于文本对齐 ===== */
+    .spacer {
+      display: inline-block;
+      width: 2.2em;        /* 约等于2个汉字宽度，可根据需要调整 */
+      min-width: 1em;
+      flex-shrink: 0;
+    }
+    /* 预设几种常用宽度，方便直接使用 */
+    .spacer-sm { width: 1.2em; }
+    .spacer-md { width: 2.8em; }
+    .spacer-lg { width: 4.2em; }
+    .spacer-xl { width: 6em; }
+
+    /* 红色隐藏词 - 核心 */
+    .redact {
+      background: #b31b1b;
+      color: #b31b1b;
+      padding: 0 6px;
+      border-radius: 6px;
+      transition: background 0.08s ease, color 0.1s ease;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-block;
+      letter-spacing: 0.3px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      border: 1px solid transparent;
+    }
+    .redact.revealed {
+      background: transparent !important;
+      color: #b31b1b !important;
+      border-color: #b31b1b40;
+      padding: 0 6px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    /* 特殊：有些红色词本身带背景，保留强调 */
+    .redact.revealed strong, .redact.revealed b {
+      color: #b31b1b;
+    }
+
+    /* 其他辅助样式 */
+    .highlight-box {
+      background: #f2eee9;
+      padding: 12px 20px;
+      border-radius: 40px;
+      margin: 20px 0 10px;
+      font-size: 0.95rem;
+    }
+    .center {
+      text-align: center;
+    }
+    .caption {
+      font-size: 0.9rem;
+      color: #4d3f32;
+      background: #efe8df;
+      display: inline-block;
+      padding: 2px 20px;
+      border-radius: 40px;
+    }
+    hr {
+      border: 0;
+      border-top: 2px dashed #d8cdbc;
+      margin: 28px 0 18px;
+    }
+    .flex-images {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px 40px;
+      margin: 24px 0 16px;
+    }
+    .img-placeholder {
+      background: #e6ddd2;
+      border-radius: 28px;
+      padding: 18px 25px;
+      font-size: 0.9rem;
+      color: #3b332a;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+      border: 1px solid #cdbfb0;
+      min-width: 180px;
+      text-align: center;
+    }
+    .img-placeholder i {
+      font-style: normal;
+      background: #b31b1b10;
+      padding: 2px 12px;
+      border-radius: 40px;
+    }
+    .img-placeholder .art-title {
+      font-weight: 500;
+      display: block;
+      margin: 6px 0 2px;
+    }
+    .small-note {
+      font-size: 0.85rem;
+      color: #5e4e3a;
+      background: #f3ede6;
+      padding: 2px 14px;
+      border-radius: 30px;
+      display: inline-block;
+    }
+
+    /* 响应式 */
+    @media (max-width: 650px) {
+      .container { padding: 20px 16px; }
+      h1 { font-size: 1.6rem; }
+      .memo-bar { flex-direction: column; align-items: flex-start; }
+    }
+    /* 点击提示 */
+    .click-hint {
+      font-size: 0.8rem;
+      color: #8f7b66;
+      background: #f0ebe4;
+      padding: 2px 14px;
+      border-radius: 40px;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>
+    📜 中2歴史（赤字入り）p.36–39
+    <small>暗記用・タップで表示/非表示</small>
+  </h1>
+  <div class="memo-bar">
+    <div class="legend">
+      <span class="legend-swatch"></span> <span>赤字＝暗記箇所</span>
+    </div>
+    <button class="toggle-all-btn" id="toggleAllBtn">🔁 すべて表示/非表示</button>
+  </div>
+
+  <div class="content" id="contentRoot">
+
+    <!-- ===== ページ1 内容 ===== -->
+    <div class="block">
+      <div class="block-title">🚢 海上交通・河川舟運 <span>p.36</span></div>
+      <p><strong><span class="redact">南海路</span></strong>（大坂－江戸） <span class="redact">菱垣廻船</span>（17世紀前半～）・<span class="redact">樽廻船</span>（18世紀前半～）<br>
+      <strong><span class="redact">東廻り航路</span></strong> 東北－太平洋－江戸　 　 　 　 　  <span class="redact">河村瑞賢</span>（江戸商人）<br>
+      <strong><span class="redact">西廻り航路</span></strong> 東北－日本海－瀬戸内海－江戸　<br> 
+      <span class="spacer-md">.</span>→ 蝦夷地（<span class="redact">北前船</span>）</p>
+      <p>・河川舟運</p>
+      <p>
+        <span class="redact">河岸(港町)</span>の成立（陸上交通と舟運とを結ぶ流通の拠点） 
+        <span class="redact">角倉了以</span> →富士川 ・<span class="redact">高瀬川・保津川・天竜川</span>の開削<br>
+        淀川(大坂～伏見)、<span class="redact">高瀬川（京都～伏見）</span>　高瀬舟
+      </p>
+    </div>
+
+    <div class="block">
+      <div class="block-title">💰 幕府と藩の経済 <span>商品経済・流通</span></div>
+      <p>
+        武士（幕府・藩）の収入＝米　米を貨幣にかえて商品を買う → <span class="redact">商品経済</span> の発達→流通の分業化<br>
+        <span class="redact">問屋</span> <span class="spacer"></span>…三都や城下町で仕入れ　
+        <span class="redact">仲買</span> <span class="spacer"></span>…問屋からの卸売り　
+        <span class="redact">小売</span> <span class="spacer"></span>…消費者への販売
+      </p>
+      <p>
+        全国的都市の発達　<span class="redact">城下町</span> <span class="spacer-sm"></span>
+        <span class="redact">港町</span> <span class="spacer-sm"></span>
+        <span class="redact">宿場町</span> <span class="spacer-sm"></span>
+        <span class="redact">門前町</span>
+      </p>
+      <p>
+        <span class="redact">仲間（同業者組合）</span>の結成→営業権 の独占(<span class="redact">株仲間</span>)
+      </p>
+      <p>
+        大商人…<span class="redact">三井</span>や<span class="redact">鴻池</span>など→大きな経済力 ＊政治には関わらず
+      </p>
+      <p>
+        <strong>三井</strong> （伊勢松坂）→ 兩替商　<span class="redact">越後屋（江戸）</span> 「現金掛け値なし」 薄利多売<br>
+        <strong>鴻池</strong> （摂津伊丹）→酒造 兩替商
+      </p>
+    </div>
+
+    <div class="block">
+      <div class="block-title">🏯 三都 <span>大坂・江戸・京都</span></div>
+      <p>
+        <strong>大坂</strong> <span class="spacer-md"></span><span class="redact">天下の台所</span> 物資の集散地←西廻り航路　商業金融の中心　各藩の蔵屋敷 ＊<span class="redact">町人</span>の町
+      </p>
+      <p>
+        <strong>江戸</strong> <span class="spacer-md"></span>將軍の膝元 大消費地 人口約100万人 ＊<span class="redact">武士</span>の町
+      </p>
+      <p>
+        <strong>京都</strong> <span class="spacer-md"></span>豪商 伝統と高度な技術 <span class="redact">西陣織</span> <span class="redact">京焼（清水焼が有名）</span>など
+      </p>
+      <p style="margin-top:10px;">
+        <span class="small-note">📍 江戸時代の物流の大きな流れ</span><br>
+        西廻り航路を通じて日本海沿岸と瀬戸内海沿岸の生産物が天下の台所大坂へ運ばれ、 そこから南海路で最大の消費都市である江戸に運ばれた。江戸周辺には江戸の消費を賄うだけの生産量がなかったため。
+      </p>
+    </div>
+
+    <hr>
+
+    <!-- ===== ページ2 内容 ===== -->
+    <div class="block">
+      <div class="block-title">⚔️ 文治政治・武断政治 <span>p.37</span></div>
+      <p>
+        ① 文治政治への転換 ② <span class="redact">守人問題</span> ③ <span class="redact">武断政治</span> ④ 家康～家光 大名に対する厳しい統制<br>
+        ⑤ <span class="redact">改易</span> → 守人・かぶき者 の増加 ⑥ 1651年 家光の死→4代将軍徳川家綱<br>
+        ⑦ <span class="redact">由井正雪の乱（慶安の変）</span> ⑧ 軍学者由井正雪と守人丸橋忠弥の反乱未遂事件 ⑨ 守人問題の深刻化<br>
+        ⑩ <span class="redact">殉死</span> の禁止　家光の死の際にも側近殉死　<span class="redact">忠臣二君にまみえず</span><br>
+        ⑪ <span class="redact">末期養子の禁止の緩和</span> ⑫ 末期養子…嗣子のない武家が死にのぞんで急に養子を決めること
+      </p>
+      <p>
+        <span class="redact">末期養子の禁止を緩和したのはなぜだろう</span><br>
+        末期養子の禁止が改易の大きな原因だった。末期養子をある程度認めることで改易を減らし、守人を減らして治安を改善するため。
+      </p>
+      <p>
+        <strong>文治政治</strong> への転換…<span class="redact">忠孝</span>・<span class="redact">儀礼</span> にもとづく支配。武力で諸大名を従わせるのではなく、徳で従わせる。実際には儀礼を通じて、将軍の徳を演出。
+      </p>
+      <p>
+        <span class="redact">文治政治への転換が必要だったのはなぜだろう</span><br>
+        カリスマ性を持った有能な指導者ではなく、病弱であったり若年の将軍でも 支配ができるような体制づくり。将軍個人ではなく将軍の地位そのものに権威をもたせる。
+      </p>
+      <p>
+        ＊<span class="redact">明暦の大火(1657)</span>→江戸城天守閣 焼失 ＊天守閣は以後復旧せず
+      </p>
+    </div>
+
+    <hr>
+
+    <!-- ===== ページ3 内容 ===== -->
+    <div class="block">
+      <div class="block-title">👑 元禄時代・正徳の治 <span>p.38</span></div>
+      <p>
+        <strong>元禄時代（17世紀末）</strong> 5代将軍徳川綱吉　文治政治　<span class="redact">儒教</span> 思想と儀礼 を重視<br>
+        <span class="redact">湯島聖堂</span> <span class="spacer"></span><span class="redact">聖堂学問所</span> （朱子学重視）<br>
+        <span class="redact">側用人柳沢吉保</span>の登用→将軍権力の強化<br>
+        側用人 ：将軍の命を老中に伝え、老中からの上申を将軍に伝達する。将軍の相談役。老中に準じる待遇。<br>
+        <span class="redact">生類憐みの令</span> 都市の繁栄→ぜいたくな生活 浪費 → 幕府の財政悪化<br>
+        <span class="redact">護国寺</span> 建築　<span class="redact">鉱山収入</span> の減少　<span class="redact">貨幣改鋳</span> <span class="redact">元禄小判</span> （質を悪くする）→物価高 →武士の生活苦
+      </p>
+      <p>
+        <span class="redact">貨幣改鋳を行うと、どうして物価は変動するのだろう</span><br>
+        貨幣の質を下げる＝金貨の金の含有量が減る＝貨幣価値が下がる＝物価上昇。 貨幣の質を上げる＝金貨の金の含有量が増える＝貨幣価値が上がる＝物価下落。
+      </p>
+      <p>
+        <strong>1701年 赤穂事件</strong> <span class="redact">浅野内匠頭長矩</span>→<span class="redact">吉良上野介義央</span>に刃傷→赤穂藩改易 浅野切腹<br>
+        1702年 <span class="redact">赤穂藩浪士47士</span>の討ち入り 吉良殺害 『<span class="redact">仮名手本忠臣蔵</span>』（竹田出雲）
+      </p>
+    </div>
+
+    <div class="block">
+      <div class="block-title">📜 正徳の治 (1709～16) <span>新井白石</span></div>
+      <p>
+        <span class="redact">新井白石</span> ６代将軍徳川家宣 ・７代将軍徳川家継 の侍講<br>
+        元禄政治の否定：<span class="redact">生類憐みの令の廃止</span> 柳沢吉保を罷免<br>
+        朝鮮からの国書で将軍を「日本国大君殿下」→「<span class="redact">日本国王</span>」に変更させる ＊８代吉宗→「大君」（祖法尊重）<br>
+        <span class="redact">閑院宮家</span>の創設→天皇家との結びつきを強化　朝鮮通信使の待遇簡素化<br>
+        貨幣の改鋳 <span class="redact">正徳小判</span>（質を良くする）→物価下落 ・経済混乱<br>
+        長崎貿易の制限 <span class="redact">海舶互市新例 (1715)</span> 貿易額の制限（金銀の流出を防ぐため）<br>
+        1716 家継死去→白石失脚
+      </p>
+    </div>
+
+    <div class="block">
+      <div class="block-title">📖 学問の発達 <span>儒教・朱子学・陽明学など</span></div>
+      <p>公家・僧＋武士・庶民→学問研究</p>
+      <p>
+        ・儒学 幕藩体制を支える思想<br>
+        <span class="redact">朱子学</span> （上下関係を重視）→身分制・主従制の正当化<br>
+        <span class="redact">林羅山</span> 家康に仕える 以後林家が幕府の保護を受ける<br>
+        徳川綱吉 <span class="redact">湯島聖堂</span> 建設（孔子をまつる）
+      </p>
+      <p>
+        ・<span class="redact">陽明学</span> …実行を重んじる 社会を批判する傾向 <span class="redact">中江藤樹</span>
+      </p>
+      <p>
+        ・諸学問<br>
+        歴史 <span class="redact">徳川光圀</span>（水戸藩）→「<span class="redact">大日本史</span>」の編纂<br>
+        地理 <span class="redact">新井白石</span>→「<span class="redact">西洋紀間</span>」 ＊イタリア人宣教師シドッチを尋問<br>
+        数学 <span class="redact">関孝和</span> →和算
+      </p>
+    </div>
+
+    <hr>
+
+    <!-- ===== ページ4 内容 ===== -->
+    <div class="block">
+      <div class="block-title">🎎 元禄文化 <span>17C末~18Cはじめ 上方の町人中心</span></div>
+      <p>
+        <strong>文学</strong><br>
+        浮世草子 (小说) <span class="redact">井原西鶴</span> (大坂) 町人物: 「<span class="redact">日本永代蔵</span>」 「<span class="redact">世間胸算用</span>」 好色物: 「<span class="redact">好色一代男</span>」<br>
+        人形浄瑠璃・歌舞伎の脚本 <span class="redact">近松門左衛門</span> 世話物: 「<span class="redact">曽根崎心中</span>」 時代物: 「<span class="redact">国姓爺合戟</span>」 鄭成功<br>
+        俳譜 <span class="redact">松尾芭蕉</span> 紀行文「<span class="redact">奥の細道</span>」
+      </p>
+      <p>
+        <strong>演劇</strong><br>
+        歌舞伎 演劇として発達 役者 (上方) <span class="redact">坂田藤十郎</span> 和事　 (江戸) <span class="redact">市川团十郎</span> 荒事
+      </p>
+      <p>
+        <strong>美術</strong><br>
+        装飾画 <span class="redact">狩野探幽</span> <span class="redact">俵屋宗達</span> 「<span class="redact">風神雷神図屏風</span>」<br>
+        <span class="redact">尾形光琳</span> 「<span class="redact">紅白梅図屏風</span>」 「<span class="redact">燕子花図屏風</span>」 「<span class="redact">八橋蒔絵硯箱</span>」(工芸)<br>
+        浮世絵 <span class="redact">菱川師宣</span> 「<span class="redact">見返り美人図</span>」(肉筆画) 版画(墨一色)
+      </p>
+      <p>
+        <strong>庶民の生活</strong><br>
+        <span class="redact">木綿の服</span>の普及　<span class="redact">菜種油と行灯</span>の使用
+      </p>
+    </div>
+
+    <!-- 画像部分（参考） -->
+    <div class="flex-images">
+      <div class="img-placeholder"><span class="art-title">俵屋宗達『風神雷神図屏風』</span> <i>⛩️ 国宝</i></div>
+      <div class="img-placeholder"><span class="art-title">尾形光琳『紅白梅図屏風』</span> <i>🌸 琳派</i></div>
+      <div class="img-placeholder"><span class="art-title">尾形光琳『八橋蒔絵硯箱』</span> <i>✒️ 工芸</i></div>
+    </div>
+    <div class="center" style="margin: 6px 0 16px;"><span class="caption">※ 赤文字をタップすると表示/非表示</span></div>
+  </div>
+  <!-- end content -->
+</div>
+<!-- end container -->
+
+<script>
+  (function() {
+    const redactElements = document.querySelectorAll('.redact');
+    const toggleAllBtn = document.getElementById('toggleAllBtn');
+
+    // 点击单个词切换
+    redactElements.forEach(el => {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.classList.toggle('revealed');
+      });
+    });
+
+    // 全切替
+    let allRevealed = false;
+    toggleAllBtn.addEventListener('click', function() {
+      allRevealed = !allRevealed;
+      redactElements.forEach(el => {
+        if (allRevealed) {
+          el.classList.add('revealed');
+        } else {
+          el.classList.remove('revealed');
+        }
+      });
+      // ボタン表記微調整
+      this.textContent = allRevealed ? '🙈 すべて非表示' : '🔁 すべて表示/非表示';
+    });
+
+    // 任意: 初期はすべて隠れた状態 (デフォルト)
+    // ただし、すでに redact クラスは visible なし
+    // もし一部を最初から表示したい場合は .revealed を付与
+    // 今回はすべて hidden スタート
+  })();
+</script>
+
+</body>
+</html>
