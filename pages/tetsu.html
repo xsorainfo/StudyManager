@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鉄律会 · 学び航路</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
+    body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .app-wrapper { max-width: 1400px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
+
+    /* 导航 */
+    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 20px; color: #f0ebe3; }
+    .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
+    .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 500; }
+    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover { background: #3f352b; color: #fff; }
+    .nav-links a.active { background: #5f4b38; color: #fff2e0; }
+    .nav-right { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; flex-wrap: wrap; }
+    .nav-right .user-badge { background: #3f352b; padding: 6px 18px 6px 14px; border-radius: 40px; display: flex; align-items: center; gap: 8px; }
+    .nav-right .data-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .nav-right .data-actions button { background: #3f352b; border: none; color: #e8dfd5; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; transition: 0.15s; display: flex; align-items: center; gap: 5px; }
+    .nav-right .data-actions button:hover { background: #5f4b38; color: #fff; }
+    .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
+    .status-dot.online { background: #4CAF50; }
+    .status-dot.offline { background: #f44336; }
+
+    .token-bar { background: #f0ebe4; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .token-bar .label { font-weight: 600; color: #3d3229; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
+    .token-bar input { flex: 1; min-width: 200px; padding: 8px 16px; border: 2px solid #d8cdbf; border-radius: 40px; font-size: 0.85rem; outline: none; background: white; font-family: monospace; }
+    .token-bar input:focus { border-color: #8f735b; }
+    .token-bar .token-status { font-size: 0.8rem; color: #6b5d4e; white-space: nowrap; }
+    .token-bar .btn-set { background: #2c241c; border: none; color: white; padding: 6px 20px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.15s; }
+    .token-bar .btn-set:hover { background: #4d3b2c; }
+
+    /* 页面标题 */
+    .page-title { font-size: 1.8rem; font-weight: 700; color: #2a221b; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .page-title i { color: #8f735b; }
+    .page-title .sub { font-size: 0.9rem; font-weight: 400; color: #6b5d4e; margin-left: 12px; }
+
+    /* ===== 学年タブ ===== */
+    .grade-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; }
+    .grade-tabs .tab { padding: 8px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
+    .grade-tabs .tab:hover { background: #e3d9ce; }
+    .grade-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
+
+    /* ===== 科目タブ ===== */
+    .subject-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .subject-tabs .tab { padding: 6px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
+    .subject-tabs .tab:hover { background: #e3d9ce; }
+    .subject-tabs .tab.active { background: #8f735b; color: white; }
+
+    /* ===== 機能タブ（カリキュラム / テスト） ===== */
+    .func-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 1px solid #e7dfd5; padding-bottom: 12px; }
+    .func-tabs .tab { padding: 6px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: 0.15s; background: transparent; color: #6b5d4e; border: none; }
+    .func-tabs .tab:hover { background: #f0ebe4; }
+    .func-tabs .tab.active { background: #f0ebe4; color: #2c241c; font-weight: 600; }
+
+    /* ===== カリキュラム表 ===== */
+    .curriculum-table-wrap { overflow-x: auto; }
+    .curriculum-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 700px; }
+    .curriculum-table th { background: #2c241c; color: #f0ebe3; padding: 10px 14px; text-align: left; font-weight: 600; }
+    .curriculum-table td { padding: 8px 14px; border-bottom: 1px solid #ede6dd; }
+    .curriculum-table tr:hover { background: #f8f4ef; }
+    .curriculum-table .test { background: #f0ebe4; font-weight: 500; color: #8f4a4a; }
+    .curriculum-table .holiday { background: #f5f0e8; color: #b7a086; font-style: italic; }
+    .curriculum-table .double { font-size: 0.7rem; color: #8f735b; }
+
+    /* ===== テスト一覧 ===== */
+    .test-list { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .test-item { background: #f6f1ea; border-radius: 16px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .test-item .name { font-weight: 500; }
+    .test-item .date { font-size: 0.8rem; color: #6b5d4e; }
+    .test-item .status { font-size: 0.8rem; padding: 2px 14px; border-radius: 40px; }
+    .test-item .status.done { background: #c8e6c9; color: #2e7d32; }
+    .test-item .status.pending { background: #fff3e0; color: #e65100; }
+    .test-item .status.upcoming { background: #e3f2fd; color: #0d47a1; }
+
+    /* ===== 空き状態 ===== */
+    .empty-state { text-align: center; padding: 60px 20px; color: #b7a086; }
+    .empty-state i { font-size: 3rem; margin-bottom: 16px; }
+    .empty-state p { font-size: 1.1rem; }
+
+    .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
+    .toast-msg.show { opacity: 1; }
+    #fileInput { display: none; }
+    .flex { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    @media (max-width: 768px) {
+      .test-list { grid-template-columns: 1fr; }
+      .grade-tabs .tab { padding: 6px 16px; font-size: 0.8rem; }
+      .subject-tabs .tab { padding: 4px 14px; font-size: 0.8rem; }
+      .func-tabs .tab { padding: 4px 14px; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ===== 导航 ===== -->
+  <nav class="navbar">
+    <div class="nav-brand"><i class="fas fa-compass"></i><span>学び航路</span></div>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> ダッシュボード</a>
+      <a class="active" href="tetsu.html"><i class="fas fa-flag"></i> 鉄律会</a>
+      <a href="sakura.html"><i class="fas fa-cherry-blossom"></i> 桜蔭</a>
+      <a href="schedule.html"><i class="fas fa-calendar-alt"></i> 年間予定</a>
+      <a href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
+    </div>
+    <div class="nav-right">
+      <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
+      <div class="data-actions">
+        <span id="statusInfo"><span class="status-dot offline" id="statusDot"></span><span id="statusText">オフライン</span></span>
+        <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
+        <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
+        <button onclick="exportData()"><i class="fas fa-file-export"></i></button>
+        <button onclick="document.getElementById('fileInput').click()"><i class="fas fa-file-import"></i></button>
+        <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== Token 栏 ===== -->
+  <div class="token-bar">
+    <span class="label"><i class="fab fa-github"></i> Token:</span>
+    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx を入力" autocomplete="off">
+    <button class="btn-set" onclick="setTokenFromInput()">設定</button>
+    <span class="token-status" id="tokenStatus">🔑 未設定</span>
+  </div>
+
+  <!-- ===== 页面标题 ===== -->
+  <div class="page-title">
+    <i class="fas fa-flag"></i> 鉄律会
+    <span class="sub">学習カリキュラム・テスト管理</span>
+  </div>
+
+  <!-- ===== 学年タブ ===== -->
+  <div class="grade-tabs" id="gradeTabs">
+    <button class="tab active" data-grade="1">中1</button>
+    <button class="tab" data-grade="2">中2</button>
+    <button class="tab" data-grade="3">中3</button>
+    <button class="tab" data-grade="4">高1</button>
+    <button class="tab" data-grade="5">高2</button>
+    <button class="tab" data-grade="6">高3</button>
+  </div>
+
+  <!-- ===== 科目タブ ===== -->
+  <div class="subject-tabs" id="subjectTabs">
+    <button class="tab active" data-subject="math">数学</button>
+    <button class="tab" data-subject="english">英語</button>
+  </div>
+
+  <!-- ===== 機能タブ ===== -->
+  <div class="func-tabs" id="funcTabs">
+    <button class="tab active" data-func="curriculum">📖 カリキュラム</button>
+    <button class="tab" data-func="review">📝 総復習テスト</button>
+    <button class="tab" data-func="test">📊 復習テスト</button>
+    <button class="tab" data-func="calc">🧮 計算テスト</button>
+  </div>
+
+  <!-- ===== コンテンツ表示領域 ===== -->
+  <div id="contentArea">
+    <!-- JavaScript で動的生成 -->
+  </div>
+
+  <div class="toast-msg" id="toast"></div>
+</div>
+
+<script>
+// ============================================================
+// 鉄律会ページ データ
+// ============================================================
+
+// 中1 数学 カリキュラム（前期 + 後期）
+const CURRICULUM_DATA = {
+  '1': {
+    math: {
+      name: '中1 数学',
+      curriculum: [
+        // 前期
+        { week: '前期第01週', date: '4月3日', content: '正負の数(1)', test: '—' },
+        { week: '前期第02週', date: '4月10日', content: '正負の数(2)', test: '—' },
+        { week: '前期第03週', date: '4月17日', content: '式の計算Ⅰ(1)', test: '—' },
+        { week: '前期第04週', date: '4月24日', content: '式の計算Ⅰ(2)', test: '正負の数' },
+        { week: '前期第05週', date: '5月8日', content: '式の計算Ⅰ(3)', test: '—' },
+        { week: '前期第06週', date: '5月15日', content: '方程式(1)', test: '—' },
+        { week: '前期第07週', date: '5月22日', content: '方程式(2)', test: '式の計算Ⅰ' },
+        { week: '前期第08週', date: '5月29日', content: '方程式(3)', test: '—' },
+        { week: '前期第09週', date: '6月5日', content: '方程式(4)', test: '—' },
+        { week: '前期第10週', date: '6月12日', content: '方程式(5)', test: '—' },
+        { week: '前期第11週', date: '6月19日', content: '不等式(1)', test: '—' },
+        { week: '前期第12週', date: '6月26日', content: '不等式(2)', test: '方程式' },
+        { week: '前期第13週W1', date: '7月3日', content: '平行と合同(1)', test: '—' },
+        { week: '前期第13週W2', date: '7月10日', content: '平行と合同(2)', test: '—' },
+        { week: '前期第14週', date: '7月17日', content: '平行と合同(3)', test: '不等式' },
+        { week: '前期第15週', date: '7月24日', content: '平行と合同(4)', test: '—' },
+        { week: '前期第16週', date: '7月31日', content: '平行と合同(5)', test: '—' },
+        { week: '前期第17週', date: '8月7日', content: '平行四边形(1)', test: '—' },
+        { week: '前期第18週', date: '8月28日', content: '平行四边形(2)', test: '平行と合同' },
+        { week: '前期第19週', date: '9月4日', content: '1次関数(1)', test: '—' },
+        { week: '前期第20週', date: '9月11日', content: '1次関数(2)', test: '平行四边形' },
+        { week: '前期第21週', date: '9月18日', content: '1次関数(3)', test: '—' },
+        { week: '前期第22週', date: '9月25日', content: '1次関数(4)', test: '—' },
+        // 後期
+        { week: '後期第01週', date: '10月2日', content: '相似(1)', test: '—' },
+        { week: '後期第02週', date: '10月9日', content: '相似(2)', test: '1次関数' },
+        { week: '後期第03週', date: '10月16日', content: '相似(3)', test: '—' },
+        { week: '後期第04週', date: '10月23日', content: '式の計算Ⅱ(1)', test: '—' },
+        { week: '後期第05週', date: '10月30日', content: '式の計算Ⅱ(2)', test: '相似' },
+        { week: '後期第06週', date: '11月6日', content: '式の計算Ⅱ(3)', test: '—' },
+        { week: '後期第07週', date: '11月13日', content: '式の計算Ⅱ(4)', test: '—' },
+        { week: '後期第08週', date: '11月20日', content: '円(1)', test: '—' },
+        { week: '後期第09週', date: '11月27日', content: '円(2)', test: '式の計算Ⅱ' },
+        { week: '後期第10週W1', date: '12月4日', content: '円(3)', test: '—' },
+        { week: '後期第10週W2', date: '12月11日', content: '円(4)', test: '—' },
+        { week: '後期第11週', date: '12月18日', content: '円(5)', test: '—' },
+        { week: '後期第12週', date: '12月25日', content: '無理数(1)', test: '—' },
+        { week: '後期第13週', date: '1月8日', content: '無理数(2)', test: '円' },
+        { week: '後期第14週', date: '1月15日', content: '2次方程式(1)', test: '—' },
+        { week: '後期第15週', date: '1月22日', content: '2次方程式(2)', test: '—' },
+        { week: '後期第16週', date: '1月29日', content: '三平方の定理(1)', test: '—' },
+        { week: '後期第17週', date: '2月5日', content: '三平方の定理(2)', test: '無理数・2次方程式' },
+        { week: '後期第18週', date: '2月12日', content: '2次関数(1)', test: '—' },
+        { week: '後期第19週', date: '2月26日', content: '2次関数(2)', test: '三平方の定理' },
+        { week: '後期第20週W1', date: '3月5日', content: '2次関数(3)', test: '—' },
+        { week: '後期第20週W2', date: '3月12日', content: '円(6)', test: '—' },
+        { week: '後期第21週', date: '3月19日', content: '総括', test: '2次関数' }
+      ],
+      holidays: [
+        { date: '5月1日', label: '第1期休講期間' },
+        { date: '8月14日', label: '第2期休講期間' },
+        { date: '8月21日', label: '校内模試週間' },
+        { date: '1月1日', label: '第3期休講期間' },
+        { date: '2月19日', label: '校内模試週間' },
+        { date: '3月26日', label: '第4期休講期間' }
+      ],
+      tests: {
+        review: [
+          { name: '正負の数', date: '4月24日', status: 'done' },
+          { name: '式の計算Ⅰ', date: '5月22日', status: 'done' },
+          { name: '方程式', date: '6月26日', status: 'done' },
+          { name: '不等式', date: '7月17日', status: 'done' },
+          { name: '平行と合同', date: '8月28日', status: 'done' },
+          { name: '平行四边形', date: '9月11日', status: 'done' },
+          { name: '1次関数', date: '10月9日', status: 'pending' },
+          { name: '相似', date: '10月30日', status: 'upcoming' },
+          { name: '式の計算Ⅱ', date: '11月27日', status: 'upcoming' },
+          { name: '円', date: '1月8日', status: 'upcoming' },
+          { name: '無理数・2次方程式', date: '2月5日', status: 'upcoming' },
+          { name: '三平方の定理', date: '2月26日', status: 'upcoming' },
+          { name: '2次関数', date: '3月19日', status: 'upcoming' }
+        ],
+        test: [
+          { name: '計算テスト①', date: '4月17日', status: 'done' },
+          { name: '計算テスト②', date: '5月15日', status: 'done' },
+          { name: '計算テスト③', date: '6月12日', status: 'done' },
+          { name: '計算テスト④', date: '7月10日', status: 'done' }
+        ],
+        calc: [
+          { name: '計算テスト 第1回', date: '4月10日', status: 'done' },
+          { name: '計算テスト 第2回', date: '5月8日', status: 'done' },
+          { name: '計算テスト 第3回', date: '6月5日', status: 'done' },
+          { name: '計算テスト 第4回', date: '7月3日', status: 'done' }
+        ]
+      }
+    },
+    english: {
+      name: '中1 英語',
+      curriculum: [
+        { week: '前期 1', date: '4月3日', content: 'be動詞Ⅰ 肯定文', test: '—' },
+        { week: '前期 2', date: '4月10日', content: 'be動詞Ⅱ 否定文・疑問文', test: '—' },
+        { week: '前期 3', date: '4月17日', content: 'be動詞Ⅲ 複数', test: '—' },
+        { week: '前期 4', date: '4月24日', content: '前期1～3週のまとめ', test: '—' },
+        { week: '前期 5', date: '5月8日', content: 'be動詞Ⅳ 形容詞', test: '前期1～4週' },
+        { week: '前期 6', date: '5月15日', content: 'be動詞Ⅴ 疑問詞', test: '—' },
+        { week: '前期 7', date: '5月22日', content: '一般動詞Ⅰ 肯定文・否定文・疑問文', test: '—' },
+        { week: '前期 8', date: '5月29日', content: '前期5～7週のまとめ', test: '—' },
+        { week: '前期 9', date: '6月5日', content: '一般動詞Ⅱ 疑問詞', test: '前期5～8週' },
+        { week: '前期10', date: '6月12日', content: '比較Ⅰ', test: '—' },
+        { week: '前期11', date: '6月19日', content: '比較Ⅱ', test: '—' },
+        { week: '前期12', date: '6月26日', content: '前期9～11週のまとめ', test: '—' },
+        { week: '前期13', date: '7月3日', content: '現在進行形', test: '前期9～12週' },
+        { week: '前期14', date: '7月10日', content: '過去', test: '—' },
+        { week: '前期15', date: '7月17日', content: '未来', test: '—' },
+        { week: '前期16', date: '7月24日', content: '前期13～15週のまとめ', test: '—' },
+        { week: '前期17', date: '7月31日', content: '助動詞Ⅰ', test: '前期13～16週' },
+        { week: '前期18', date: '8月7日', content: '助動詞Ⅱ', test: '—' },
+        { week: '前期19', date: '8月28日', content: '名詞節・副詞節Ⅰ', test: '—' },
+        { week: '前期20', date: '9月4日', content: '前期17～19週のまとめ', test: '—' },
+        { week: '前期21', date: '9月11日', content: 'There is の文', test: '前期17～20週' },
+        { week: '前期22', date: '9月18日', content: '不定詞Ⅰ', test: '—' },
+        // 後期
+        { week: '後期 1', date: '10月2日', content: '不定詞Ⅱ', test: '—' },
+        { week: '後期 2', date: '10月9日', content: '前期21週～後期1週のまとめ', test: '—' },
+        { week: '後期 3', date: '10月16日', content: '動名詞', test: '前期21～後期2' },
+        { week: '後期 4', date: '10月23日', content: '5文型Ⅰ (SVC・SVOO)', test: '—' },
+        { week: '後期 5', date: '10月30日', content: '5文型Ⅱ (SVOC・SVO to do)', test: '—' },
+        { week: '後期 6', date: '11月6日', content: '後期3～5週のまとめ', test: '—' },
+        { week: '後期 7', date: '11月13日', content: '使役動詞・知覚動詞', test: '後期3～6週' },
+        { week: '後期 8', date: '11月20日', content: '受動態', test: '—' },
+        { week: '後期 9', date: '11月27日', content: '分詞・感嘆文', test: '—' },
+        { week: '後期10W1', date: '12月4日', content: '後期7～9週のまとめ', test: '—' },
+        { week: '後期10W2', date: '12月11日', content: '〃', test: '—' },
+        { week: '後期11', date: '12月18日', content: '現在完了Ⅰ', test: '後期7～10週' },
+        { week: '後期12', date: '12月25日', content: '現在完了Ⅱ', test: '—' },
+        { week: '後期13', date: '1月8日', content: '副詞節Ⅱ', test: '—' },
+        { week: '後期14', date: '1月15日', content: '後期11～13週のまとめ', test: '—' },
+        { week: '後期15', date: '1月22日', content: '助動詞Ⅲ', test: '後期11～14週' },
+        { week: '後期16', date: '1月29日', content: 'so～that ... to～to ... 構文', test: '—' },
+        { week: '後期17', date: '2月5日', content: '間接疑問', test: '—' },
+        { week: '後期18', date: '2月12日', content: '後期15～17週のまとめ', test: '—' },
+        { week: '後期19', date: '2月26日', content: '関係代名詞Ⅰ', test: '後期15～18週' },
+        { week: '後期20W1', date: '3月5日', content: '関係代名詞Ⅱ', test: '—' },
+        { week: '後期20W2', date: '3月12日', content: '〃', test: '—' },
+        { week: '後期21', date: '3月19日', content: '関係代名詞Ⅲ', test: '—' }
+      ],
+      tests: {
+        review: [
+          { name: '前期1～4週', date: '5月8日', status: 'done' },
+          { name: '前期5～8週', date: '6月5日', status: 'done' },
+          { name: '前期9～12週', date: '7月3日', status: 'done' },
+          { name: '前期13～16週', date: '7月31日', status: 'done' },
+          { name: '前期17～20週', date: '9月11日', status: 'done' },
+          { name: '前期21～後期2', date: '10月16日', status: 'pending' },
+          { name: '後期3～6週', date: '11月13日', status: 'upcoming' },
+          { name: '後期7～10週', date: '12月18日', status: 'upcoming' },
+          { name: '後期11～14週', date: '1月22日', status: 'upcoming' },
+          { name: '後期15～18週', date: '2月26日', status: 'upcoming' }
+        ],
+        test: [
+          { name: '復習テスト①', date: '5月22日', status: 'done' },
+          { name: '復習テスト②', date: '6月26日', status: 'done' },
+          { name: '復習テスト③', date: '7月24日', status: 'done' },
+          { name: '復習テスト④', date: '9月18日', status: 'done' }
+        ],
+        calc: [
+          { name: '計算テスト 第1回', date: '4月10日', status: 'done' },
+          { name: '計算テスト 第2回', date: '5月15日', status: 'done' },
+          { name: '計算テスト 第3回', date: '6月19日', status: 'done' },
+          { name: '計算テスト 第4回', date: '7月17日', status: 'done' }
+        ]
+      }
+    }
+  },
+  '2': {
+    math: {
+      name: '中2 数学',
+      curriculum: [
+        { week: '前期第01週', date: '4月2日', content: '幾何(1)', test: '—' },
+        { week: '前期第02週', date: '4月9日', content: '幾何(2)', test: '—' },
+        { week: '前期第03週', date: '4月16日', content: '幾何(3)', test: '—' },
+        { week: '前期第04週', date: '4月23日', content: '幾何(4)', test: '—' },
+        { week: '前期第05週', date: '5月7日', content: '幾何(5)', test: '—' },
+        { week: '前期第06週', date: '5月14日', content: '個数の処理・確率(1)', test: '—' },
+        { week: '前期第07週', date: '5月21日', content: '個数の処理・確率(2)', test: '幾何' },
+        { week: '前期第08週', date: '5月28日', content: '個数の処理・確率(3)', test: '—' },
+        { week: '前期第09週', date: '6月4日', content: '個数の処理・確率(4)', test: '—' },
+        { week: '前期第10週', date: '6月11日', content: '個数の処理・確率(5)', test: '—' },
+        { week: '前期第11週', date: '6月18日', content: '数と式(1)', test: '—' },
+        { week: '前期第12週', date: '6月25日', content: '数と式(2)', test: '個数の処理・確率' },
+        { week: '前期第13週W1', date: '7月2日', content: '数と式(3)', test: '—' },
+        { week: '前期第13週W2', date: '7月9日', content: '数と式(3)', test: '—' },
+        { week: '前期第14週', date: '7月16日', content: '数と式(4)', test: '—' },
+        { week: '前期第15週', date: '7月23日', content: '数と式(5)', test: '—' },
+        { week: '前期第16週', date: '7月30日', content: '数と式(6)', test: '—' },
+        { week: '前期第17週', date: '8月6日', content: '2次方程式(1)', test: '—' },
+        { week: '前期第18週', date: '8月27日', content: '2次方程式(2)', test: '数と式' },
+        { week: '前期第19週', date: '9月3日', content: '2次方程式(3)', test: '—' },
+        { week: '前期第20週', date: '9月10日', content: '2次方程式(4)', test: '—' },
+        { week: '前期第21週', date: '9月17日', content: '2次方程式(5)', test: '—' },
+        { week: '前期第22週', date: '9月24日', content: '2次方程式(6)', test: '—' }
+      ],
+      tests: {
+        review: [
+          { name: '幾何', date: '5月21日', status: 'done' },
+          { name: '個数の処理・確率', date: '6月25日', status: 'done' },
+          { name: '数と式', date: '8月27日', status: 'done' }
+        ],
+        test: [],
+        calc: []
+      }
+    },
+    english: {
+      name: '中2 英語',
+      curriculum: [
+        { week: '前期第01週', date: '4月1日', content: '文の種類', test: '—' },
+        { week: '前期第02週', date: '4月8日', content: '時制Ⅰ', test: '—' },
+        { week: '前期第03週', date: '4月15日', content: '時制Ⅱ', test: '—' },
+        { week: '前期第04週', date: '4月22日', content: '時制Ⅲ', test: '—' },
+        { week: '前期第05週', date: '5月6日', content: '前期1～4週のまとめ', test: '—' },
+        { week: '前期第06週', date: '5月13日', content: '助動詞Ⅰ', test: '前期1～4' },
+        { week: '前期第07週', date: '5月20日', content: '助動詞Ⅱ', test: '—' },
+        { week: '前期第08週', date: '5月27日', content: '仮定法', test: '—' },
+        { week: '前期第09週', date: '6月3日', content: '受動態Ⅰ', test: '—' },
+        { week: '前期第10週', date: '6月10日', content: '受動態Ⅱ', test: '—' },
+        { week: '前期第11週', date: '6月17日', content: '前期6～10週のまとめ', test: '—' },
+        { week: '前期第12週', date: '6月24日', content: '不定詞Ⅰ', test: '前期6～10' },
+        { week: '前期第13週W1', date: '7月1日', content: '不定詞Ⅱ', test: '—' },
+        { week: '前期第13週W2', date: '7月8日', content: '不定詞Ⅲ', test: '—' },
+        { week: '前期第14週', date: '7月15日', content: '不定詞Ⅲ', test: '—' },
+        { week: '前期第15週', date: '7月22日', content: '動名詞Ⅰ', test: '—' },
+        { week: '前期第16週', date: '7月29日', content: '動名詞Ⅱ', test: '—' },
+        { week: '前期第17週', date: '8月5日', content: '前期12～16週のまとめ', test: '—' },
+        { week: '前期第18週', date: '8月26日', content: '分詞', test: '前期12～16' },
+        { week: '前期第19週', date: '9月2日', content: '文型Ⅰ', test: '—' },
+        { week: '前期第20週', date: '9月9日', content: '文型Ⅱ', test: '—' },
+        { week: '前期第21週', date: '9月16日', content: '名詞・冠詞Ⅰ', test: '—' },
+        { week: '前期第22週', date: '9月23日', content: '名詞・冠詞Ⅱ', test: '—' }
+      ],
+      tests: {
+        review: [
+          { name: '前期1～4週', date: '5月13日', status: 'done' },
+          { name: '前期6～10週', date: '6月24日', status: 'done' },
+          { name: '前期12～16週', date: '8月26日', status: 'done' }
+        ],
+        test: [],
+        calc: []
+      }
+    }
+  }
+};
+
+// ============================================================
+// 表示ロジック
+// ============================================================
+
+let currentGrade = '1';
+let currentSubject = 'math';
+let currentFunc = 'curriculum';
+
+function getData() {
+  const gradeData = CURRICULUM_DATA[currentGrade];
+  if (!gradeData) return null;
+  return gradeData[currentSubject] || null;
+}
+
+function renderContent() {
+  const area = document.getElementById('contentArea');
+  const data = getData();
+
+  if (!data) {
+    area.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-construction"></i>
+        <p>${currentGrade === '1' || currentGrade === '2' ? '準備中です' : 'データ準備中'}</p>
+      </div>
+    `;
+    return;
+  }
+
+  if (currentFunc === 'curriculum') {
+    renderCurriculum(area, data);
+  } else {
+    renderTests(area, data);
+  }
+}
+
+function renderCurriculum(area, data) {
+  const curriculum = data.curriculum || [];
+  let html = `
+    <div class="curriculum-table-wrap">
+      <table class="curriculum-table">
+        <thead>
+          <tr>
+            <th>日付</th>
+            <th>週</th>
+            <th>授業内容</th>
+            <th>総復習テスト</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  curriculum.forEach(item => {
+    const isTest = item.test !== '—' && item.test !== '';
+    const testClass = isTest ? 'test' : '';
+    const double = item.week.includes('W1') || item.week.includes('W2');
+    const doubleHtml = double ? `<span class="double">(W1/W2)</span>` : '';
+
+    // 休講期間のチェック（日付が空の場合）
+    if (item.date === '休講' || item.content === '休講') {
+      html += `
+        <tr class="holiday">
+          <td>${item.date}</td>
+          <td colspan="3">${item.content}</td>
+        </tr>
+      `;
+      return;
+    }
+
+    html += `
+      <tr>
+        <td>${item.date}</td>
+        <td>${item.week} ${doubleHtml}</td>
+        <td>${item.content}</td>
+        <td class="${testClass}">${item.test || '—'}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  // 凡例
+  html += `
+    <div style="margin-top: 16px; font-size:0.8rem; color:#6b5d4e; display:flex; gap:20px; flex-wrap:wrap;">
+      <span><span style="background:#f0ebe4; padding:2px 10px; border-radius:4px;">総復習テスト実施週</span></span>
+      <span><span style="color:#8f735b;">W1/W2</span> ダブル授業</span>
+    </div>
+  `;
+
+  area.innerHTML = html;
+}
+
+function renderTests(area, data) {
+  const tests = data.tests || {};
+  let testData = [];
+
+  if (currentFunc === 'review') testData = tests.review || [];
+  else if (currentFunc === 'test') testData = tests.test || [];
+  else if (currentFunc === 'calc') testData = tests.calc || [];
+
+  if (!testData || testData.length === 0) {
+    area.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-clipboard-list"></i>
+        <p>${currentFunc === 'review' ? '総復習テスト' : currentFunc === 'test' ? '復習テスト' : '計算テスト'} データがありません</p>
+      </div>
+    `;
+    return;
+  }
+
+  const statusMap = {
+    done: { label: '済', class: 'done' },
+    pending: { label: '実施予定', class: 'pending' },
+    upcoming: { label: '予定', class: 'upcoming' }
+  };
+
+  const funcNames = {
+    review: '総復習テスト',
+    test: '復習テスト',
+    calc: '計算テスト'
+  };
+
+  let html = `
+    <div style="margin-bottom:16px;">
+      <span style="font-weight:600; font-size:1.1rem;">${funcNames[currentFunc]}</span>
+      <span style="margin-left:12px; font-size:0.85rem; color:#6b5d4e;">全 ${testData.length} 件</span>
+    </div>
+    <div class="test-list">
+  `;
+
+  testData.forEach(item => {
+    const status = statusMap[item.status] || statusMap.upcoming;
+    html += `
+      <div class="test-item">
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="date">${item.date || '日程未定'}</div>
+        </div>
+        <span class="status ${status.class}">${status.label}</span>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  area.innerHTML = html;
+}
+
+// ============================================================
+// イベントハンドラ
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  // 学年タブ
+  document.querySelectorAll('#gradeTabs .tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#gradeTabs .tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentGrade = this.dataset.grade;
+      renderContent();
+    });
+  });
+
+  // 科目タブ
+  document.querySelectorAll('#subjectTabs .tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#subjectTabs .tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentSubject = this.dataset.subject;
+      renderContent();
+    });
+  });
+
+  // 機能タブ
+  document.querySelectorAll('#funcTabs .tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#funcTabs .tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentFunc = this.dataset.func;
+      renderContent();
+    });
+  });
+
+  // 初期表示
+  renderContent();
+
+  // Token関連（共通関数）
+  updateStatus();
+});
+
+// ============================================================
+// Token 管理（共通）
+// ============================================================
+
+function getToken() {
+  return localStorage.getItem('github_token') || '';
+}
+
+function setTokenFromInput() {
+  const input = document.getElementById('tokenInput');
+  if (!input) return;
+  const token = input.value.trim();
+  if (!token) { showToast('❌ Token を入力してください'); return; }
+  if (!token.startsWith('ghp_')) { showToast('❌ Token は ghp_ で始まる必要があります'); return; }
+  localStorage.setItem('github_token', token);
+  input.value = '';
+  updateStatus();
+  showToast('✅ Token を設定しました');
+}
+
+function updateStatus() {
+  const token = getToken();
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  const status = document.getElementById('tokenStatus');
+  const saveBtn = document.getElementById('saveBtn');
+  const loadBtn = document.getElementById('loadBtn');
+
+  if (token) {
+    if (dot) dot.className = 'status-dot online';
+    if (text) text.textContent = 'オンライン';
+    if (status) status.textContent = '✅ ' + token.substring(0, 8) + '...';
+    if (saveBtn) saveBtn.disabled = false;
+    if (loadBtn) loadBtn.disabled = false;
+  } else {
+    if (dot) dot.className = 'status-dot offline';
+    if (text) text.textContent = 'オフライン';
+    if (status) status.textContent = '🔑 未設定';
+    if (saveBtn) saveBtn.disabled = true;
+    if (loadBtn) loadBtn.disabled = true;
+  }
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// Enter キーで Token 設定
+document.getElementById('tokenInput')?.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') setTokenFromInput();
+});
+
+// ============================================================
+// 共通関数（他のページから呼ばれる）
+// ============================================================
+
+function saveToGitHub() { showToast('💾 GitHub保存機能は後日実装予定'); }
+function loadFromGitHub() { showToast('📥 GitHub読込機能は後日実装予定'); }
+function exportData() { showToast('📁 バックアップ機能は後日実装予定'); }
+function importData() { showToast('📁 復元機能は後日実装予定'); }
+</script>
+</body>
+</html>
