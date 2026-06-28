@@ -1,1 +1,166 @@
-
+{
+  "years": [
+    {
+      "id": "y1",
+      "name": "中1",
+      "sub": "基礎",
+      "progress": 45
+    },
+    {
+      "id": "y2",
+      "name": "中2",
+      "sub": "発展",
+      "progress": 72
+    },
+    {
+      "id": "y3",
+      "name": "中3",
+      "sub": "応用",
+      "progress": 30
+    },
+    {
+      "id": "y4",
+      "name": "高1",
+      "sub": "標準",
+      "progress": 10
+    },
+    {
+      "id": "y5",
+      "name": "高2",
+      "sub": "演習",
+      "progress": 5
+    },
+    {
+      "id": "y6",
+      "name": "高3",
+      "sub": "総仕上げ",
+      "progress": 0
+    }
+  ],
+  "scores": [
+    {
+      "id": "s1",
+      "subject": "中2 歴史",
+      "score": 86,
+      "date": "2026-06-27"
+    },
+    {
+      "id": "s2",
+      "subject": "中2 数学",
+      "score": 72,
+      "date": "2026-06-25"
+    },
+    {
+      "id": "s3",
+      "subject": "中2 国語",
+      "score": 90,
+      "date": "2026-06-20"
+    },
+    {
+      "id": "mqx4m6w42c6q",
+      "subject": "国語",
+      "score": 60,
+      "date": "2026-06-28"
+    },
+    {
+      "id": "mqx9v6qlpmb6",
+      "subject": "d",
+      "score": 20,
+      "date": "2026-06-28"
+    },
+    {
+      "id": "mqxaitx40cpa",
+      "subject": "dd",
+      "score": 4,
+      "date": "2026-06-28"
+    },
+    {
+      "id": "mqxaniul8rln",
+      "subject": "ff",
+      "score": 1,
+      "date": "2026-06-28"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "r1",
+      "title": "歴史: 元禄文化・赤穂事件 暗記",
+      "done": false
+    },
+    {
+      "id": "r2",
+      "title": "数学: 一次関数グラフ 演習問題",
+      "done": false
+    },
+    {
+      "id": "r3",
+      "title": "英語: 不定詞・動名詞 復習",
+      "done": true
+    }
+  ],
+  "tetsu": [
+    {
+      "id": "t1",
+      "name": "古文・漢文",
+      "progress": 68,
+      "icon": "fa-scroll"
+    },
+    {
+      "id": "t2",
+      "name": "数学 応用",
+      "progress": 42,
+      "icon": "fa-calculator"
+    },
+    {
+      "id": "t3",
+      "name": "歴史・地理",
+      "progress": 81,
+      "icon": "fa-globe-asia"
+    },
+    {
+      "id": "t4",
+      "name": "理科 物理",
+      "progress": 25,
+      "icon": "fa-flask"
+    }
+  ],
+  "schedules": [
+    {
+      "id": "s1",
+      "text": "第1週: 漢文 訓読 完了",
+      "done": true
+    },
+    {
+      "id": "s2",
+      "text": "第2週: 江戸時代 基礎 完了",
+      "done": true
+    },
+    {
+      "id": "s3",
+      "text": "第3週: 関数 演習中 (70%)",
+      "done": false
+    },
+    {
+      "id": "s4",
+      "text": "第4週: 化学 未着手",
+      "done": false
+    }
+  ],
+  "exams": [
+    {
+      "id": "e1",
+      "name": "中2 歴史 期末",
+      "range": "p.36-39 (江戸時代)"
+    },
+    {
+      "id": "e2",
+      "name": "中2 国語 漢文",
+      "range": "『論語』『孟子』"
+    },
+    {
+      "id": "e3",
+      "name": "中2 数学 関数",
+      "range": "一次関数・連立方程式"
+    }
+  ]
+}
