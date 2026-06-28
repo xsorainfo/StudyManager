@@ -22,9 +22,12 @@
     .nav-right .data-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
     .nav-right .data-actions button { background: #3f352b; border: none; color: #e8dfd5; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; transition: 0.15s; display: flex; align-items: center; gap: 5px; }
     .nav-right .data-actions button:hover { background: #5f4b38; color: #fff; }
+    .nav-right .data-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
     .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
     .status-dot.online { background: #4CAF50; }
     .status-dot.offline { background: #f44336; }
+    .status-dot.saving { background: #ff9800; animation: pulse 0.8s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
     .token-bar { background: #f0ebe4; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
     .token-bar .label { font-weight: 600; color: #3d3229; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
@@ -156,7 +159,6 @@
     }
     .range-list .actions button:hover { background: #f5e0e0; }
 
-    /* ===== Textarea 入力欄 ===== */
     .add-area { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: flex-start; }
     .add-area textarea { 
       flex: 3; 
@@ -234,8 +236,15 @@
     <div class="nav-right">
       <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
       <div class="data-actions">
-        <span id="statusInfo"><span class="status-dot offline" id="statusDot"></span><span id="statusText">オフライン</span></span>
-        <button onclick="saveExamData()" id="saveBtn"><i class="fas fa-save"></i> 保存</button>
+        <span id="statusInfo">
+          <span class="status-dot offline" id="statusDot"></span>
+          <span id="statusText">オフライン</span>
+        </span>
+        <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
+        <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
+        <button onclick="exportData()"><i class="fas fa-file-export"></i></button>
+        <button onclick="document.getElementById('fileInput').click()"><i class="fas fa-file-import"></i></button>
+        <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
       </div>
     </div>
   </nav>
@@ -347,6 +356,14 @@
 
 <script>
 // ============================================================
+// 設定
+// ============================================================
+const GITHUB_OWNER = 'xsorainfo';
+const GITHUB_REPO = 'StudyManager';
+const GITHUB_PATH = 'data/exam_data.json';
+const GITHUB_BRANCH = 'main';
+
+// ============================================================
 // 試験データ
 // ============================================================
 
@@ -454,7 +471,208 @@ function loadExamData() {
 
 function saveExamData() {
   localStorage.setItem('exam_data', JSON.stringify(examData));
-  showToast('💾 試験データを保存しました');
+  showToast('💾 ローカルに保存しました');
+}
+
+// ============================================================
+// Token 管理
+// ============================================================
+
+function getToken() {
+  return localStorage.getItem('github_token') || '';
+}
+
+function setTokenFromInput() {
+  const input = document.getElementById('tokenInput');
+  if (!input) return;
+  const token = input.value.trim();
+  if (!token) { showToast('❌ Token を入力してください'); return; }
+  if (!token.startsWith('ghp_')) { showToast('❌ Token は ghp_ で始まる必要があります'); return; }
+  localStorage.setItem('github_token', token);
+  input.value = '';
+  updateStatus();
+  showToast('✅ Token を設定しました');
+}
+
+function updateStatus() {
+  const token = getToken();
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  const status = document.getElementById('tokenStatus');
+  const saveBtn = document.getElementById('saveBtn');
+  const loadBtn = document.getElementById('loadBtn');
+
+  if (token) {
+    dot.className = 'status-dot online';
+    text.textContent = 'オンライン';
+    status.textContent = '✅ ' + token.substring(0, 8) + '...';
+    saveBtn.disabled = false;
+    loadBtn.disabled = false;
+  } else {
+    dot.className = 'status-dot offline';
+    text.textContent = 'オフライン';
+    status.textContent = '🔑 未設定';
+    saveBtn.disabled = true;
+    loadBtn.disabled = true;
+  }
+}
+
+// ============================================================
+// GitHub 保存・読込
+// ============================================================
+
+function getHeaders() {
+  const token = getToken();
+  if (!token) return null;
+  return {
+    'Authorization': `token ${token}`,
+    'Accept': 'application/vnd.github.v3+json'
+  };
+}
+
+async function saveToGitHub() {
+  const token = getToken();
+  if (!token) {
+    showToast('❌ Token が設定されていません');
+    return;
+  }
+
+  // まずローカルに保存
+  saveExamData();
+
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  dot.className = 'status-dot saving';
+  text.textContent = '保存中...';
+
+  try {
+    const content = JSON.stringify(examData, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(content)));
+    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+    const headers = getHeaders();
+
+    // ファイルの存在確認とSHA取得
+    let sha = null;
+    const checkRes = await fetch(url, { headers });
+    if (checkRes.ok) {
+      const fileData = await checkRes.json();
+      sha = fileData.sha;
+    }
+
+    const body = {
+      message: `📝 試験データ更新: ${new Date().toISOString()}`,
+      content: encoded,
+      branch: GITHUB_BRANCH
+    };
+    if (sha) body.sha = sha;
+
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: headers,
+      body: JSON.stringify(body)
+    });
+
+    if (response.ok) {
+      dot.className = 'status-dot online';
+      text.textContent = 'オンライン';
+      showToast('✅ GitHub に保存しました');
+    } else {
+      const err = await response.json();
+      throw new Error(err.message || `HTTP ${response.status}`);
+    }
+  } catch(e) {
+    dot.className = 'status-dot offline';
+    text.textContent = 'エラー';
+    showToast('❌ 保存失敗: ' + e.message);
+  }
+}
+
+async function loadFromGitHub() {
+  const token = getToken();
+  if (!token) {
+    showToast('❌ Token が設定されていません');
+    return;
+  }
+
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  dot.className = 'status-dot saving';
+  text.textContent = '読込中...';
+
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+    const headers = getHeaders();
+    const response = await fetch(url, { headers });
+
+    if (response.status === 404) {
+      showToast('📭 GitHub にデータがありません');
+      dot.className = 'status-dot online';
+      text.textContent = 'オンライン';
+      return;
+    }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const fileData = await response.json();
+    const content = decodeURIComponent(escape(atob(fileData.content)));
+    const loadedData = JSON.parse(content);
+
+    // データ構造の検証
+    const keys = ['1','2','3','4','5','6'];
+    for (let key of keys) {
+      if (!loadedData[key]) loadedData[key] = {};
+    }
+
+    examData = loadedData;
+    localStorage.setItem('exam_data', JSON.stringify(examData));
+
+    dot.className = 'status-dot online';
+    text.textContent = 'オンライン';
+    renderContent();
+    showToast('✅ GitHub から読み込みました');
+  } catch(e) {
+    dot.className = 'status-dot offline';
+    text.textContent = 'エラー';
+    showToast('❌ 読込失敗: ' + e.message);
+  }
+}
+
+// ============================================================
+// インポート/エクスポート（JSONファイル）
+// ============================================================
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(examData, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `exam_data_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('📁 エクスポートしました');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      const keys = ['1','2','3','4','5','6'];
+      for (let key of keys) {
+        if (!imported[key]) imported[key] = {};
+      }
+      if (confirm('現在のデータをインポートデータで上書きしますか？')) {
+        examData = imported;
+        localStorage.setItem('exam_data', JSON.stringify(examData));
+        renderContent();
+        showToast('📁 インポートしました');
+      }
+    } catch(err) {
+      showToast('❌ ファイル読み込み失敗');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
 }
 
 // ============================================================
@@ -567,7 +785,7 @@ function renderContent() {
 
   area.innerHTML = html;
 
-  // Textarea Enter キーイベント（Shift+Enter は改行、Enterのみで送信）
+  // Textarea Enter キーイベント
   const rangeInput = document.getElementById('newRangeInput');
   if (rangeInput) {
     rangeInput.addEventListener('keydown', function(e) {
@@ -707,40 +925,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ============================================================
-// Token 管理（共通）
+// Toast
 // ============================================================
-
-function getToken() {
-  return localStorage.getItem('github_token') || '';
-}
-
-function setTokenFromInput() {
-  const input = document.getElementById('tokenInput');
-  if (!input) return;
-  const token = input.value.trim();
-  if (!token) { showToast('❌ Token を入力してください'); return; }
-  if (!token.startsWith('ghp_')) { showToast('❌ Token は ghp_ で始まる必要があります'); return; }
-  localStorage.setItem('github_token', token);
-  input.value = '';
-  updateStatus();
-  showToast('✅ Token を設定しました');
-}
-
-function updateStatus() {
-  const token = getToken();
-  const dot = document.getElementById('statusDot');
-  const text = document.getElementById('statusText');
-  const status = document.getElementById('tokenStatus');
-  if (token) {
-    if (dot) dot.className = 'status-dot online';
-    if (text) text.textContent = 'オンライン';
-    if (status) status.textContent = '✅ ' + token.substring(0, 8) + '...';
-  } else {
-    if (dot) dot.className = 'status-dot offline';
-    if (text) text.textContent = 'オフライン';
-    if (status) status.textContent = '🔑 未設定';
-  }
-}
 
 function showToast(msg) {
   const el = document.getElementById('toast');
@@ -756,7 +942,10 @@ window.addRange = addRange;
 window.deleteRange = deleteRange;
 window.addLink = addLink;
 window.deleteLink = deleteLink;
-window.saveExamData = saveExamData;
+window.saveToGitHub = saveToGitHub;
+window.loadFromGitHub = loadFromGitHub;
+window.exportData = exportData;
+window.importData = importData;
 window.setTokenFromInput = setTokenFromInput;
 window.applyDefaults = applyDefaults;
 </script>
