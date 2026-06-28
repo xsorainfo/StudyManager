@@ -141,31 +141,53 @@ const TETSU_DATA = {
             note: ''
           }
         ],
+        // ===== 復習テスト（每周实施，出题范围是上一周的课程内容） =====
         test: [
-          { 
-            id: 't1', name: '復習テスト①', date: '5月22日', 
-            status: 'done', 
-            score: 82, avg: 70, deviation: 56,
-            note: ''
-          },
-          { 
-            id: 't2', name: '復習テスト②', date: '6月26日', 
-            status: 'done', 
-            score: 75, avg: 65, deviation: 53,
-            note: ''
-          },
-          { 
-            id: 't3', name: '復習テスト③', date: '7月24日', 
-            status: 'done', 
-            score: 90, avg: 68, deviation: 64,
-            note: ''
-          },
-          { 
-            id: 't4', name: '復習テスト④', date: '9月18日', 
-            status: 'upcoming', 
-            score: null, avg: null, deviation: null,
-            note: ''
-          }
+          // ---- 前期 ----
+          { id: 't1', name: '復習テスト①', week: 2, date: '4月10日', range: '正負の数(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't2', name: '復習テスト②', week: 3, date: '4月17日', range: '正負の数(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't3', name: '復習テスト③', week: 4, date: '4月24日', range: '式の計算Ⅰ(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't4', name: '復習テスト④', week: 5, date: '5月8日', range: '式の計算Ⅰ(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't5', name: '復習テスト⑤', week: 6, date: '5月15日', range: '式の計算Ⅰ(3)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't6', name: '復習テスト⑥', week: 7, date: '5月22日', range: '方程式(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't7', name: '復習テスト⑦', week: 8, date: '5月29日', range: '方程式(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't8', name: '復習テスト⑧', week: 9, date: '6月5日', range: '方程式(3)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't9', name: '復習テスト⑨', week: 10, date: '6月12日', range: '方程式(4)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't10', name: '復習テスト⑩', week: 11, date: '6月19日', range: '方程式(5)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't11', name: '復習テスト⑪', week: 12, date: '6月26日', range: '不等式(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't12', name: '復習テスト⑫', week: 13, date: '7月3日', range: '不等式(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't13', name: '復習テスト⑬', week: 14, date: '7月10日', range: '平行と合同(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't14', name: '復習テスト⑭', week: 15, date: '7月17日', range: '平行と合同(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't15', name: '復習テスト⑮', week: 16, date: '7月24日', range: '平行と合同(3)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't16', name: '復習テスト⑯', week: 17, date: '7月31日', range: '平行と合同(4)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't17', name: '復習テスト⑰', week: 18, date: '8月7日', range: '平行と合同(5)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't18', name: '復習テスト⑱', week: 19, date: '8月28日', range: '平行四边形(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't19', name: '復習テスト⑲', week: 20, date: '9月4日', range: '平行四边形(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't20', name: '復習テスト⑳', week: 21, date: '9月11日', range: '1次関数(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't21', name: '復習テスト㉑', week: 22, date: '9月18日', range: '1次関数(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          
+          // ---- 後期 ----
+          { id: 't22', name: '復習テスト㉒', week: 2, date: '10月9日', range: '相似(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't23', name: '復習テスト㉓', week: 3, date: '10月16日', range: '相似(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't24', name: '復習テスト㉔', week: 4, date: '10月23日', range: '相似(3)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't25', name: '復習テスト㉕', week: 5, date: '10月30日', range: '式の計算Ⅱ(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't26', name: '復習テスト㉖', week: 6, date: '11月6日', range: '式の計算Ⅱ(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't27', name: '復習テスト㉗', week: 7, date: '11月13日', range: '式の計算Ⅱ(3)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't28', name: '復習テスト㉘', week: 8, date: '11月20日', range: '式の計算Ⅱ(4)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't29', name: '復習テスト㉙', week: 9, date: '11月27日', range: '円(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't30', name: '復習テスト㉚', week: 10, date: '12月4日', range: '円(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't31', name: '復習テスト㉛', week: 11, date: '12月11日', range: '円(3)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't32', name: '復習テスト㉜', week: 12, date: '12月18日', range: '円(4)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't33', name: '復習テスト㉝', week: 13, date: '12月25日', range: '円(5)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't34', name: '復習テスト㉞', week: 14, date: '1月8日', range: '無理数(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't35', name: '復習テスト㉟', week: 15, date: '1月15日', range: '無理数(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't36', name: '復習テスト㊱', week: 16, date: '1月22日', range: '2次方程式(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't37', name: '復習テスト㊲', week: 17, date: '1月29日', range: '2次方程式(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't38', name: '復習テスト㊳', week: 18, date: '2月5日', range: '三平方の定理(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't39', name: '復習テスト㊴', week: 19, date: '2月12日', range: '三平方の定理(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't40', name: '復習テスト㊵', week: 20, date: '2月26日', range: '2次関数(1)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't41', name: '復習テスト㊶', week: 21, date: '3月5日', range: '2次関数(2)', status: 'pending', score: null, avg: null, deviation: null, note: '' },
+          { id: 't42', name: '復習テスト㊷', week: 22, date: '3月12日', range: '2次関数(3)', status: 'pending', score: null, avg: null, deviation: null, note: '' }
         ],
         calc: [
           { 
