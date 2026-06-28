@@ -1,0 +1,62 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create config.js with Token
+        run: |
+          # 创建 scripts 目录（如果不存在）
+          mkdir -p scripts
+          
+          # 生成 config.js 文件
+          cat > scripts/config.js << 'EOF'
+          // =====================================================
+          // 自動生成ファイル - 手動編集しないでください
+          // 生成時間: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          // =====================================================
+          
+          window.GITHUB_CONFIG = {
+              token: '${{ secrets.GITHUB_TOKEN }}',
+              owner: '${{ github.repository_owner }}',
+              repo: '${{ github.event.repository.name }}',
+              path: 'data/data.json',
+              branch: 'main'
+          };
+          
+          console.log('✅ GitHub Config loaded (owner: ' + window.GITHUB_CONFIG.owner + ', repo: ' + window.GITHUB_CONFIG.repo + ')');
+          EOF
+          
+          # 显示生成状态（不显示token内容）
+          echo "✅ config.js created successfully"
+
+      - name: List files (debug)
+        run: |
+          echo "📁 scripts/config.js content:"
+          head -n 10 scripts/config.js
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          keep_files: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: '🚀 Deploy with config ${{ github.sha }}'
+
+      - name: Output deployment info
+        run: |
+          echo "✅ Deployed to https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pages/index.html"
