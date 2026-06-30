@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>化学式暗記 · 学び航路</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
+    body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .app-wrapper { max-width: 1000px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
+
+    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 24px; color: #f0ebe3; }
+    .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
+    .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 500; }
+    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover { background: #3f352b; color: #fff; }
+    .nav-links a.active { background: #5f4b38; color: #fff2e0; }
+    .nav-right { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; flex-wrap: wrap; }
+    .nav-right .user-badge { background: #3f352b; padding: 6px 18px 6px 14px; border-radius: 40px; display: flex; align-items: center; gap: 8px; }
+    .nav-right .data-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .nav-right .data-actions button { background: #3f352b; border: none; color: #e8dfd5; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; transition: 0.15s; display: flex; align-items: center; gap: 5px; }
+    .nav-right .data-actions button:hover { background: #5f4b38; color: #fff; }
+
+    .page-title { font-size: 1.8rem; font-weight: 700; color: #2a221b; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .page-title i { color: #8f735b; }
+    .page-title .sub { font-size: 0.9rem; font-weight: 400; color: #6b5d4e; margin-left: 12px; }
+
+    /* モード切替 */
+    .mode-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; }
+    .mode-tabs .tab { padding: 8px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
+    .mode-tabs .tab:hover { background: #e3d9ce; }
+    .mode-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
+
+    .mode-tabs .tab .badge { font-weight: 400; font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 0 8px; border-radius: 40px; margin-left: 4px; }
+
+    /* カードグリッド */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .card-item { background: #fffffffa; border-radius: 20px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 2px solid #ede8e0; transition: 0.15s; cursor: pointer; }
+    .card-item:hover { border-color: #b7a086; }
+    .card-item .formula { font-size: 1.3rem; font-weight: 700; color: #2c241c; text-align: center; padding: 12px 0; font-family: 'Times New Roman', serif; letter-spacing: 0.5px; }
+    .card-item .name { font-size: 1.1rem; color: #3d3229; text-align: center; padding: 8px 0; }
+    .card-item .hidden { background: #b31b1b; color: #b31b1b; padding: 0 8px; border-radius: 6px; transition: 0.1s; cursor: pointer; }
+    .card-item .hidden.revealed { background: transparent; color: #b31b1b; }
+    .card-item .category { font-size: 0.7rem; color: #8f735b; background: #f0ebe4; padding: 2px 12px; border-radius: 40px; display: inline-block; margin-bottom: 8px; }
+    .card-item .mode-label { font-size: 0.7rem; color: #6b5d4e; text-align: center; margin-top: 8px; border-top: 1px dashed #ede6dd; padding-top: 8px; }
+
+    /* カテゴリ別グループ */
+    .category-group { margin-bottom: 24px; }
+    .category-group .cat-title { font-size: 1.1rem; font-weight: 700; color: #3d3229; margin-bottom: 12px; padding-left: 4px; border-left: 4px solid #8f735b; padding-left: 12px; }
+    .category-group .cat-count { font-weight: 400; font-size: 0.8rem; color: #6b5d4e; margin-left: 8px; }
+
+    /* 統計 */
+    .stats { background: #f0ebe4; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 20px; font-size: 0.9rem; }
+    .stats span { display: flex; align-items: center; gap: 6px; }
+    .stats .num { font-weight: 700; color: #2c241c; }
+
+    /* 一括操作 */
+    .batch-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .batch-actions button { background: #f0ebe4; border: none; padding: 6px 18px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; transition: 0.15s; }
+    .batch-actions button:hover { background: #e3d9ce; }
+
+    .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
+    .toast-msg.show { opacity: 1; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: #b7a086; }
+    .empty-state i { font-size: 3rem; margin-bottom: 16px; }
+
+    @media (max-width: 600px) {
+      .card-grid { grid-template-columns: 1fr; }
+      .app-wrapper { padding: 16px; }
+      .page-title { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ===== 导航 ===== -->
+  <nav class="navbar">
+    <div class="nav-brand"><i class="fas fa-compass"></i><span>学び航路</span></div>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> ダッシュボード</a>
+      <a href="tetsu.html"><i class="fas fa-flag"></i> 鉄律会</a>
+      <a href="sakura.html"><i class="fas fa-cherry-blossom"></i> 桜蔭</a>
+      <a href="schedule.html"><i class="fas fa-calendar-alt"></i> 年間予定</a>
+      <a class="active" href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
+    </div>
+    <div class="nav-right">
+      <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
+    </div>
+  </nav>
+
+  <!-- ===== ページタイトル ===== -->
+  <div class="page-title">
+    <i class="fas fa-flask"></i> 化学式暗記
+    <span class="sub">中2 理科1 · 覚える化学式リスト</span>
+  </div>
+
+  <!-- ===== モード切替 ===== -->
+  <div class="mode-tabs" id="modeTabs">
+    <button class="tab active" data-mode="formula"><i class="fas fa-eye-slash"></i> 分子式を隠す</button>
+    <button class="tab" data-mode="name"><i class="fas fa-eye-slash"></i> 名前を隠す</button>
+  </div>
+
+  <!-- ===== 統計 ===== -->
+  <div class="stats" id="stats">
+    <span>📊 全 <span class="num" id="totalCount">0</span> 件</span>
+    <span>✅ 表示中 <span class="num" id="visibleCount">0</span> 件</span>
+    <span>🔴 隠し中 <span class="num" id="hiddenCount">0</span> 件</span>
+  </div>
+
+  <!-- ===== 一括操作 ===== -->
+  <div class="batch-actions">
+    <button onclick="revealAll()"><i class="fas fa-eye"></i> すべて表示</button>
+    <button onclick="hideAll()"><i class="fas fa-eye-slash"></i> すべて隠す</button>
+  </div>
+
+  <!-- ===== カード表示エリア ===== -->
+  <div id="cardArea"></div>
+
+  <div class="toast-msg" id="toast"></div>
+</div>
+
+<script>
+// ============================================================
+// 📦 データ
+// ============================================================
+
+const CHEMISTRY_DATA = [
+  // ---- 酸 ----
+  { formula: 'H<sup>+</sup>', name: '水素イオン', category: '酸' },
+  { formula: 'Li<sup>+</sup>', name: 'リチウムイオン', category: '酸' },
+  { formula: 'Na<sup>+</sup>', name: 'ナトリウムイオン', category: '酸' },
+  { formula: 'K<sup>+</sup>', name: 'カリウムイオン', category: '酸' },
+  { formula: 'Mg<sup>2+</sup>', name: 'マグネシウムイオン', category: '酸' },
+  { formula: 'Ca<sup>2+</sup>', name: 'カルシウムイオン', category: '酸' },
+  { formula: 'Al<sup>3+</sup>', name: 'アルミニウムイオン', category: '酸' },
+  { formula: 'O<sup>2-</sup>', name: '酸化物イオン', category: '酸' },
+  { formula: 'S<sup>2-</sup>', name: '硫化物イオン', category: '酸' },
+  { formula: 'F<sup>-</sup>', name: 'フッ化物イオン', category: '酸' },
+  { formula: 'Cl<sup>-</sup>', name: '塩化物イオン', category: '酸' },
+
+  // ---- 金属イオン ----
+  { formula: 'Fe<sup>2+</sup>', name: '鉄(II)イオン', category: '金属イオン' },
+  { formula: 'Fe<sup>3+</sup>', name: '鉄(III)イオン', category: '金属イオン' },
+  { formula: 'Cu<sup>+</sup>', name: '銅(I)イオン', category: '金属イオン' },
+  { formula: 'Cu<sup>2+</sup>', name: '銅(II)イオン', category: '金属イオン' },
+  { formula: 'Zn<sup>2+</sup>', name: '亜鉛イオン', category: '金属イオン' },
+  { formula: 'Ag<sup>+</sup>', name: '銀イオン', category: '金属イオン' },
+  { formula: 'Ba<sup>2+</sup>', name: 'バリウムイオン', category: '金属イオン' },
+
+  // ---- 酸（分子） ----
+  { formula: 'HNO<sub>3</sub>', name: '硝酸', category: '酸' },
+  { formula: 'H<sub>2</sub>SO<sub>4</sub>', name: '硫酸', category: '酸' },
+  { formula: 'H<sub>3</sub>PO<sub>4</sub>', name: 'リン酸', category: '酸' },
+  { formula: 'H<sub>2</sub>CO<sub>3</sub>', name: '炭酸', category: '酸' },
+  { formula: 'CH<sub>3</sub>COOH', name: '酢酸', category: '酸' },
+
+  // ---- 酸のイオン ----
+  { formula: 'NO<sub>3</sub><sup>-</sup>', name: '硝酸イオン', category: '酸のイオン' },
+  { formula: 'SO<sub>4</sub><sup>2-</sup>', name: '硫酸イオン', category: '酸のイオン' },
+  { formula: 'HSO<sub>4</sub><sup>-</sup>', name: '硫酸水素イオン', category: '酸のイオン' },
+  { formula: 'PO<sub>4</sub><sup>3-</sup>', name: 'リン酸イオン', category: '酸のイオン' },
+  { formula: 'CO<sub>3</sub><sup>2-</sup>', name: '炭酸イオン', category: '酸のイオン' },
+  { formula: 'HCO<sub>3</sub><sup>-</sup>', name: '炭酸水素イオン', category: '酸のイオン' },
+  { formula: 'CH<sub>3</sub>COO<sup>-</sup>', name: '酢酸イオン', category: '酸のイオン' },
+  { formula: 'OH<sup>-</sup>', name: '水酸化物イオン', category: '酸のイオン' },
+  { formula: 'NH<sub>4</sub><sup>+</sup>', name: 'アンモニウムイオン', category: '酸のイオン' },
+
+  // ---- 化合物 ----
+  { formula: 'CO', name: '一酸化炭素', category: '化合物' },
+  { formula: 'H<sub>2</sub>O<sub>2</sub>', name: '過酸化水素', category: '化合物' },
+  { formula: 'NO', name: '一酸化窒素', category: '化合物' },
+  { formula: 'NO<sub>2</sub>', name: '二酸化窒素', category: '化合物' },
+  { formula: 'SO<sub>2</sub>', name: '二酸化硫黄', category: '化合物' },
+  { formula: 'H<sub>2</sub>S', name: '硫化水素', category: '化合物' },
+  { formula: 'NH<sub>3</sub>', name: 'アンモニア', category: '化合物' },
+
+  // ---- 塩化物 ----
+  { formula: 'NaCl', name: '塩化ナトリウム', category: '塩化物' },
+  { formula: 'NaOH', name: '水酸化ナトリウム', category: '塩化物' },
+  { formula: 'NaNO<sub>3</sub>', name: '硝酸ナトリウム', category: '塩化物' },
+  { formula: 'Na<sub>2</sub>SO<sub>4</sub>', name: '硫酸ナトリウム', category: '塩化物' },
+  { formula: 'NH<sub>4</sub>Cl', name: '塩化アンモニウム', category: '塩化物' },
+  { formula: 'NH<sub>4</sub>NO<sub>3</sub>', name: '硝酸アンモニウム', category: '塩化物' },
+  { formula: '(NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub>', name: '硫酸アンモニウム', category: '塩化物' },
+  { formula: 'MgCl<sub>2</sub>', name: '塩化マグネシウム', category: '塩化物' },
+  { formula: 'Mg(OH)<sub>2</sub>', name: '水酸化マグネシウム', category: '塩化物' },
+  { formula: 'Mg(NO<sub>3</sub>)<sub>2</sub>', name: '硝酸マグネシウム', category: '塩化物' },
+  { formula: 'MgSO<sub>4</sub>', name: '硫酸マグネシウム', category: '塩化物' },
+  { formula: 'AlCl<sub>3</sub>', name: '塩化アルミニウム', category: '塩化物' },
+  { formula: 'Al(OH)<sub>3</sub>', name: '水酸化アルミニウム', category: '塩化物' },
+  { formula: 'Al(NO<sub>3</sub>)<sub>3</sub>', name: '硝酸アルミニウム', category: '塩化物' },
+  { formula: 'Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>', name: '硫酸アルミニウム', category: '塩化物' },
+
+  // ---- 金属の酸化物 ----
+  { formula: 'Fe<sub>2</sub>O<sub>3</sub>', name: '酸化鉄(III)', category: '金属の酸化物' },
+  { formula: 'FeO', name: '酸化鉄(II)', category: '金属の酸化物' },
+  { formula: 'Cu<sub>2</sub>O', name: '酸化銅(I)', category: '金属の酸化物' },
+  { formula: 'CuO', name: '酸化銅(II)', category: '金属の酸化物' },
+  { formula: 'Al<sub>2</sub>O<sub>3</sub>', name: '酸化アルミニウム', category: '金属の酸化物' },
+
+  // ---- 硫化物・硫酸塩 ----
+  { formula: 'CuS', name: '硫化銅(II)', category: '硫化物・硫酸塩' },
+  { formula: 'MgS', name: '硫化マグネシウム', category: '硫化物・硫酸塩' },
+  { formula: 'CuSO<sub>4</sub>', name: '硫酸銅(II)', category: '硫化物・硫酸塩' },
+  { formula: 'MgSO<sub>4</sub>', name: '硫酸マグネシウム', category: '硫化物・硫酸塩' }
+];
+
+// ============================================================
+// 状態管理
+// ============================================================
+
+let currentMode = 'formula'; // 'formula' | 'name'
+let revealedState = {}; // { index: true/false }
+
+// ============================================================
+// レンダリング
+// ============================================================
+
+function renderCards() {
+  const area = document.getElementById('cardArea');
+
+  // カテゴリごとにグループ化
+  const categories = {};
+  CHEMISTRY_DATA.forEach((item, index) => {
+    if (!categories[item.category]) categories[item.category] = [];
+    categories[item.category].push({ ...item, index });
+  });
+
+  let html = '';
+  let total = CHEMISTRY_DATA.length;
+  let visible = 0;
+  let hidden = 0;
+
+  Object.keys(categories).forEach(cat => {
+    const items = categories[cat];
+    html += `
+      <div class="category-group">
+        <div class="cat-title">${cat} <span class="cat-count">${items.length}件</span></div>
+        <div class="card-grid">
+    `;
+
+    items.forEach(item => {
+      const isRevealed = revealedState[item.index] || false;
+      const isFormulaHidden = (currentMode === 'formula' && !isRevealed);
+      const isNameHidden = (currentMode === 'name' && !isRevealed);
+
+      if (isFormulaHidden) hidden++;
+      else if (isNameHidden) hidden++;
+      else visible++;
+
+      // 表示するテキスト
+      let formulaDisplay = item.formula;
+      let nameDisplay = item.name;
+
+      if (isFormulaHidden) {
+        formulaDisplay = `<span class="hidden" onclick="toggleReveal(${item.index})">${item.formula}</span>`;
+      } else if (isNameHidden) {
+        nameDisplay = `<span class="hidden" onclick="toggleReveal(${item.index})">${item.name}</span>`;
+      }
+
+      html += `
+        <div class="card-item" onclick="toggleReveal(${item.index})">
+          <div class="category">${item.category}</div>
+          <div class="formula">${formulaDisplay}</div>
+          <div class="name">${nameDisplay}</div>
+          <div class="mode-label">
+            ${isFormulaHidden ? '🔴 タップで表示' : isNameHidden ? '🔴 タップで表示' : '✅ 表示中'}
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+        </div>
+      </div>
+    `;
+  });
+
+  area.innerHTML = html;
+
+  // 統計更新
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('visibleCount').textContent = visible;
+  document.getElementById('hiddenCount').textContent = hidden;
+}
+
+// ============================================================
+// 操作関数
+// ============================================================
+
+function toggleReveal(index) {
+  revealedState[index] = !revealedState[index];
+  renderCards();
+  showToast(revealedState[index] ? '✅ 表示しました' : '🔴 隠しました');
+}
+
+function revealAll() {
+  CHEMISTRY_DATA.forEach((_, i) => { revealedState[i] = true; });
+  renderCards();
+  showToast('✅ すべて表示しました');
+}
+
+function hideAll() {
+  CHEMISTRY_DATA.forEach((_, i) => { revealedState[i] = false; });
+  renderCards();
+  showToast('🔴 すべて隠しました');
+}
+
+// ============================================================
+// Toast
+// ============================================================
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// ============================================================
+// イベントハンドラ
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  // モード切替
+  document.querySelectorAll('#modeTabs .tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#modeTabs .tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentMode = this.dataset.mode;
+      // モード切替時に表示状態をリセット
+      revealedState = {};
+      renderCards();
+      showToast(currentMode === 'formula' ? '分子式を隠します' : '名前を隠します');
+    });
+  });
+
+  renderCards();
+});
+
+// グローバル公開
+window.toggleReveal = toggleReveal;
+window.revealAll = revealAll;
+window.hideAll = hideAll;
+</script>
+</body>
+</html>
