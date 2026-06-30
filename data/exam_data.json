@@ -28,7 +28,12 @@
           "ranges": [
             "<b>☆高校化学の基礎</b> \n\tp.18－21, p.24-35， p.38-39\n\tただし、以下を除く\n\tp.18B①～④，p.20B②③, p.20C，\n\tp.24A②，p.24C③④\n<b>☆プリント</b> \n\t・結合のまとめ 化学式のまとめ\n\t・覚える化学式リスト\n\t・練習問題 イオン式と組成式\n\t・練習問題 原子量・分子量・式量…"
           ],
-          "links": []
+          "links": [
+            {
+              "label": "中２ 理科１ 覚える化学式リスト",
+              "url": "https://xsorainfo.github.io/StudyManager/pages/anki-chemistryG2-1.html"
+            }
+          ]
         }
       }
     },
