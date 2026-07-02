@@ -192,7 +192,7 @@
       .add-area select { min-width: 100px; }
     }
 
-    /* 学科ごとのカード */
+    /* 学科ごとのカード（折りたたみ対応） */
     .subject-card { 
       background: #fcf9f4; 
       border-radius: 20px; 
@@ -208,6 +208,11 @@
       display: flex; 
       align-items: center; 
       gap: 10px; 
+      cursor: pointer;
+      user-select: none;
+    }
+    .subject-card .subject-title:hover .count {
+      color: #2c241c;
     }
     .subject-card .subject-title .count { 
       font-size: 0.75rem; 
@@ -216,11 +221,24 @@
       background: #f0ebe4; 
       padding: 0 12px; 
       border-radius: 40px; 
+      transition: 0.15s;
+    }
+    .subject-card .subject-title .toggle-icon {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: #8f735b;
+      transition: transform 0.2s;
+    }
+    .subject-card .subject-title .toggle-icon.open {
+      transform: rotate(180deg);
     }
     .subject-card .empty-subject { 
       color: #b7a086; 
       font-size: 0.85rem; 
       padding: 4px 0; 
+    }
+    .subject-card .subject-body {
+      transition: 0.2s;
     }
   </style>
 </head>
@@ -239,7 +257,6 @@
       <a class="active" href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
     </div>
     <div class="nav-right">
-      
       <div class="data-actions">
         <span id="statusInfo">
           <span class="status-dot offline" id="statusDot"></span>
@@ -350,6 +367,7 @@ let currentGrade = DEFAULT_GRADE;
 let currentSemester = DEFAULT_SEMESTER;
 let currentType = DEFAULT_EXAM_TYPE;
 let examData = {};
+let subjectStates = {}; // ★ 折りたたみ状態を保存
 
 function loadExamData() {
   const saved = localStorage.getItem('exam_data');
@@ -660,7 +678,24 @@ function renderSchedule() {
 }
 
 // ============================================================
-// レンダリング（全学科一覧）
+// 折りたたみ関数
+// ============================================================
+
+function toggleSubject(id) {
+  const body = document.getElementById(id + '_body');
+  const icon = document.getElementById(id + '_icon');
+  if (!body) return;
+  if (body.style.display === 'none') {
+    body.style.display = '';
+    if (icon) icon.className = 'fas fa-chevron-down';
+  } else {
+    body.style.display = 'none';
+    if (icon) icon.className = 'fas fa-chevron-right';
+  }
+}
+
+// ============================================================
+// レンダリング（全学科一覧 + 折りたたみ）
 // ============================================================
 
 function renderContent() {
@@ -685,10 +720,10 @@ function renderContent() {
     ${renderSchedule()}
   `;
 
-  // 各学科のデータを表示
   let totalRanges = 0;
   let totalLinks = 0;
   let hasData = false;
+  let subjectIdx = 0;
 
   ALL_SUBJECTS.forEach(subject => {
     const data = getSubjectData(subject);
@@ -703,39 +738,47 @@ function renderContent() {
     hasData = true;
     totalRanges += ranges.length;
     totalLinks += links.length;
+    const sid = 'subj_' + subjectIdx++;
+
+    // 初期状態：データがある場合は開いておく
+    const isOpen = true;
 
     html += `
       <div class="subject-card" data-subject="${subject}">
-        <div class="subject-title">
+        <div class="subject-title" onclick="toggleSubject('${sid}')">
           <span>${subject}</span>
           <span class="count">試験範囲 ${ranges.length} 件 ｜ リンク ${links.length} 件</span>
+          <span class="toggle-icon" id="${sid}_icon">
+            <i class="fas fa-chevron-down"></i>
+          </span>
         </div>
-        ${links.length > 0 ? `
-          <div class="practice-links" style="margin-top:4px;">
-            ${links.map((l, i) => `
-              <a href="${l.url}" target="_blank" class="practice-link">
-                <i class="fas fa-external-link-alt"></i>
-                <span class="link-label">${l.label}</span>
-                <span class="del-link" onclick="event.preventDefault(); event.stopPropagation(); deleteLink('${subject}', ${i})">
-                  <i class="fas fa-times"></i>
-                </span>
-              </a>
-            `).join('')}
-          </div>
-        ` : ''}
-        ${ranges.length > 0 ? `
-          <ul class="range-list" style="margin-top:4px;">
-            ${ranges.map((r, i) => `
-              <li>
-                <span class="range-text">${r}</span>
-                <div class="actions">
-                  <button onclick="deleteRange('${subject}', ${i})"><i class="fas fa-trash"></i></button>
-                </div>
-              </li>
-            `).join('')}
-          </ul>
-        ` : ''}
-        
+        <div class="subject-body" id="${sid}_body">
+          ${links.length > 0 ? `
+            <div class="practice-links" style="margin-top:8px;">
+              ${links.map((l, i) => `
+                <a href="${l.url}" target="_blank" class="practice-link">
+                  <i class="fas fa-external-link-alt"></i>
+                  <span class="link-label">${l.label}</span>
+                  <span class="del-link" onclick="event.preventDefault(); event.stopPropagation(); deleteLink('${subject}', ${i})">
+                    <i class="fas fa-times"></i>
+                  </span>
+                </a>
+              `).join('')}
+            </div>
+          ` : ''}
+          ${ranges.length > 0 ? `
+            <ul class="range-list" style="margin-top:4px;">
+              ${ranges.map((r, i) => `
+                <li>
+                  <span class="range-text">${r}</span>
+                  <div class="actions">
+                    <button onclick="deleteRange('${subject}', ${i})"><i class="fas fa-trash"></i></button>
+                  </div>
+                </li>
+              `).join('')}
+            </ul>
+          ` : ''}
+        </div>
       </div>
     `;
   });
@@ -964,6 +1007,7 @@ window.loadFromGitHub = loadFromGitHub;
 window.exportData = exportData;
 window.importData = importData;
 window.setTokenFromInput = setTokenFromInput;
+window.toggleSubject = toggleSubject;
 </script>
 </body>
 </html>
