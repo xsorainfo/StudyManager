@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>九州地名暗記 · 学び航路</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
+    body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .app-wrapper { max-width: 1400px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
+
+    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 24px; color: #f0ebe3; }
+    .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
+    .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 500; }
+    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover { background: #3f352b; color: #fff; }
+    .nav-links a.active { background: #5f4b38; color: #fff2e0; }
+    .nav-right { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; flex-wrap: wrap; }
+    .nav-right .user-badge { background: #3f352b; padding: 6px 18px 6px 14px; border-radius: 40px; display: flex; align-items: center; gap: 8px; }
+
+    .page-title { font-size: 1.8rem; font-weight: 700; color: #2a221b; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .page-title i { color: #8f735b; }
+    .page-title .sub { font-size: 0.9rem; font-weight: 400; color: #6b5d4e; margin-left: 12px; }
+
+    .mode-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; }
+    .mode-tabs .tab { padding: 8px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
+    .mode-tabs .tab:hover { background: #e3d9ce; }
+    .mode-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
+
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+    .card-item { background: #fffffffa; border-radius: 12px; padding: 12px 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 2px solid #ede8e0; transition: 0.15s; cursor: pointer; }
+    .card-item:hover { border-color: #b7a086; }
+    .card-item .name { font-size: 1.05rem; font-weight: 700; color: #2c241c; text-align: center; padding: 4px 0; }
+    .card-item .desc { font-size: 0.8rem; color: #3d3229; text-align: center; padding: 4px 0; line-height: 1.5; }
+    .card-item .hidden { background: #b31b1b; color: #b31b1b; padding: 0 6px; border-radius: 4px; transition: 0.1s; cursor: pointer; }
+    .card-item .hidden.revealed { background: transparent; color: #b31b1b; }
+    .card-item .category { font-size: 0.6rem; color: #8f735b; background: #f0ebe4; padding: 1px 10px; border-radius: 40px; display: inline-block; margin-bottom: 4px; }
+    .card-item .mode-label { font-size: 0.6rem; color: #6b5d4e; text-align: center; margin-top: 6px; border-top: 1px dashed #ede6dd; padding-top: 6px; }
+
+    .stats { background: #f0ebe4; border-radius: 20px; padding: 10px 18px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.85rem; }
+    .stats span { display: flex; align-items: center; gap: 6px; }
+    .stats .num { font-weight: 700; color: #2c241c; }
+
+    .batch-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .batch-actions button { background: #f0ebe4; border: none; padding: 5px 14px; border-radius: 40px; cursor: pointer; font-size: 0.75rem; transition: 0.15s; }
+    .batch-actions button:hover { background: #e3d9ce; }
+
+    .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
+    .toast-msg.show { opacity: 1; }
+
+    @media (max-width: 600px) {
+      .card-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+      .app-wrapper { padding: 16px; }
+      .page-title { font-size: 1.3rem; }
+      .card-item .name { font-size: 0.9rem; }
+      .card-item .desc { font-size: 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ===== 导航 ===== -->
+  <nav class="navbar">
+    <div class="nav-brand"><i class="fas fa-compass"></i><span>学び航路</span></div>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> ダッシュボード</a>
+      <a href="tetsu.html"><i class="fas fa-flag"></i> 鉄律会</a>
+      <a href="sakura.html"><i class="fas fa-cherry-blossom"></i> 桜蔭</a>
+      <a href="schedule.html"><i class="fas fa-calendar-alt"></i> 年間予定</a>
+      <a class="active" href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
+    </div>
+    <div class="nav-right">
+      <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
+    </div>
+  </nav>
+
+  <!-- ===== ページタイトル ===== -->
+  <div class="page-title">
+    <i class="fas fa-map"></i> 九州地名暗記
+    <span class="sub">地名と説明を暗記</span>
+  </div>
+
+  <!-- ===== モード切替 ===== -->
+  <div class="mode-tabs" id="modeTabs">
+    <button class="tab active" data-mode="name"><i class="fas fa-eye-slash"></i> 地名を隠す</button>
+    <button class="tab" data-mode="desc"><i class="fas fa-eye-slash"></i> 説明を隠す</button>
+  </div>
+
+  <!-- ===== 統計 ===== -->
+  <div class="stats" id="stats">
+    <span>📊 全 <span class="num" id="totalCount">0</span> 件</span>
+    <span>✅ 表示中 <span class="num" id="visibleCount">0</span> 件</span>
+    <span>🔴 隠し中 <span class="num" id="hiddenCount">0</span> 件</span>
+  </div>
+
+  <!-- ===== 一括操作 ===== -->
+  <div class="batch-actions">
+    <button onclick="revealAll()"><i class="fas fa-eye"></i> すべて表示</button>
+    <button onclick="hideAll()"><i class="fas fa-eye-slash"></i> すべて隠す</button>
+  </div>
+
+  <!-- ===== カード表示エリア ===== -->
+  <div id="cardArea"></div>
+
+  <div class="toast-msg" id="toast"></div>
+</div>
+
+<script>
+// ============================================================
+// 📦 データ
+// ============================================================
+
+const KYUSHU_DATA = [
+  // ---- 地名（説明付き） ----
+  { name: '玄界灘', desc: '古代、大陸と日本をつなぐルート。北東にある沖ノ島は世界文化遺産「神宿る島」', category: '海' },
+  { name: '関門海峡', desc: '日本海と周防灘を結ぶ海峡', category: '海峡' },
+  { name: '周防灘', desc: '瀬戸内海の一部', category: '海' },
+  { name: '別府湾', desc: '', category: '湾' },
+  { name: '日向灘', desc: '', category: '海' },
+  { name: '志布志湾', desc: '志布志湾にある志布志港は、日本有数の飼料穀物輸入拠点。国の石油備蓄基地もある', category: '湾' },
+  { name: '鹿児島湾', desc: '巨大なカルデラが湾になった。湾の奥（北部）は始良カルデラ。約3万年前に超巨大噴火が起こり、シラス台地をつくった', category: '湾' },
+  { name: '八代海', desc: '熊本県・鹿児島県本土と天草諸島の間の海。水俣市は八代海に面する', category: '海' },
+  { name: '有明海', desc: '干潟が広がり、古くから干拓が行われてきた。漁業、海苔の養殖がさかん', category: '海' },
+  { name: '対馬', desc: '朝鮮半島南部の釜山まで直線距離で約50km。長崎県に属する', category: '島' },
+  { name: '壱岐', desc: '玄界灘の西部にある島。さらに西は東シナ海。長崎県', category: '島' },
+  { name: '志賀島', desc: '金印「漢委奴国王」出土。東京国立博物館にある', category: '島' },
+  { name: '五島列島', desc: '長崎県の島。東シナ海に浮かぶ大小140余りの島。漁業がさかん。隠れキリシタンの歴史→世界文化遺産', category: '列島' },
+  { name: '天草諸島', desc: '熊本県と鹿児島県にまたがる島々。養殖がさかん。隠れキリシタンの歴史→世界文化遺産', category: '諸島' },
+  { name: '桜島', desc: '火山の島。成層火山。昔は島だったが、その後の噴火で大隅半島とつながった', category: '島' },
+  { name: '国東半島', desc: '中央に火山がある', category: '半島' },
+  { name: '島原半島', desc: '雲仙・普賢岳がある', category: '半島' },
+  { name: '薩摩半島', desc: '', category: '半島' },
+  { name: '長崎鼻', desc: '薩摩半島南端', category: '岬' },
+  { name: '大隅半島', desc: '', category: '半島' },
+  { name: '種子島', desc: '宇宙センター', category: '島' },
+  { name: '屋久島', desc: '世界自然遺産', category: '島' },
+  { name: '奄美大島', desc: '世界自然遺産', category: '島' },
+  { name: '与論島', desc: 'ここまで鹿児島県', category: '島' },
+  { name: '沖縄島', desc: '沖縄県で一番大きい島', category: '島' },
+  { name: '西表島', desc: '世界自然遺産', category: '島' },
+  { name: '尖閣諸島', desc: '教科書21ページ参照', category: '諸島' },
+  { name: '台湾', desc: '日本の西端「与那国島」まで110km', category: 'その他' },
+  { name: '諫早湾干拓地', desc: '諫早湾を含む有明海で江戸時代以前から干拓が行われてきた。農林水産省が国営干拓事業として実施', category: '干拓' },
+
+  // ---- 都市 ----
+  { name: '北九州', desc: '★', category: '都市' },
+  { name: '宮若', desc: '★', category: '都市' },
+  { name: '福岡', desc: '', category: '都市' },
+  { name: '唐津', desc: '佐賀県で人口第2の都市。福岡市との結びつきも深い。唐津焼は伊万里焼とともに伝統的な焼き物として有名', category: '都市' },
+  { name: '佐世保', desc: '★', category: '都市' },
+  { name: '長崎', desc: '★', category: '都市' },
+  { name: '鹿島', desc: '有明海の干潟に面する都市', category: '都市' },
+  { name: '佐賀', desc: '', category: '都市' },
+  { name: '久留米', desc: '★', category: '都市' },
+  { name: '日田', desc: '日田盆地の中心', category: '都市' },
+  { name: '別府', desc: '国際観光温泉文化都市。「湯けむり」は別府の象徴', category: '都市' },
+  { name: '大分', desc: '★', category: '都市' },
+  { name: '延岡', desc: '★', category: '都市' },
+  { name: '宮崎', desc: '', category: '都市' },
+  { name: '都城', desc: '畜産がさかん。令和5年は市町村別の農業産出額日本1！', category: '都市' },
+  { name: '熊本', desc: '', category: '都市' },
+  { name: '八代', desc: 'トマトの大産地', category: '都市' },
+  { name: '水俣', desc: 'プリント「水俣病」参照', category: '都市' },
+  { name: '川内', desc: '川内川下流にある都市', category: '都市' },
+  { name: '鹿児島', desc: '', category: '都市' },
+  { name: '指宿', desc: '温泉のまち', category: '都市' },
+  { name: '鹿屋', desc: '笠野原などのシラス台地が広がる大隅半島の中部の中心', category: '都市' },
+  { name: '五島', desc: '五島列島の中心', category: '都市' },
+  { name: '那覇', desc: '', category: '都市' }
+];
+
+// ============================================================
+// 状態管理
+// ============================================================
+
+let currentMode = 'name';
+let revealedState = {};
+
+// ============================================================
+// レンダリング
+// ============================================================
+
+function renderCards() {
+  const area = document.getElementById('cardArea');
+
+  const categories = {};
+  KYUSHU_DATA.forEach((item, index) => {
+    if (!categories[item.category]) categories[item.category] = [];
+    categories[item.category].push({ ...item, index });
+  });
+
+  let html = '';
+  let total = KYUSHU_DATA.length;
+  let visible = 0;
+  let hidden = 0;
+
+  Object.keys(categories).forEach(cat => {
+    const items = categories[cat];
+    html += `
+      <div class="category-group" style="margin-bottom:20px;">
+        <div class="cat-title" style="font-size:1.05rem; font-weight:700; color:#3d3229; margin-bottom:10px; border-left:4px solid #8f735b; padding-left:12px;">
+          ${cat} <span style="font-weight:400; font-size:0.75rem; color:#6b5d4e; margin-left:8px;">${items.length}件</span>
+        </div>
+        <div class="card-grid">
+    `;
+
+    items.forEach(item => {
+      const isRevealed = revealedState[item.index] || false;
+      const isNameHidden = (currentMode === 'name' && !isRevealed);
+      const isDescHidden = (currentMode === 'desc' && !isRevealed);
+
+      if (isNameHidden || isDescHidden) hidden++;
+      else visible++;
+
+      let nameDisplay = item.name;
+      let descDisplay = item.desc || '—';
+
+      if (isNameHidden) {
+        nameDisplay = `<span class="hidden" onclick="event.stopPropagation(); toggleReveal(${item.index})">${item.name}</span>`;
+      }
+      if (isDescHidden) {
+        descDisplay = `<span class="hidden" onclick="event.stopPropagation(); toggleReveal(${item.index})">${descDisplay}</span>`;
+      }
+
+      html += `
+        <div class="card-item" onclick="toggleReveal(${item.index})">
+          <div class="category">${item.category}</div>
+          <div class="name">${nameDisplay}</div>
+          <div class="desc">${descDisplay}</div>
+          <div class="mode-label">
+            ${(isNameHidden || isDescHidden) ? '🔴' : '✅'}
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+        </div>
+      </div>
+    `;
+  });
+
+  area.innerHTML = html;
+
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('visibleCount').textContent = visible;
+  document.getElementById('hiddenCount').textContent = hidden;
+}
+
+// ============================================================
+// 操作関数
+// ============================================================
+
+function toggleReveal(index) {
+  revealedState[index] = !revealedState[index];
+  renderCards();
+  showToast(revealedState[index] ? '✅ 表示しました' : '🔴 隠しました');
+}
+
+function revealAll() {
+  KYUSHU_DATA.forEach((_, i) => { revealedState[i] = true; });
+  renderCards();
+  showToast('✅ すべて表示しました');
+}
+
+function hideAll() {
+  KYUSHU_DATA.forEach((_, i) => { revealedState[i] = false; });
+  renderCards();
+  showToast('🔴 すべて隠しました');
+}
+
+// ============================================================
+// Toast
+// ============================================================
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// ============================================================
+// イベントハンドラ
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('#modeTabs .tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#modeTabs .tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentMode = this.dataset.mode;
+      revealedState = {};
+      renderCards();
+      showToast(currentMode === 'name' ? '地名を隠します' : '説明を隠します');
+    });
+  });
+
+  renderCards();
+});
+
+window.toggleReveal = toggleReveal;
+window.revealAll = revealAll;
+window.hideAll = hideAll;
+</script>
+</body>
+</html>
