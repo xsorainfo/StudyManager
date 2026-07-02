@@ -8,7 +8,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
     body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-    .app-wrapper { max-width: 1400px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
+    .app-wrapper { max-width: 800px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
 
     .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 24px; color: #f0ebe3; }
     .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
@@ -29,15 +29,20 @@
     .mode-tabs .tab:hover { background: #e3d9ce; }
     .mode-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
 
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-    .card-item { background: #fffffffa; border-radius: 12px; padding: 12px 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 2px solid #ede8e0; transition: 0.15s; cursor: pointer; }
+    /* ★ 1行1列 ★ */
+    .card-grid { display: flex; flex-direction: column; gap: 8px; }
+    .card-item { background: #fffffffa; border-radius: 12px; padding: 14px 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 2px solid #ede8e0; transition: 0.15s; cursor: pointer; }
     .card-item:hover { border-color: #b7a086; }
-    .card-item .name { font-size: 1.05rem; font-weight: 700; color: #2c241c; text-align: center; padding: 4px 0; }
-    .card-item .desc { font-size: 0.8rem; color: #3d3229; text-align: center; padding: 4px 0; line-height: 1.5; }
+    .card-item .name { font-size: 1.2rem; font-weight: 700; color: #2c241c; padding: 4px 0; }
+    .card-item .desc { font-size: 0.95rem; color: #3d3229; padding: 4px 0; line-height: 1.6; }
     .card-item .hidden { background: #b31b1b; color: #b31b1b; padding: 0 6px; border-radius: 4px; transition: 0.1s; cursor: pointer; }
     .card-item .hidden.revealed { background: transparent; color: #b31b1b; }
-    .card-item .category { font-size: 0.6rem; color: #8f735b; background: #f0ebe4; padding: 1px 10px; border-radius: 40px; display: inline-block; margin-bottom: 4px; }
-    .card-item .mode-label { font-size: 0.6rem; color: #6b5d4e; text-align: center; margin-top: 6px; border-top: 1px dashed #ede6dd; padding-top: 6px; }
+    .card-item .category { font-size: 0.7rem; color: #8f735b; background: #f0ebe4; padding: 2px 12px; border-radius: 40px; display: inline-block; margin-bottom: 4px; }
+    .card-item .mode-label { font-size: 0.7rem; color: #6b5d4e; margin-top: 6px; border-top: 1px dashed #ede6dd; padding-top: 6px; }
+
+    .category-group { margin-bottom: 24px; }
+    .category-group .cat-title { font-size: 1.1rem; font-weight: 700; color: #3d3229; margin-bottom: 10px; border-left: 4px solid #8f735b; padding-left: 12px; }
+    .category-group .cat-count { font-weight: 400; font-size: 0.8rem; color: #6b5d4e; margin-left: 8px; }
 
     .stats { background: #f0ebe4; border-radius: 20px; padding: 10px 18px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.85rem; }
     .stats span { display: flex; align-items: center; gap: 6px; }
@@ -51,11 +56,11 @@
     .toast-msg.show { opacity: 1; }
 
     @media (max-width: 600px) {
-      .card-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
       .app-wrapper { padding: 16px; }
       .page-title { font-size: 1.3rem; }
-      .card-item .name { font-size: 0.9rem; }
-      .card-item .desc { font-size: 0.7rem; }
+      .card-item .name { font-size: 1.1rem; }
+      .card-item .desc { font-size: 0.85rem; }
+      .card-item { padding: 12px 14px; }
     }
   </style>
 </head>
@@ -201,10 +206,8 @@ function renderCards() {
   Object.keys(categories).forEach(cat => {
     const items = categories[cat];
     html += `
-      <div class="category-group" style="margin-bottom:20px;">
-        <div class="cat-title" style="font-size:1.05rem; font-weight:700; color:#3d3229; margin-bottom:10px; border-left:4px solid #8f735b; padding-left:12px;">
-          ${cat} <span style="font-weight:400; font-size:0.75rem; color:#6b5d4e; margin-left:8px;">${items.length}件</span>
-        </div>
+      <div class="category-group">
+        <div class="cat-title">${cat} <span class="cat-count">${items.length}件</span></div>
         <div class="card-grid">
     `;
 
