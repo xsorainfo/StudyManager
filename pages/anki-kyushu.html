@@ -8,7 +8,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
     body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-    .app-wrapper { max-width: 800px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
+    .app-wrapper { max-width: 1200px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
 
     .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 24px; color: #f0ebe3; }
     .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
@@ -29,16 +29,16 @@
     .mode-tabs .tab:hover { background: #e3d9ce; }
     .mode-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
 
-    /* ★ 1行1列 ★ */
-    .card-grid { display: flex; flex-direction: column; gap: 8px; }
-    .card-item { background: #fffffffa; border-radius: 12px; padding: 14px 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 2px solid #ede8e0; transition: 0.15s; cursor: pointer; }
+    /* ★ 1行2列 ★ */
+    .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .card-item { background: #fffffffa; border-radius: 12px; padding: 14px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 2px solid #ede8e0; transition: 0.15s; cursor: pointer; }
     .card-item:hover { border-color: #b7a086; }
-    .card-item .name { font-size: 1.2rem; font-weight: 700; color: #2c241c; padding: 4px 0; }
-    .card-item .desc { font-size: 0.95rem; color: #3d3229; padding: 4px 0; line-height: 1.6; }
+    .card-item .name { font-size: 1.1rem; font-weight: 700; color: #2c241c; padding: 4px 0; }
+    .card-item .desc { font-size: 0.85rem; color: #3d3229; padding: 4px 0; line-height: 1.6; }
     .card-item .hidden { background: #b31b1b; color: #b31b1b; padding: 0 6px; border-radius: 4px; transition: 0.1s; cursor: pointer; }
     .card-item .hidden.revealed { background: transparent; color: #b31b1b; }
-    .card-item .category { font-size: 0.7rem; color: #8f735b; background: #f0ebe4; padding: 2px 12px; border-radius: 40px; display: inline-block; margin-bottom: 4px; }
-    .card-item .mode-label { font-size: 0.7rem; color: #6b5d4e; margin-top: 6px; border-top: 1px dashed #ede6dd; padding-top: 6px; }
+    .card-item .category { font-size: 0.65rem; color: #8f735b; background: #f0ebe4; padding: 2px 10px; border-radius: 40px; display: inline-block; margin-bottom: 4px; }
+    .card-item .mode-label { font-size: 0.65rem; color: #6b5d4e; margin-top: 6px; border-top: 1px dashed #ede6dd; padding-top: 6px; }
 
     .category-group { margin-bottom: 24px; }
     .category-group .cat-title { font-size: 1.1rem; font-weight: 700; color: #3d3229; margin-bottom: 10px; border-left: 4px solid #8f735b; padding-left: 12px; }
@@ -56,11 +56,11 @@
     .toast-msg.show { opacity: 1; }
 
     @media (max-width: 600px) {
+      .card-grid { grid-template-columns: 1fr; }
       .app-wrapper { padding: 16px; }
       .page-title { font-size: 1.3rem; }
-      .card-item .name { font-size: 1.1rem; }
-      .card-item .desc { font-size: 0.85rem; }
-      .card-item { padding: 12px 14px; }
+      .card-item .name { font-size: 1.0rem; }
+      .card-item .desc { font-size: 0.8rem; }
     }
   </style>
 </head>
@@ -121,21 +121,21 @@
 
 const KYUSHU_DATA = [
   // ---- 地名（説明付き） ----
-  { name: '玄界灘', desc: '古代、大陸と日本をつなぐルート。北東にある沖ノ島は世界文化遺産「神宿る島」', category: '海' },
+  { name: '玄界灘', desc: '古代、大陸と日本をつなぐルート。北東にある沖ノ島は世界文化遺産', category: '海' },
   { name: '関門海峡', desc: '日本海と周防灘を結ぶ海峡', category: '海峡' },
   { name: '周防灘', desc: '瀬戸内海の一部', category: '海' },
   { name: '別府湾', desc: '', category: '湾' },
   { name: '日向灘', desc: '', category: '海' },
-  { name: '志布志湾', desc: '志布志湾にある志布志港は、日本有数の飼料穀物輸入拠点。国の石油備蓄基地もある', category: '湾' },
-  { name: '鹿児島湾', desc: '巨大なカルデラが湾になった。湾の奥（北部）は始良カルデラ。約3万年前に超巨大噴火が起こり、シラス台地をつくった', category: '湾' },
-  { name: '八代海', desc: '熊本県・鹿児島県本土と天草諸島の間の海。水俣市は八代海に面する', category: '海' },
-  { name: '有明海', desc: '干潟が広がり、古くから干拓が行われてきた。漁業、海苔の養殖がさかん', category: '海' },
-  { name: '対馬', desc: '朝鮮半島南部の釜山まで直線距離で約50km。長崎県に属する', category: '島' },
-  { name: '壱岐', desc: '玄界灘の西部にある島。さらに西は東シナ海。長崎県', category: '島' },
-  { name: '志賀島', desc: '金印「漢委奴国王」出土。東京国立博物館にある', category: '島' },
-  { name: '五島列島', desc: '長崎県の島。東シナ海に浮かぶ大小140余りの島。漁業がさかん。隠れキリシタンの歴史→世界文化遺産', category: '列島' },
-  { name: '天草諸島', desc: '熊本県と鹿児島県にまたがる島々。養殖がさかん。隠れキリシタンの歴史→世界文化遺産', category: '諸島' },
-  { name: '桜島', desc: '火山の島。成層火山。昔は島だったが、その後の噴火で大隅半島とつながった', category: '島' },
+  { name: '志布志湾', desc: '日本有数の飼料穀物輸入拠点。国の石油備蓄基地もある', category: '湾' },
+  { name: '鹿児島湾', desc: '巨大なカルデラが湾になった。始良カルデラ。約3万年前に超巨大噴火', category: '湾' },
+  { name: '八代海', desc: '熊本県・鹿児島県本土と天草諸島の間の海。水俣市に面する', category: '海' },
+  { name: '有明海', desc: '干潟が広がり干拓が行われてきた。漁業・海苔養殖がさかん', category: '海' },
+  { name: '対馬', desc: '朝鮮半島南部の釜山まで約50km。長崎県に属する', category: '島' },
+  { name: '壱岐', desc: '玄界灘の西部にある島。長崎県', category: '島' },
+  { name: '志賀島', desc: '金印「漢委奴国王」出土。東京国立博物館', category: '島' },
+  { name: '五島列島', desc: '長崎県。東シナ海に浮かぶ140余りの島。隠れキリシタン→世界遺産', category: '列島' },
+  { name: '天草諸島', desc: '熊本県と鹿児島県。養殖がさかん。隠れキリシタン→世界遺産', category: '諸島' },
+  { name: '桜島', desc: '成層火山。昔は島だったが噴火で大隅半島とつながった', category: '島' },
   { name: '国東半島', desc: '中央に火山がある', category: '半島' },
   { name: '島原半島', desc: '雲仙・普賢岳がある', category: '半島' },
   { name: '薩摩半島', desc: '', category: '半島' },
@@ -149,31 +149,31 @@ const KYUSHU_DATA = [
   { name: '西表島', desc: '世界自然遺産', category: '島' },
   { name: '尖閣諸島', desc: '教科書21ページ参照', category: '諸島' },
   { name: '台湾', desc: '日本の西端「与那国島」まで110km', category: 'その他' },
-  { name: '諫早湾干拓地', desc: '諫早湾を含む有明海で江戸時代以前から干拓が行われてきた。農林水産省が国営干拓事業として実施', category: '干拓' },
+  { name: '諫早湾干拓地', desc: '有明海で江戸時代以前から干拓。農林水産省が国営事業として実施', category: '干拓' },
 
   // ---- 都市 ----
   { name: '北九州', desc: '★', category: '都市' },
   { name: '宮若', desc: '★', category: '都市' },
   { name: '福岡', desc: '', category: '都市' },
-  { name: '唐津', desc: '佐賀県で人口第2の都市。福岡市との結びつきも深い。唐津焼は伊万里焼とともに伝統的な焼き物として有名', category: '都市' },
+  { name: '唐津', desc: '佐賀県人口第2。唐津焼は伊万里焼とともに伝統的焼き物', category: '都市' },
   { name: '佐世保', desc: '★', category: '都市' },
   { name: '長崎', desc: '★', category: '都市' },
   { name: '鹿島', desc: '有明海の干潟に面する都市', category: '都市' },
   { name: '佐賀', desc: '', category: '都市' },
   { name: '久留米', desc: '★', category: '都市' },
   { name: '日田', desc: '日田盆地の中心', category: '都市' },
-  { name: '別府', desc: '国際観光温泉文化都市。「湯けむり」は別府の象徴', category: '都市' },
+  { name: '別府', desc: '国際観光温泉文化都市。「湯けむり」が象徴', category: '都市' },
   { name: '大分', desc: '★', category: '都市' },
   { name: '延岡', desc: '★', category: '都市' },
   { name: '宮崎', desc: '', category: '都市' },
-  { name: '都城', desc: '畜産がさかん。令和5年は市町村別の農業産出額日本1！', category: '都市' },
+  { name: '都城', desc: '畜産がさかん。農業産出額日本1（令和5年）', category: '都市' },
   { name: '熊本', desc: '', category: '都市' },
   { name: '八代', desc: 'トマトの大産地', category: '都市' },
   { name: '水俣', desc: 'プリント「水俣病」参照', category: '都市' },
   { name: '川内', desc: '川内川下流にある都市', category: '都市' },
   { name: '鹿児島', desc: '', category: '都市' },
   { name: '指宿', desc: '温泉のまち', category: '都市' },
-  { name: '鹿屋', desc: '笠野原などのシラス台地が広がる大隅半島の中部の中心', category: '都市' },
+  { name: '鹿屋', desc: 'シラス台地が広がる大隅半島中部の中心', category: '都市' },
   { name: '五島', desc: '五島列島の中心', category: '都市' },
   { name: '那覇', desc: '', category: '都市' }
 ];
