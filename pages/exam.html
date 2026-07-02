@@ -710,18 +710,6 @@ function renderContent() {
           <span>${subject}</span>
           <span class="count">試験範囲 ${ranges.length} 件 ｜ リンク ${links.length} 件</span>
         </div>
-        ${ranges.length > 0 ? `
-          <ul class="range-list" style="margin-top:4px;">
-            ${ranges.map((r, i) => `
-              <li>
-                <span class="range-text">${r}</span>
-                <div class="actions">
-                  <button onclick="deleteRange('${subject}', ${i})"><i class="fas fa-trash"></i></button>
-                </div>
-              </li>
-            `).join('')}
-          </ul>
-        ` : ''}
         ${links.length > 0 ? `
           <div class="practice-links" style="margin-top:4px;">
             ${links.map((l, i) => `
@@ -735,6 +723,19 @@ function renderContent() {
             `).join('')}
           </div>
         ` : ''}
+        ${ranges.length > 0 ? `
+          <ul class="range-list" style="margin-top:4px;">
+            ${ranges.map((r, i) => `
+              <li>
+                <span class="range-text">${r}</span>
+                <div class="actions">
+                  <button onclick="deleteRange('${subject}', ${i})"><i class="fas fa-trash"></i></button>
+                </div>
+              </li>
+            `).join('')}
+          </ul>
+        ` : ''}
+        
       </div>
     `;
   });
