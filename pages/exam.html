@@ -225,20 +225,23 @@
     }
     .subject-card .subject-title .toggle-icon {
       margin-left: auto;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       color: #8f735b;
-      transition: transform 0.2s;
+      background: #f0ebe4;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+    .subject-card .subject-title .toggle-icon:hover {
+      background: #e3d9ce;
     }
     .subject-card .subject-title .toggle-icon.open {
-      transform: rotate(180deg);
-    }
-    .subject-card .empty-subject { 
-      color: #b7a086; 
-      font-size: 0.85rem; 
-      padding: 4px 0; 
-    }
-    .subject-card .subject-body {
-      transition: 0.2s;
+      background: #8f735b;
+      color: white;
     }
   </style>
 </head>
@@ -687,10 +690,16 @@ function toggleSubject(id) {
   if (!body) return;
   if (body.style.display === 'none') {
     body.style.display = '';
-    if (icon) icon.className = 'fas fa-chevron-down';
+    if (icon) {
+      icon.className = 'toggle-icon open';
+      icon.innerHTML = '<i class="fas fa-minus"></i>';
+    }
   } else {
     body.style.display = 'none';
-    if (icon) icon.className = 'fas fa-chevron-right';
+    if (icon) {
+      icon.className = 'toggle-icon';
+      icon.innerHTML = '<i class="fas fa-plus"></i>';
+    }
   }
 }
 
@@ -740,16 +749,18 @@ function renderContent() {
     totalLinks += links.length;
     const sid = 'subj_' + subjectIdx++;
 
-    // 初期状態：データがある場合は開いておく
+    // ★ 初期状態は折りたたみ（false）
     const isOpen = false;
-
+    
+    // アイコンの初期表示（折りたたみ → ＋）
+    const iconHtml = isOpen ? '<i class="fas fa-minus"></i>' : '<i class="fas fa-plus"></i>';
+    const iconClass = isOpen ? 'toggle-icon open' : 'toggle-icon';
     
     html += `
       <div class="subject-card" data-subject="${subject}">
         <div class="subject-title" onclick="toggleSubject('${sid}')">
           <span>${subject}</span>
           <span class="count">試験範囲 ${ranges.length} 件</span>
-          <!-- ★ リンクはタイトル横に常に表示 -->
           ${links.length > 0 ? `
             <span style="display:inline-flex; gap:6px; flex-wrap:wrap; margin-left:8px;">
               ${links.map((l, i) => `
@@ -763,8 +774,8 @@ function renderContent() {
               `).join('')}
             </span>
           ` : ''}
-          <span class="toggle-icon" id="${sid}_icon">
-            <i class="fas fa-chevron-down"></i>
+          <span class="${iconClass}" id="${sid}_icon">
+            ${iconHtml}
           </span>
         </div>
         <div class="subject-body" id="${sid}_body" style="${isOpen ? '' : 'display:none;'}">
@@ -783,7 +794,6 @@ function renderContent() {
         </div>
       </div>
     `;
-  });
 
   // ★ データが1件もない場合のメッセージ ★
   if (!hasData) {
