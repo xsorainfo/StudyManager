@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>九州地名学習 · 学び航路</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
+    body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .app-wrapper { max-width: 1000px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
+
+    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 24px; color: #f0ebe3; }
+    .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
+    .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 500; }
+    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover { background: #3f352b; color: #fff; }
+    .nav-links a.active { background: #5f4b38; color: #fff2e0; }
+    .nav-right { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; flex-wrap: wrap; }
+    .nav-right .user-badge { background: #3f352b; padding: 6px 18px 6px 14px; border-radius: 40px; display: flex; align-items: center; gap: 8px; }
+
+    .page-title { font-size: 1.8rem; font-weight: 700; color: #2a221b; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .page-title i { color: #8f735b; }
+    .page-title .sub { font-size: 0.9rem; font-weight: 400; color: #6b5d4e; margin-left: 12px; }
+
+    /* ===== タブ ===== */
+    .main-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; }
+    .main-tabs .tab { padding: 8px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
+    .main-tabs .tab:hover { background: #e3d9ce; }
+    .main-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
+    .main-tabs .tab .badge { font-weight: 400; font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 0 8px; border-radius: 40px; margin-left: 4px; }
+
+    /* ===== 暗記モード ===== */
+    .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .card-item { background: #fffffffa; border-radius: 12px; padding: 14px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 2px solid #ede8e0; transition: 0.15s; cursor: pointer; }
+    .card-item:hover { border-color: #b7a086; }
+    .card-item .name { font-size: 1.1rem; font-weight: 700; color: #2c241c; padding: 4px 0; }
+    .card-item .desc { font-size: 0.85rem; color: #3d3229; padding: 4px 0; line-height: 1.6; }
+    .card-item .hidden { background: #b31b1b; color: #b31b1b; padding: 0 6px; border-radius: 4px; transition: 0.1s; cursor: pointer; }
+    .card-item .hidden.revealed { background: transparent; color: #b31b1b; }
+    .card-item .category { font-size: 0.65rem; color: #8f735b; background: #f0ebe4; padding: 2px 10px; border-radius: 40px; display: inline-block; margin-bottom: 4px; }
+    .card-item .mode-label { font-size: 0.65rem; color: #6b5d4e; margin-top: 6px; border-top: 1px dashed #ede6dd; padding-top: 6px; }
+
+    .category-group { margin-bottom: 20px; }
+    .category-group .cat-title { font-size: 1.05rem; font-weight: 700; color: #3d3229; margin-bottom: 10px; border-left: 4px solid #8f735b; padding-left: 12px; }
+    .category-group .cat-count { font-weight: 400; font-size: 0.75rem; color: #6b5d4e; margin-left: 8px; }
+
+    /* ===== クイズ共通 ===== */
+    .quiz-card { background: #fffffffa; border-radius: 20px; padding: 28px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 2px solid #ede8e0; margin-bottom: 20px; }
+    .quiz-card .question { font-size: 1.1rem; color: #3d3229; margin-bottom: 20px; line-height: 1.8; }
+    .quiz-card .options { display: flex; flex-direction: column; gap: 10px; }
+    .quiz-card .options .opt { padding: 12px 18px; border-radius: 12px; border: 2px solid #ede8e0; cursor: pointer; transition: 0.15s; font-size: 1.0rem; background: #fcf9f5; }
+    .quiz-card .options .opt:hover { border-color: #b7a086; background: #f8f4ef; }
+    .quiz-card .options .opt.correct { border-color: #2e7d32; background: #e8f5e9; }
+    .quiz-card .options .opt.wrong { border-color: #c62828; background: #ffebee; }
+    .quiz-card .options .opt.disabled { cursor: default; opacity: 0.7; }
+    .quiz-card .options .opt .label { font-weight: 600; color: #6b5d4e; margin-right: 8px; }
+    .quiz-card .result { margin-top: 16px; padding: 12px 16px; border-radius: 12px; font-weight: 600; display: none; }
+    .quiz-card .result.show { display: block; }
+    .quiz-card .result.correct { background: #e8f5e9; color: #2e7d32; border: 2px solid #2e7d32; }
+    .quiz-card .result.wrong { background: #ffebee; color: #c62828; border: 2px solid #c62828; }
+
+    /* ===== 入力モード ===== */
+    .input-area { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
+    .input-area input { flex: 1; min-width: 200px; padding: 10px 18px; border: 2px solid #d8cdbf; border-radius: 40px; font-size: 1rem; outline: none; background: white; }
+    .input-area input:focus { border-color: #8f735b; }
+    .input-area input:disabled { opacity: 0.5; }
+    .input-area button { background: #2c241c; border: none; color: white; padding: 10px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; }
+    .input-area button:hover { background: #4d3b2c; }
+    .input-area button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .input-hint { font-size: 0.8rem; color: #6b5d4e; margin-top: 8px; }
+
+    .quiz-controls { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; justify-content: center; }
+    .quiz-controls button { background: #2c241c; border: none; color: white; padding: 10px 28px; border-radius: 60px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+    .quiz-controls button:hover { background: #4d3b2c; transform: scale(0.97); }
+    .quiz-controls button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .quiz-controls button.secondary { background: #f0ebe4; color: #2c241c; }
+    .quiz-controls button.secondary:hover { background: #e3d9ce; }
+
+    .stats { background: #f0ebe4; border-radius: 20px; padding: 10px 18px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.85rem; justify-content: center; }
+    .stats span { display: flex; align-items: center; gap: 6px; }
+    .stats .num { font-weight: 700; color: #2c241c; }
+
+    .progress-bar { height: 6px; background: #ede8e0; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+    .progress-bar .fill { height: 100%; background: #8f735b; border-radius: 10px; transition: width 0.3s; width: 0%; }
+
+    .mode-sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .mode-sub-tabs .tab { padding: 4px 16px; border-radius: 40px; cursor: pointer; font-weight: 500; font-size: 0.8rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
+    .mode-sub-tabs .tab:hover { background: #e3d9ce; }
+    .mode-sub-tabs .tab.active { background: #8f735b; color: white; }
+
+    .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
+    .toast-msg.show { opacity: 1; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    @media (max-width: 600px) {
+      .card-grid { grid-template-columns: 1fr; }
+      .app-wrapper { padding: 16px; }
+      .page-title { font-size: 1.3rem; }
+      .quiz-card { padding: 18px 16px; }
+      .quiz-card .question { font-size: 1.0rem; }
+      .quiz-card .options .opt { font-size: 0.9rem; padding: 10px 14px; }
+      .input-area input { font-size: 0.9rem; }
+      .main-tabs .tab { padding: 6px 14px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ===== 导航 ===== -->
+  <nav class="navbar">
+    <div class="nav-brand"><i class="fas fa-compass"></i><span>学び航路</span></div>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> ダッシュボード</a>
+      <a href="tetsu.html"><i class="fas fa-flag"></i> 鉄律会</a>
+      <a href="sakura.html"><i class="fas fa-cherry-blossom"></i> 桜蔭</a>
+      <a href="schedule.html"><i class="fas fa-calendar-alt"></i> 年間予定</a>
+      <a class="active" href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
+    </div>
+    <div class="nav-right">
+      <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
+    </div>
+  </nav>
+
+  <!-- ===== ページタイトル ===== -->
+  <div class="page-title">
+    <i class="fas fa-map"></i> 九州地名学習
+    <span class="sub">暗記 · 選択 · 入力 で完全マスター</span>
+  </div>
+
+  <!-- ===== メインタブ ===== -->
+  <div class="main-tabs" id="mainTabs">
+    <button class="tab active" data-tab="anki"><i class="fas fa-eye"></i> 暗記</button>
+    <button class="tab" data-tab="choice"><i class="fas fa-list-ul"></i> 選択問題</button>
+    <button class="tab" data-tab="input"><i class="fas fa-keyboard"></i> 入力問題</button>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ===== タブ1: 暗記 ===== -->
+  <!-- ============================================================ -->
+  <div class="tab-content active" id="tabAnki">
+    <div class="mode-sub-tabs" id="ankiSubTabs">
+      <button class="tab active" data-mode="name">地名を隠す</button>
+      <button class="tab" data-mode="desc">説明を隠す</button>
+    </div>
+
+    <div class="stats" id="ankiStats">
+      <span>📊 全 <span class="num" id="ankiTotal">0</span> 件</span>
+      <span>✅ 表示中 <span class="num" id="ankiVisible">0</span> 件</span>
+      <span>🔴 隠し中 <span class="num" id="ankiHidden">0</span> 件</span>
+    </div>
+
+    <div class="batch-actions" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+      <button onclick="ankiRevealAll()" style="background:#f0ebe4; border:none; padding:5px 14px; border-radius:40px; cursor:pointer; font-size:0.75rem;"><i class="fas fa-eye"></i> すべて表示</button>
+      <button onclick="ankiHideAll()" style="background:#f0ebe4; border:none; padding:5px 14px; border-radius:40px; cursor:pointer; font-size:0.75rem;"><i class="fas fa-eye-slash"></i> すべて隠す</button>
+    </div>
+
+    <div id="ankiArea"></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ===== タブ2: 選択問題 ===== -->
+  <!-- ============================================================ -->
+  <div class="tab-content" id="tabChoice">
+    <div class="mode-sub-tabs" id="choiceSubTabs">
+      <button class="tab active" data-mode="name">地名 → 説明</button>
+      <button class="tab" data-mode="desc">説明 → 地名</button>
+    </div>
+
+    <div class="stats" id="choiceStats">
+      <span>📊 <span class="num" id="choiceTotal">0</span> 問</span>
+      <span>✅ 正解 <span class="num" id="choiceCorrect">0</span></span>
+      <span>❌ 不正解 <span class="num" id="choiceWrong">0</span></span>
+      <span>🎯 正答率 <span class="num" id="choiceRate">0</span>%</span>
+    </div>
+
+    <div class="progress-bar"><div class="fill" id="choiceProgress"></div></div>
+
+    <div id="choiceArea"></div>
+
+    <div class="quiz-controls">
+      <button id="choiceNextBtn" onclick="choiceNext()"><i class="fas fa-forward"></i> 次の問題</button>
+      <button class="secondary" onclick="choiceReset()"><i class="fas fa-redo"></i> やり直し</button>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ===== タブ3: 入力問題 ===== -->
+  <!-- ============================================================ -->
+  <div class="tab-content" id="tabInput">
+    <div class="mode-sub-tabs" id="inputSubTabs">
+      <button class="tab active" data-mode="name">地名 → 説明</button>
+      <button class="tab" data-mode="desc">説明 → 地名</button>
+    </div>
+
+    <div class="stats" id="inputStats">
+      <span>📊 <span class="num" id="inputTotal">0</span> 問</span>
+      <span>✅ 正解 <span class="num" id="inputCorrect">0</span></span>
+      <span>❌ 不正解 <span class="num" id="inputWrong">0</span></span>
+      <span>🎯 正答率 <span class="num" id="inputRate">0</span>%</span>
+    </div>
+
+    <div class="progress-bar"><div class="fill" id="inputProgress"></div></div>
+
+    <div id="inputArea"></div>
+
+    <div class="quiz-controls">
+      <button id="inputNextBtn" onclick="inputNext()"><i class="fas fa-forward"></i> 次の問題</button>
+      <button class="secondary" onclick="inputReset()"><i class="fas fa-redo"></i> やり直し</button>
+    </div>
+  </div>
+
+  <div class="toast-msg" id="toast"></div>
+</div>
+
+<script>
+// ============================================================
+// 📦 共通データ
+// ============================================================
+
+const DATA = [
+  { name: '玄界灘', desc: '古代、大陸と日本をつなぐルート。沖ノ島は世界文化遺産', category: '海' },
+  { name: '関門海峡', desc: '日本海と周防灘を結ぶ海峡', category: '海峡' },
+  { name: '周防灘', desc: '瀬戸内海の一部', category: '海' },
+  { name: '別府湾', desc: '国際観光温泉文化都市の前に広がる湾', category: '湾' },
+  { name: '志布志湾', desc: '日本有数の飼料穀物輸入拠点。石油備蓄基地もある', category: '湾' },
+  { name: '鹿児島湾', desc: '巨大なカルデラが湾になった。約3万年前に超巨大噴火', category: '湾' },
+  { name: '八代海', desc: '熊本県・鹿児島県本土と天草諸島の間の海', category: '海' },
+  { name: '有明海', desc: '干潟が広がり干拓が行われてきた。海苔養殖がさかん', category: '海' },
+  { name: '対馬', desc: '朝鮮半島南部の釜山まで約50km。長崎県', category: '島' },
+  { name: '壱岐', desc: '玄界灘の西部にある島。長崎県', category: '島' },
+  { name: '志賀島', desc: '金印「漢委奴国王」が出土した島', category: '島' },
+  { name: '五島列島', desc: '東シナ海に浮かぶ140余りの島。隠れキリシタンの歴史', category: '列島' },
+  { name: '天草諸島', desc: '熊本県と鹿児島県にまたがる島々。養殖がさかん', category: '諸島' },
+  { name: '桜島', desc: '成層火山。噴火で大隅半島とつながった', category: '島' },
+  { name: '国東半島', desc: '中央に火山がある半島', category: '半島' },
+  { name: '島原半島', desc: '雲仙・普賢岳がある半島', category: '半島' },
+  { name: '長崎鼻', desc: '薩摩半島南端の岬', category: '岬' },
+  { name: '種子島', desc: '宇宙センターがある島', category: '島' },
+  { name: '屋久島', desc: '世界自然遺産', category: '島' },
+  { name: '奄美大島', desc: '世界自然遺産', category: '島' },
+  { name: '沖縄島', desc: '沖縄県で一番大きい島', category: '島' },
+  { name: '西表島', desc: '世界自然遺産', category: '島' },
+  { name: '諫早湾干拓地', desc: '有明海で江戸時代以前から行われてきた干拓事業', category: '干拓' },
+  { name: '唐津', desc: '佐賀県人口第2。唐津焼は伝統的焼き物', category: '都市' },
+  { name: '鹿島', desc: '有明海の干潟に面する都市', category: '都市' },
+  { name: '日田', desc: '日田盆地の中心都市', category: '都市' },
+  { name: '別府', desc: '国際観光温泉文化都市。「湯けむり」が象徴', category: '都市' },
+  { name: '都城', desc: '畜産がさかん。農業産出額日本1（令和5年）', category: '都市' },
+  { name: '八代', desc: 'トマトの大産地', category: '都市' },
+  { name: '水俣', desc: '水俣病で知られる都市', category: '都市' },
+  { name: '指宿', desc: '温泉のまち', category: '都市' },
+  { name: '鹿屋', desc: 'シラス台地が広がる大隅半島中部の中心都市', category: '都市' },
+  { name: '五島', desc: '五島列島の中心都市', category: '都市' }
+];
+
+const ALL_NAMES = DATA.map(d => d.name);
+
+// ============================================================
+// 🛠 共通ユーティリティ
+// ============================================================
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// ============================================================
+// 🟢 暗記モード
+// ============================================================
+
+let ankiMode = 'name';
+let ankiRevealed = {};
+
+function renderAnki() {
+  const area = document.getElementById('ankiArea');
+  const categories = {};
+  DATA.forEach((item, index) => {
+    if (!categories[item.category]) categories[item.category] = [];
+    categories[item.category].push({ ...item, index });
+  });
+
+  let html = '';
+  let total = DATA.length;
+  let visible = 0;
+  let hidden = 0;
+
+  Object.keys(categories).forEach(cat => {
+    const items = categories[cat];
+    html += `
+      <div class="category-group">
+        <div class="cat-title">${cat} <span class="cat-count">${items.length}件</span></div>
+        <div class="card-grid">
+    `;
+
+    items.forEach(item => {
+      const isRevealed = ankiRevealed[item.index] || false;
+      const isNameHidden = (ankiMode === 'name' && !isRevealed);
+      const isDescHidden = (ankiMode === 'desc' && !isRevealed);
+
+      if (isNameHidden || isDescHidden) hidden++;
+      else visible++;
+
+      let nameDisplay = item.name;
+      let descDisplay = item.desc || '—';
+
+      if (isNameHidden) {
+        nameDisplay = `<span class="hidden" onclick="event.stopPropagation(); toggleAnki(${item.index})">${item.name}</span>`;
+      }
+      if (isDescHidden) {
+        descDisplay = `<span class="hidden" onclick="event.stopPropagation(); toggleAnki(${item.index})">${descDisplay}</span>`;
+      }
+
+      html += `
+        <div class="card-item" onclick="toggleAnki(${item.index})">
+          <div class="category">${item.category}</div>
+          <div class="name">${nameDisplay}</div>
+          <div class="desc">${descDisplay}</div>
+          <div class="mode-label">${(isNameHidden || isDescHidden) ? '🔴' : '✅'}</div>
+        </div>
+      `;
+    });
+
+    html += `</div></div>`;
+  });
+
+  area.innerHTML = html;
+  document.getElementById('ankiTotal').textContent = total;
+  document.getElementById('ankiVisible').textContent = visible;
+  document.getElementById('ankiHidden').textContent = hidden;
+}
+
+function toggleAnki(index) {
+  ankiRevealed[index] = !ankiRevealed[index];
+  renderAnki();
+  showToast(ankiRevealed[index] ? '✅ 表示しました' : '🔴 隠しました');
+}
+
+function ankiRevealAll() {
+  DATA.forEach((_, i) => { ankiRevealed[i] = true; });
+  renderAnki();
+  showToast('✅ すべて表示しました');
+}
+
+function ankiHideAll() {
+  DATA.forEach((_, i) => { ankiRevealed[i] = false; });
+  renderAnki();
+  showToast('🔴 すべて隠しました');
+}
+
+// ============================================================
+// 🔵 選択問題モード
+// ============================================================
+
+let choiceMode = 'name';
+let choiceQuestions = [];
+let choiceIndex = 0;
+let choiceCorrect = 0;
+let choiceWrong = 0;
+let choiceAnswered = false;
+
+function choiceGenerate() {
+  const mode = choiceMode;
+  const base = shuffle(DATA);
+  choiceQuestions = base.map(item => {
+    const wrongs = shuffle(ALL_NAMES.filter(n => n !== item.name)).slice(0, 4);
+    if (mode === 'name') {
+      const opts = shuffle([item.name, ...wrongs]);
+      return {
+        question: item.desc || '説明がありません',
+        answer: item.name,
+        options: opts,
+        correctIndex: opts.indexOf(item.name)
+      };
+    } else {
+      const otherDescs = DATA.filter(d => d.name !== item.name).map(d => d.desc || '説明なし');
+      const wrongDescs = shuffle(otherDescs).slice(0, 4);
+      const correctDesc = item.desc || '説明がありません';
+      const allDescs = shuffle([correctDesc, ...wrongDescs.map(d => d || '説明がありません')]);
+      return {
+        question: `「${item.name}」の説明として正しいのは？`,
+        answer: correctDesc,
+        options: allDescs,
+        correctIndex: allDescs.indexOf(correctDesc)
+      };
+    }
+  });
+}
+
+function choiceRender() {
+  const area = document.getElementById('choiceArea');
+  const total = choiceQuestions.length;
+  if (total === 0) { area.innerHTML = '<div style="text-align:center;padding:40px;color:#b7a086;">問題がありません</div>'; return; }
+
+  if (choiceIndex >= total) {
+    const rate = total > 0 ? Math.round((choiceCorrect / total) * 100) : 0;
+    area.innerHTML = `
+      <div class="quiz-card" style="text-align:center;padding:40px;">
+        <div style="font-size:3rem;margin-bottom:16px;">🎉</div>
+        <h2>クイズ終了！</h2>
+        <p style="font-size:1.1rem;color:#3d3229;">全 ${total} 問中 ${choiceCorrect} 問正解</p>
+        <p style="font-size:1.3rem;font-weight:700;color:#2c241c;">正答率 <strong style="color:#8f735b;">${rate}%</strong></p>
+        <button onclick="choiceReset()" style="margin-top:20px;background:#2c241c;border:none;color:white;padding:10px 32px;border-radius:60px;cursor:pointer;font-weight:600;font-size:1rem;"><i class="fas fa-redo"></i> もう一度</button>
+      </div>
+    `;
+    document.getElementById('choiceNextBtn').disabled = true;
+    updateChoiceStats();
+    return;
+  }
+
+  document.getElementById('choiceNextBtn').disabled = false;
+  choiceAnswered = false;
+  const q = choiceQuestions[choiceIndex];
+  const labels = ['A', 'B', 'C', 'D', 'E'];
+
+  let html = `
+    <div class="quiz-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+        <span style="font-size:0.8rem;color:#8f735b;background:#f0ebe4;padding:2px 14px;border-radius:40px;">${choiceIndex + 1}/${choiceQuestions.length}</span>
+        <span style="font-size:0.8rem;color:#6b5d4e;">${choiceMode === 'name' ? '地名を選ぶ' : '説明を選ぶ'}</span>
+      </div>
+      <div class="question">${q.question}</div>
+      <div class="options">
+  `;
+  q.options.forEach((opt, i) => {
+    html += `<div class="opt" data-idx="${i}" onclick="choiceSelect(${i})"><span class="label">${labels[i] || '?'}.</span> ${opt}</div>`;
+  });
+  html += `
+      </div>
+      <div class="result" id="choiceResult"></div>
+    </div>
+  `;
+  area.innerHTML = html;
+  updateChoiceStats();
+  updateChoiceProgress();
+}
+
+function choiceSelect(idx) {
+  if (choiceAnswered) return;
+  choiceAnswered = true;
+  const q = choiceQuestions[choiceIndex];
+  const opts = document.querySelectorAll('#choiceArea .opt');
+  const result = document.getElementById('choiceResult');
+  opts.forEach(el => el.classList.add('disabled'));
+
+  if (idx === q.correctIndex) {
+    opts[idx].classList.add('correct');
+    choiceCorrect++;
+    result.textContent = '✅ 正解！';
+    result.className = 'result show correct';
+  } else {
+    opts[idx].classList.add('wrong');
+    opts[q.correctIndex].classList.add('correct');
+    choiceWrong++;
+    result.textContent = `❌ 不正解。正解: ${q.answer}`;
+    result.className = 'result show wrong';
+  }
+  updateChoiceStats();
+  updateChoiceProgress();
+}
+
+function choiceNext() {
+  if (!choiceAnswered && choiceIndex < choiceQuestions.length) { showToast('⚠️ 先に答えてください'); return; }
+  choiceIndex++;
+  choiceRender();
+}
+
+function choiceReset() {
+  choiceIndex = 0;
+  choiceCorrect = 0;
+  choiceWrong = 0;
+  choiceAnswered = false;
+  choiceGenerate();
+  choiceRender();
+  showToast('🔄 リセットしました');
+}
+
+function updateChoiceStats() {
+  const total = choiceQuestions.length;
+  document.getElementById('choiceTotal').textContent = total;
+  document.getElementById('choiceCorrect').textContent = choiceCorrect;
+  document.getElementById('choiceWrong').textContent = choiceWrong;
+  const answered = choiceCorrect + choiceWrong;
+  document.getElementById('choiceRate').textContent = answered > 0 ? Math.round((choiceCorrect / answered) * 100) : 0;
+}
+
+function updateChoiceProgress() {
+  const total = choiceQuestions.length;
+  const prog = total > 0 ? ((choiceIndex + (choiceAnswered ? 1 : 0)) / total) * 100 : 0;
+  document.getElementById('choiceProgress').style.width = Math.min(prog, 100) + '%';
+}
+
+// ============================================================
+// 🟠 入力問題モード
+// ============================================================
+
+let inputMode = 'name';
+let inputQuestions = [];
+let inputIndex = 0;
+let inputCorrect = 0;
+let inputWrong = 0;
+let inputAnswered = false;
+
+function inputGenerate() {
+  inputQuestions = shuffle(DATA);
+}
+
+function inputRender() {
+  const area = document.getElementById('inputArea');
+  const total = inputQuestions.length;
+  if (total === 0) { area.innerHTML = '<div style="text-align:center;padding:40px;color:#b7a086;">問題がありません</div>'; return; }
+
+  if (inputIndex >= total) {
+    const rate = total > 0 ? Math.round((inputCorrect / total) * 100) : 0;
+    area.innerHTML = `
+      <div class="quiz-card" style="text-align:center;padding:40px;">
+        <div style="font-size:3rem;margin-bottom:16px;">🎉</div>
+        <h2>入力クイズ終了！</h2>
+        <p style="font-size:1.1rem;color:#3d3229;">全 ${total} 問中 ${inputCorrect} 問正解</p>
+        <p style="font-size:1.3rem;font-weight:700;color:#2c241c;">正答率 <strong style="color:#8f735b;">${rate}%</strong></p>
+        <button onclick="inputReset()" style="margin-top:20px;background:#2c241c;border:none;color:white;padding:10px 32px;border-radius:60px;cursor:pointer;font-weight:600;font-size:1rem;"><i class="fas fa-redo"></i> もう一度</button>
+      </div>
+    `;
+    document.getElementById('inputNextBtn').disabled = true;
+    updateInputStats();
+    return;
+  }
+
+  document.getElementById('inputNextBtn').disabled = false;
+  inputAnswered = false;
+  const item = inputQuestions[inputIndex];
+
+  let questionText, answerText, placeholder;
+  if (inputMode === 'name') {
+    questionText = item.desc || '説明がありません';
+    answerText = item.name;
+    placeholder = '地名を入力してください';
+  } else {
+    questionText = `「${item.name}」の説明を入力してください`;
+    answerText = item.desc || '説明がありません';
+    placeholder = '説明を入力してください';
+  }
+
+  let html = `
+    <div class="quiz-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+        <span style="font-size:0.8rem;color:#8f735b;background:#f0ebe4;padding:2px 14px;border-radius:40px;">${inputIndex + 1}/${inputQuestions.length}</span>
+        <span style="font-size:0.8rem;color:#6b5d4e;">${inputMode === 'name' ? '地名を入力' : '説明を入力'}</span>
+      </div>
+      <div class="question">${questionText}</div>
+      <div class="input-area">
+        <input type="text" id="inputField" placeholder="${placeholder}" onkeydown="if(event.key==='Enter') inputSubmit()">
+        <button id="inputSubmitBtn" onclick="inputSubmit()"><i class="fas fa-check"></i> 回答</button>
+      </div>
+      <div class="result" id="inputResult"></div>
+      <div style="font-size:0.8rem;color:#6b5d4e;margin-top:8px;">💡 ヒント: ${item.category}</div>
+    </div>
+  `;
+  area.innerHTML = html;
+  document.getElementById('inputField').focus();
+  updateInputStats();
+  updateInputProgress();
+}
+
+function inputSubmit() {
+  if (inputAnswered) return;
+  const field = document.getElementById('inputField');
+  const val = field.value.trim();
+  if (!val) { showToast('⚠️ 入力してください'); return; }
+
+  inputAnswered = true;
+  const item = inputQuestions[inputIndex];
+  const result = document.getElementById('inputResult');
+  field.disabled = true;
+  document.getElementById('inputSubmitBtn').disabled = true;
+
+  const isCorrect = val === item.name || val === item.desc;
+  if (isCorrect) {
+    inputCorrect++;
+    result.textContent = '✅ 正解！';
+    result.className = 'result show correct';
+  } else {
+    inputWrong++;
+    const correctAnswer = inputMode === 'name' ? item.name : item.desc;
+    result.textContent = `❌ 不正解。正解: ${correctAnswer}`;
+    result.className = 'result show wrong';
+  }
+  updateInputStats();
+  updateInputProgress();
+}
+
+function inputNext() {
+  if (!inputAnswered && inputIndex < inputQuestions.length) { showToast('⚠️ 先に答えてください'); return; }
+  inputIndex++;
+  inputRender();
+}
+
+function inputReset() {
+  inputIndex = 0;
+  inputCorrect = 0;
+  inputWrong = 0;
+  inputAnswered = false;
+  inputGenerate();
+  inputRender();
+  showToast('🔄 リセットしました');
+}
+
+function updateInputStats() {
+  const total = inputQuestions.length;
+  document.getElementById('inputTotal').textContent = total;
+  document.getElementById('inputCorrect').textContent = inputCorrect;
+  document.getElementById('inputWrong').textContent = inputWrong;
+  const answered = inputCorrect + inputWrong;
+  document.getElementById('inputRate').textContent = answered > 0 ? Math.round((inputCorrect / answered) * 100) : 0;
+}
+
+function updateInputProgress() {
+  const total = inputQuestions.length;
+  const prog = total > 0 ? ((inputIndex + (inputAnswered ? 1 : 0)) / total) * 100 : 0;
+  document.getElementById('inputProgress').style.width = Math.min(prog, 100) + '%';
+}
+
+// ============================================================
+// 📌 タブ切り替え
+// ============================================================
+
+document.querySelectorAll('#mainTabs .tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('#mainTabs .tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    const target = this.dataset.tab;
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab' + target.charAt(0).toUpperCase() + target.slice(1)).classList.add('active');
+  });
+});
+
+// ============================================================
+// 📌 サブタブ切り替え
+// ============================================================
+
+// 暗記サブタブ
+document.querySelectorAll('#ankiSubTabs .tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('#ankiSubTabs .tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    ankiMode = this.dataset.mode;
+    ankiRevealed = {};
+    renderAnki();
+    showToast(ankiMode === 'name' ? '地名を隠します' : '説明を隠します');
+  });
+});
+
+// 選択サブタブ
+document.querySelectorAll('#choiceSubTabs .tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('#choiceSubTabs .tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    choiceMode = this.dataset.mode;
+    choiceReset();
+  });
+});
+
+// 入力サブタブ
+document.querySelectorAll('#inputSubTabs .tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('#inputSubTabs .tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    inputMode = this.dataset.mode;
+    inputReset();
+  });
+});
+
+// ============================================================
+// 🚀 初期化
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderAnki();
+  choiceGenerate();
+  choiceRender();
+  inputGenerate();
+  inputRender();
+});
+</script>
+</body>
+</html>
