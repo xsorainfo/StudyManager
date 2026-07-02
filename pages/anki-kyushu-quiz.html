@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>九州地名クイズ · 学び航路</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
+    body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .app-wrapper { max-width: 800px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
+
+    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 24px; color: #f0ebe3; }
+    .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
+    .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 500; }
+    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover { background: #3f352b; color: #fff; }
+    .nav-links a.active { background: #5f4b38; color: #fff2e0; }
+    .nav-right { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; flex-wrap: wrap; }
+    .nav-right .user-badge { background: #3f352b; padding: 6px 18px 6px 14px; border-radius: 40px; display: flex; align-items: center; gap: 8px; }
+
+    .page-title { font-size: 1.8rem; font-weight: 700; color: #2a221b; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .page-title i { color: #8f735b; }
+    .page-title .sub { font-size: 0.9rem; font-weight: 400; color: #6b5d4e; margin-left: 12px; }
+
+    .mode-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; }
+    .mode-tabs .tab { padding: 8px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
+    .mode-tabs .tab:hover { background: #e3d9ce; }
+    .mode-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
+
+    /* ★ 問題カード ★ */
+    .quiz-card { background: #fffffffa; border-radius: 20px; padding: 28px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 2px solid #ede8e0; margin-bottom: 20px; }
+    .quiz-card .question { font-size: 1.1rem; color: #3d3229; margin-bottom: 20px; line-height: 1.8; }
+    .quiz-card .question .highlight { background: #f0ebe4; padding: 2px 10px; border-radius: 6px; font-weight: 600; }
+    .quiz-card .options { display: flex; flex-direction: column; gap: 10px; }
+    .quiz-card .options .opt { padding: 12px 18px; border-radius: 12px; border: 2px solid #ede8e0; cursor: pointer; transition: 0.15s; font-size: 1.0rem; background: #fcf9f5; }
+    .quiz-card .options .opt:hover { border-color: #b7a086; background: #f8f4ef; }
+    .quiz-card .options .opt.correct { border-color: #2e7d32; background: #e8f5e9; }
+    .quiz-card .options .opt.wrong { border-color: #c62828; background: #ffebee; }
+    .quiz-card .options .opt.disabled { cursor: default; opacity: 0.7; }
+    .quiz-card .options .opt .label { font-weight: 600; color: #6b5d4e; margin-right: 8px; }
+
+    .quiz-card .result { margin-top: 16px; padding: 12px 16px; border-radius: 12px; font-weight: 600; display: none; }
+    .quiz-card .result.show { display: block; }
+    .quiz-card .result.correct { background: #e8f5e9; color: #2e7d32; border: 2px solid #2e7d32; }
+    .quiz-card .result.wrong { background: #ffebee; color: #c62828; border: 2px solid #c62828; }
+
+    .quiz-controls { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; justify-content: center; }
+    .quiz-controls button { background: #2c241c; border: none; color: white; padding: 10px 28px; border-radius: 60px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+    .quiz-controls button:hover { background: #4d3b2c; transform: scale(0.97); }
+    .quiz-controls button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .quiz-controls button.secondary { background: #f0ebe4; color: #2c241c; }
+    .quiz-controls button.secondary:hover { background: #e3d9ce; }
+
+    .stats { background: #f0ebe4; border-radius: 20px; padding: 10px 18px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.85rem; justify-content: center; }
+    .stats span { display: flex; align-items: center; gap: 6px; }
+    .stats .num { font-weight: 700; color: #2c241c; }
+
+    .progress-bar { height: 6px; background: #ede8e0; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+    .progress-bar .fill { height: 100%; background: #8f735b; border-radius: 10px; transition: width 0.3s; width: 0%; }
+
+    .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
+    .toast-msg.show { opacity: 1; }
+
+    @media (max-width: 600px) {
+      .app-wrapper { padding: 16px; }
+      .page-title { font-size: 1.3rem; }
+      .quiz-card { padding: 18px 16px; }
+      .quiz-card .question { font-size: 1.0rem; }
+      .quiz-card .options .opt { font-size: 0.9rem; padding: 10px 14px; }
+      .quiz-controls button { padding: 8px 20px; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ===== 导航 ===== -->
+  <nav class="navbar">
+    <div class="nav-brand"><i class="fas fa-compass"></i><span>学び航路</span></div>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> ダッシュボード</a>
+      <a href="tetsu.html"><i class="fas fa-flag"></i> 鉄律会</a>
+      <a href="sakura.html"><i class="fas fa-cherry-blossom"></i> 桜蔭</a>
+      <a href="schedule.html"><i class="fas fa-calendar-alt"></i> 年間予定</a>
+      <a class="active" href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
+    </div>
+    <div class="nav-right">
+      <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
+    </div>
+  </nav>
+
+  <!-- ===== ページタイトル ===== -->
+  <div class="page-title">
+    <i class="fas fa-map"></i> 九州地名クイズ
+    <span class="sub">4択 · 地名を当てよう</span>
+  </div>
+
+  <!-- ===== モード切替 ===== -->
+  <div class="mode-tabs" id="modeTabs">
+    <button class="tab active" data-mode="name"><i class="fas fa-map-pin"></i> 地名 → 説明</button>
+    <button class="tab" data-mode="desc"><i class="fas fa-pencil-alt"></i> 説明 → 地名</button>
+  </div>
+
+  <!-- ===== 統計 ===== -->
+  <div class="stats" id="stats">
+    <span>📊 <span class="num" id="totalCount">0</span> 問</span>
+    <span>✅ 正解 <span class="num" id="correctCount">0</span></span>
+    <span>❌ 不正解 <span class="num" id="wrongCount">0</span></span>
+    <span>🎯 正答率 <span class="num" id="rateCount">0</span>%</span>
+  </div>
+
+  <!-- ===== プログレスバー ===== -->
+  <div class="progress-bar">
+    <div class="fill" id="progressFill"></div>
+  </div>
+
+  <!-- ===== 問題表示エリア ===== -->
+  <div id="quizArea"></div>
+
+  <!-- ===== コントロール ===== -->
+  <div class="quiz-controls">
+    <button id="nextBtn" onclick="nextQuestion()"><i class="fas fa-forward"></i> 次の問題</button>
+    <button class="secondary" onclick="resetQuiz()"><i class="fas fa-redo"></i> やり直し</button>
+  </div>
+
+  <div class="toast-msg" id="toast"></div>
+</div>
+
+<script>
+// ============================================================
+// 📦 データ
+// ============================================================
+
+const QUIZ_DATA = [
+  // ---- 説明から地名を当てる用 ----
+  { name: '玄界灘', desc: '古代、大陸と日本をつなぐルート。北東にある沖ノ島は世界文化遺産', category: '海' },
+  { name: '関門海峡', desc: '日本海と周防灘を結ぶ海峡', category: '海峡' },
+  { name: '周防灘', desc: '瀬戸内海の一部', category: '海' },
+  { name: '別府湾', desc: '国際観光温泉文化都市の前に広がる湾', category: '湾' },
+  { name: '志布志湾', desc: '日本有数の飼料穀物輸入拠点。国の石油備蓄基地もある', category: '湾' },
+  { name: '鹿児島湾', desc: '巨大なカルデラが湾になった。約3万年前に超巨大噴火', category: '湾' },
+  { name: '八代海', desc: '熊本県・鹿児島県本土と天草諸島の間の海', category: '海' },
+  { name: '有明海', desc: '干潟が広がり干拓が行われてきた。海苔の養殖がさかん', category: '海' },
+  { name: '対馬', desc: '朝鮮半島南部の釜山まで約50km。長崎県に属する', category: '島' },
+  { name: '壱岐', desc: '玄界灘の西部にある島。長崎県', category: '島' },
+  { name: '志賀島', desc: '金印「漢委奴国王」が出土した島', category: '島' },
+  { name: '五島列島', desc: '東シナ海に浮かぶ140余りの島。隠れキリシタンの歴史', category: '列島' },
+  { name: '天草諸島', desc: '熊本県と鹿児島県にまたがる島々。養殖がさかん', category: '諸島' },
+  { name: '桜島', desc: '成層火山。昔は島だったが噴火で大隅半島とつながった', category: '島' },
+  { name: '国東半島', desc: '中央に火山がある半島', category: '半島' },
+  { name: '島原半島', desc: '雲仙・普賢岳がある半島', category: '半島' },
+  { name: '長崎鼻', desc: '薩摩半島南端の岬', category: '岬' },
+  { name: '種子島', desc: '宇宙センターがある島', category: '島' },
+  { name: '屋久島', desc: '世界自然遺産に登録された島', category: '島' },
+  { name: '奄美大島', desc: '世界自然遺産に登録された島', category: '島' },
+  { name: '沖縄島', desc: '沖縄県で一番大きい島', category: '島' },
+  { name: '西表島', desc: '世界自然遺産に登録された島', category: '島' },
+  { name: '諫早湾干拓地', desc: '有明海で江戸時代以前から行われてきた干拓事業', category: '干拓' },
+  { name: '唐津', desc: '佐賀県人口第2。唐津焼は伝統的焼き物', category: '都市' },
+  { name: '鹿島', desc: '有明海の干潟に面する都市', category: '都市' },
+  { name: '日田', desc: '日田盆地の中心都市', category: '都市' },
+  { name: '別府', desc: '国際観光温泉文化都市。「湯けむり」が象徴', category: '都市' },
+  { name: '都城', desc: '畜産がさかん。農業産出額日本1（令和5年）', category: '都市' },
+  { name: '八代', desc: 'トマトの大産地として有名な都市', category: '都市' },
+  { name: '水俣', desc: '水俣病で知られる都市', category: '都市' },
+  { name: '指宿', desc: '温泉のまちとして知られる都市', category: '都市' },
+  { name: '鹿屋', desc: 'シラス台地が広がる大隅半島中部の中心都市', category: '都市' },
+  { name: '五島', desc: '五島列島の中心都市', category: '都市' }
+];
+
+// ダミー選択肢用（全ての地名リスト）
+const ALL_NAMES = QUIZ_DATA.map(item => item.name);
+
+// ============================================================
+// 状態管理
+// ============================================================
+
+let currentMode = 'name';
+let questions = [];
+let currentIndex = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let isAnswered = false;
+
+// ============================================================
+// シャッフル関数
+// ============================================================
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ============================================================
+// 問題生成
+// ============================================================
+
+function generateQuestions() {
+  const mode = currentMode;
+  const baseData = shuffle(QUIZ_DATA);
+  
+  questions = baseData.map(item => {
+    // 正解以外の選択肢を4つ選ぶ
+    let wrongOptions = ALL_NAMES.filter(n => n !== item.name);
+    wrongOptions = shuffle(wrongOptions).slice(0, 4);
+    
+    // 選択肢（正解 + 間違い4つ）をシャッフル
+    let options;
+    if (mode === 'name') {
+      // 地名→説明モード: 説明を問題文に、選択肢は地名
+      options = shuffle([item.name, ...wrongOptions]);
+      return {
+        question: item.desc || '説明がありません',
+        answer: item.name,
+        options: options,
+        category: item.category,
+        // 正解がどの選択肢か
+        correctIndex: options.indexOf(item.name)
+      };
+    } else {
+      // 説明→地名モード: 地名を問題文に、選択肢は説明
+      // ダミーの説明を生成（他の地名の説明からランダムに）
+      const otherDescs = QUIZ_DATA.filter(d => d.name !== item.name).map(d => d.desc || '説明なし');
+      const wrongDescs = shuffle(otherDescs).slice(0, 4);
+      // 正解の説明が短すぎる場合は補足
+      const correctDesc = item.desc || '説明がありません';
+      // 選択肢の説明が空でないことを確認
+      const finalWrongDescs = wrongDescs.map(d => d || '説明がありません');
+      // 選択肢（正解の説明 + 間違い4つ）をシャッフル
+      const allDescs = shuffle([correctDesc, ...finalWrongDescs]);
+      return {
+        question: `「${item.name}」の説明として正しいのは？`,
+        answer: correctDesc,
+        options: allDescs,
+        category: item.category,
+        correctIndex: allDescs.indexOf(correctDesc)
+      };
+    }
+  });
+}
+
+// ============================================================
+// レンダリング
+// ============================================================
+
+function renderQuiz() {
+  const area = document.getElementById('quizArea');
+  const total = questions.length;
+  
+  if (total === 0) {
+    area.innerHTML = `<div style="text-align:center; padding:40px; color:#b7a086;">問題がありません</div>`;
+    return;
+  }
+
+  if (currentIndex >= total) {
+    // 終了画面
+    const rate = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+    area.innerHTML = `
+      <div class="quiz-card" style="text-align:center; padding:40px;">
+        <div style="font-size:3rem; margin-bottom:16px;">🎉</div>
+        <h2 style="margin-bottom:12px;">クイズ終了！</h2>
+        <p style="font-size:1.1rem; color:#3d3229; margin-bottom:8px;">
+          全 <strong>${total}</strong> 問中 <strong>${correctCount}</strong> 問正解
+        </p>
+        <p style="font-size:1.3rem; font-weight:700; color:#2c241c;">
+          正答率 <strong style="color:#8f735b;">${rate}%</strong>
+        </p>
+        <div style="margin-top:20px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+          <span style="background:#e8f5e9; padding:4px 16px; border-radius:40px; color:#2e7d32;">✅ ${correctCount}</span>
+          <span style="background:#ffebee; padding:4px 16px; border-radius:40px; color:#c62828;">❌ ${wrongCount}</span>
+        </div>
+        <button onclick="resetQuiz()" style="margin-top:20px; background:#2c241c; border:none; color:white; padding:10px 32px; border-radius:60px; cursor:pointer; font-weight:600; font-size:1rem;">
+          <i class="fas fa-redo"></i> もう一度やる
+        </button>
+      </div>
+    `;
+    document.getElementById('nextBtn').disabled = true;
+    updateStats();
+    return;
+  }
+
+  document.getElementById('nextBtn').disabled = false;
+  isAnswered = false;
+
+  const q = questions[currentIndex];
+  const labels = ['A', 'B', 'C', 'D', 'E'];
+
+  let html = `
+    <div class="quiz-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <span style="font-size:0.8rem; color:#8f735b; background:#f0ebe4; padding:2px 14px; border-radius:40px;">
+          ${q.category || 'その他'} · ${currentIndex + 1}/${questions.length}
+        </span>
+        <span style="font-size:0.8rem; color:#6b5d4e;">
+          ${currentMode === 'name' ? '地名を選ぶ' : '説明を選ぶ'}
+        </span>
+      </div>
+      <div class="question">${q.question}</div>
+      <div class="options" id="optionsContainer">
+  `;
+
+  q.options.forEach((opt, i) => {
+    const label = labels[i] || '?';
+    html += `
+      <div class="opt" data-index="${i}" onclick="selectOption(${i})">
+        <span class="label">${label}.</span> ${opt}
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+      <div class="result" id="resultMessage"></div>
+    </div>
+  `;
+
+  area.innerHTML = html;
+  updateStats();
+  updateProgress();
+}
+
+// ============================================================
+// 選択肢クリック
+// ============================================================
+
+function selectOption(index) {
+  if (isAnswered) return;
+  isAnswered = true;
+
+  const q = questions[currentIndex];
+  const options = document.querySelectorAll('.opt');
+  const resultDiv = document.getElementById('resultMessage');
+
+  // 全ての選択肢を無効化
+  options.forEach(el => el.classList.add('disabled'));
+
+  // 正解・不正解の判定
+  const isCorrect = (index === q.correctIndex);
+  if (isCorrect) {
+    options[index].classList.add('correct');
+    correctCount++;
+    resultDiv.textContent = '✅ 正解！';
+    resultDiv.className = 'result show correct';
+  } else {
+    options[index].classList.add('wrong');
+    options[q.correctIndex].classList.add('correct');
+    wrongCount++;
+    resultDiv.textContent = `❌ 不正解。正解は「${q.answer}」です。`;
+    resultDiv.className = 'result show wrong';
+  }
+
+  updateStats();
+  updateProgress();
+}
+
+// ============================================================
+// 次の問題
+// ============================================================
+
+function nextQuestion() {
+  if (!isAnswered && currentIndex < questions.length) {
+    showToast('⚠️ 先に問題に答えてください');
+    return;
+  }
+  currentIndex++;
+  renderQuiz();
+}
+
+// ============================================================
+// リセット
+// ============================================================
+
+function resetQuiz() {
+  currentIndex = 0;
+  correctCount = 0;
+  wrongCount = 0;
+  isAnswered = false;
+  generateQuestions();
+  renderQuiz();
+  showToast('🔄 クイズをリセットしました');
+}
+
+// ============================================================
+// 統計更新
+// ============================================================
+
+function updateStats() {
+  const total = questions.length;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('correctCount').textContent = correctCount;
+  document.getElementById('wrongCount').textContent = wrongCount;
+  const answered = correctCount + wrongCount;
+  const rate = answered > 0 ? Math.round((correctCount / answered) * 100) : 0;
+  document.getElementById('rateCount').textContent = rate;
+}
+
+function updateProgress() {
+  const total = questions.length;
+  const progress = total > 0 ? ((currentIndex + (isAnswered ? 1 : 0)) / total) * 100 : 0;
+  document.getElementById('progressFill').style.width = Math.min(progress, 100) + '%';
+}
+
+// ============================================================
+// Toast
+// ============================================================
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// ============================================================
+// イベントハンドラ
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('#modeTabs .tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#modeTabs .tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentMode = this.dataset.mode;
+      resetQuiz();
+    });
+  });
+
+  // キーボード対応（数字キーで選択）
+  document.addEventListener('keydown', function(e) {
+    if (e.key >= '1' && e.key <= '5') {
+      const idx = parseInt(e.key) - 1;
+      const opt = document.querySelector(`.opt[data-index="${idx}"]`);
+      if (opt && !opt.classList.contains('disabled')) {
+        selectOption(idx);
+      }
+    }
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'n') {
+      e.preventDefault();
+      nextQuestion();
+    }
+  });
+
+  resetQuiz();
+});
+
+// グローバル公開
+window.selectOption = selectOption;
+window.nextQuestion = nextQuestion;
+window.resetQuiz = resetQuiz;
+</script>
+</body>
+</html>
