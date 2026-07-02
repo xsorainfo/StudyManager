@@ -98,6 +98,10 @@
             {
               "label": "🗺️九州地名暗記",
               "url": "https://xsorainfo.github.io/StudyManager/pages/anki-kyushu.html"
+            },
+            {
+              "label": "🗺️九州地名小テスト",
+              "url": "https://xsorainfo.github.io/StudyManager/pages/anki-kyushu-quiz.html"
             }
           ]
         }
