@@ -741,31 +741,33 @@ function renderContent() {
     const sid = 'subj_' + subjectIdx++;
 
     // 初期状態：データがある場合は開いておく
-    const isOpen = true;
+    const isOpen = false;
 
+    
     html += `
       <div class="subject-card" data-subject="${subject}">
         <div class="subject-title" onclick="toggleSubject('${sid}')">
           <span>${subject}</span>
-          <span class="count">試験範囲 ${ranges.length} 件 ｜ リンク ${links.length} 件</span>
-          <span class="toggle-icon" id="${sid}_icon">
-            <i class="fas fa-chevron-down"></i>
-          </span>
-        </div>
-        <div class="subject-body" id="${sid}_body">
+          <span class="count">試験範囲 ${ranges.length} 件</span>
+          <!-- ★ リンクはタイトル横に常に表示 -->
           ${links.length > 0 ? `
-            <div class="practice-links" style="margin-top:8px;">
+            <span style="display:inline-flex; gap:6px; flex-wrap:wrap; margin-left:8px;">
               ${links.map((l, i) => `
-                <a href="${l.url}" target="_blank" class="practice-link">
-                  <i class="fas fa-external-link-alt"></i>
-                  <span class="link-label">${l.label}</span>
-                  <span class="del-link" onclick="event.preventDefault(); event.stopPropagation(); deleteLink('${subject}', ${i})">
+                <a href="${l.url}" target="_blank" class="practice-link" style="padding:2px 12px; font-size:0.75rem; background:#e8dfd5; border-radius:40px; text-decoration:none; color:#2c241c;" onclick="event.stopPropagation();">
+                  <i class="fas fa-external-link-alt" style="font-size:0.65rem;"></i>
+                  ${l.label}
+                  <span class="del-link" onclick="event.preventDefault(); event.stopPropagation(); deleteLink('${subject}', ${i})" style="color:#8f4a4a; font-size:0.7rem;">
                     <i class="fas fa-times"></i>
                   </span>
                 </a>
               `).join('')}
-            </div>
+            </span>
           ` : ''}
+          <span class="toggle-icon" id="${sid}_icon">
+            <i class="fas fa-chevron-down"></i>
+          </span>
+        </div>
+        <div class="subject-body" id="${sid}_body" style="${isOpen ? '' : 'display:none;'}">
           ${ranges.length > 0 ? `
             <ul class="range-list" style="margin-top:4px;">
               ${ranges.map((r, i) => `
