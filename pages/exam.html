@@ -819,7 +819,27 @@ function renderContent() {
     urlInput.addEventListener('keydown', doAddLink);
   }
 }
+// ============================================================
+// 🗓️ 時間割・提出物 折りたたみ関数
+// ============================================================
 
+function toggleSchedule() {
+  const body = document.getElementById('schedule_body');
+  const icon = document.getElementById('schedule_icon');
+  if (!body) return;
+  
+  if (body.style.display === 'none') {
+    body.style.display = '';
+    if (icon) {
+      icon.innerHTML = '<i class="fas fa-minus"></i>';
+    }
+  } else {
+    body.style.display = 'none';
+    if (icon) {
+      icon.innerHTML = '<i class="fas fa-plus"></i>';
+    }
+  }
+}
 // ============================================================
 // 操作関数
 // ============================================================
