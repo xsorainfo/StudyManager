@@ -3,9 +3,6 @@
 // ============================================================
 
 // ==================== 导航配置 ====================
-// 在这里统一修改导航链接，所有页面自动更新
-// ============================================================
-
 const NAV_LINKS = [
     { href: 'index.html', icon: 'fa-home', label: 'ダッシュボード' },
     { href: 'tetsu.html', icon: 'fa-flag', label: '鉄律会' },
@@ -58,12 +55,9 @@ function renderNavbar() {
     
     // データ操作用ボタンを追加（ページごとにカスタマイズ可能）
     renderDataActions();
-    
-    // ★ ナビゲーション描画後に状態を更新 ★
-    updateStatus();
 }
 
-// ==================== データ操作用ボタン（import/export） ====================
+// ==================== データ操作用ボタン ====================
 function renderDataActions() {
     const container = document.getElementById('dataActions');
     if (!container) return;
@@ -71,14 +65,13 @@ function renderDataActions() {
     const showExport = window.SHOW_EXPORT !== undefined ? window.SHOW_EXPORT : true;
     const showImport = window.SHOW_IMPORT !== undefined ? window.SHOW_IMPORT : true;
     
-    // statusInfo と save/load ボタンを保持
+    // 既存のボタンを保持
     const statusInfo = container.querySelector('#statusInfo');
     const saveBtn = container.querySelector('#saveBtn');
     const loadBtn = container.querySelector('#loadBtn');
     
     let html = '';
     if (statusInfo) html += statusInfo.outerHTML;
-    
     if (saveBtn) html += saveBtn.outerHTML;
     if (loadBtn) html += loadBtn.outerHTML;
     
@@ -132,11 +125,11 @@ function setTokenFromInput() {
     if (!token.startsWith('ghp_')) { showToast('❌ Token は ghp_ で始まる必要があります'); return; }
     localStorage.setItem('github_token', token);
     input.value = '';
+    // ★ Token 設定後に状態を更新 ★
     updateStatus();
     showToast('✅ Token を設定しました');
 }
 
-// ★ 修正: 要素が存在しない場合はエラーを出さない ★
 function updateStatus() {
     const token = getToken();
     const dot = document.getElementById('statusDot');
@@ -147,7 +140,7 @@ function updateStatus() {
     
     // ★ 要素が存在しない場合は何もしない ★
     if (!dot || !text || !status) {
-        // console.log('⏳ ステータス要素が見つかりません（レンダリング待ち）');
+        // 要素が存在しない場合は処理をスキップ（初回表示時など）
         return;
     }
     
@@ -193,9 +186,16 @@ function showToast(msg) {
 
 // ==================== 初期化 ====================
 document.addEventListener('DOMContentLoaded', function() {
+    // 1. ナビゲーションを描画
     renderNavbar();
+    
+    // 2. Token 欄を描画
     renderTokenBar();
     
+    // 3. 状態を更新（ここで初めて要素が存在する）
+    updateStatus();
+    
+    // 4. Token 入力欄の Enter イベント
     const tokenInput = document.getElementById('tokenInput');
     if (tokenInput) {
         tokenInput.addEventListener('keydown', function(e) {
