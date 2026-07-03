@@ -298,9 +298,7 @@
   // ============================================================
 </script>
 <script src="../scripts/common.js"></script>
-  
 <script>
-
 // ============================================================
 // 🔧 デフォルト設定（ここを編集してください）
 // ============================================================
@@ -352,7 +350,7 @@ let currentGrade = DEFAULT_GRADE;
 let currentSemester = DEFAULT_SEMESTER;
 let currentType = DEFAULT_EXAM_TYPE;
 let examData = {};
-let subjectStates = {}; // ★ 折りたたみ状態を保存
+let subjectStates = {};
 
 function loadExamData() {
   const saved = localStorage.getItem('exam_data');
@@ -374,49 +372,6 @@ function loadExamData() {
 function saveExamData() {
   localStorage.setItem('exam_data', JSON.stringify(examData));
   showToast('💾 ローカルに保存しました');
-}
-
-// ============================================================
-// Token 管理
-// ============================================================
-
-function getToken() {
-  return localStorage.getItem('github_token') || '';
-}
-
-function setTokenFromInput() {
-  const input = document.getElementById('tokenInput');
-  if (!input) return;
-  const token = input.value.trim();
-  if (!token) { showToast('❌ Token を入力してください'); return; }
-  if (!token.startsWith('ghp_')) { showToast('❌ Token は ghp_ で始まる必要があります'); return; }
-  localStorage.setItem('github_token', token);
-  input.value = '';
-  updateStatus();
-  showToast('✅ Token を設定しました');
-}
-
-function updateStatus() {
-  const token = getToken();
-  const dot = document.getElementById('statusDot');
-  const text = document.getElementById('statusText');
-  const status = document.getElementById('tokenStatus');
-  const saveBtn = document.getElementById('saveBtn');
-  const loadBtn = document.getElementById('loadBtn');
-
-  if (token) {
-    dot.className = 'status-dot online';
-    text.textContent = 'オンライン';
-    status.textContent = '✅ ' + token.substring(0, 8) + '...';
-    saveBtn.disabled = false;
-    loadBtn.disabled = false;
-  } else {
-    dot.className = 'status-dot offline';
-    text.textContent = 'オフライン';
-    status.textContent = '🔑 未設定';
-    saveBtn.disabled = true;
-    loadBtn.disabled = true;
-  }
 }
 
 // ============================================================
@@ -696,7 +651,6 @@ function renderContent() {
   const typeNames = { 'middle':'中間テスト', 'regular':'定期テスト', 'final':'期末テスト' };
   const semesterNames = { '1':'一学期', '2':'二学期', '3':'三学期' };
 
-  // ★ 現在の設定表示 + 時間割表 ★
   let html = `
     <div style="font-size:0.85rem; color:#6b5d4e; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap;">
       <span><strong>${gradeNames[currentGrade]}</strong></span>
@@ -707,7 +661,6 @@ function renderContent() {
       <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
     </div>
 
-    <!-- ===== 時間割表 ===== -->
     ${renderSchedule()}
   `;
 
@@ -721,7 +674,6 @@ function renderContent() {
     const ranges = data.ranges || [];
     const links = data.links || [];
 
-    // ★ データがない学科はスキップ ★
     if (ranges.length === 0 && links.length === 0) {
       return;
     }
@@ -731,13 +683,10 @@ function renderContent() {
     totalLinks += links.length;
     const sid = 'subj_' + subjectIdx++;
 
-    // ★ 初期状態は折りたたみ（false）
     const isOpen = false;
-    
-    // アイコンの初期表示（折りたたみ → ＋）
     const iconHtml = isOpen ? '<i class="fas fa-minus"></i>' : '<i class="fas fa-plus"></i>';
     const iconClass = isOpen ? 'toggle-icon open' : 'toggle-icon';
-    
+
     html += `
       <div class="subject-card" data-subject="${subject}">
         <div class="subject-title" onclick="toggleSubject('${sid}')">
@@ -778,7 +727,6 @@ function renderContent() {
     `;
   });
 
-  // ★ データが1件もない場合のメッセージ ★
   if (!hasData) {
     html += `
       <div class="empty-state" style="padding:60px 20px;">
@@ -789,7 +737,6 @@ function renderContent() {
     `;
   }
 
-  // 追加エリア（学科選択付き）
   html += `
     <div class="card" style="margin-top:16px; border: 2px dashed #d8cdbf;">
       <div class="card-header">
@@ -820,7 +767,6 @@ function renderContent() {
     </div>
   `;
 
-  // 総件数表示（データがある場合のみ）
   if (hasData) {
     html += `
       <div style="margin-top:16px; font-size:0.85rem; color:#6b5d4e; text-align:right; border-top:1px solid #ede6dd; padding-top:12px;">
@@ -831,7 +777,6 @@ function renderContent() {
 
   area.innerHTML = html;
 
-  // Enter キーイベント
   const rangeInput = document.getElementById('newRangeInput');
   if (rangeInput) {
     rangeInput.addEventListener('keydown', function(e) {
@@ -857,7 +802,7 @@ function renderContent() {
 }
 
 // ============================================================
-// 操作関数（学科指定付き）
+// 操作関数
 // ============================================================
 
 function getSelectedSubject() {
@@ -921,7 +866,7 @@ function deleteLink(subject, index) {
 }
 
 // ============================================================
-// 初期表示時にデフォルトを適用
+// 初期表示
 // ============================================================
 
 function applyDefaultTabs() {
@@ -971,26 +916,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  updateStatus();
   renderContent();
 
-  document.getElementById('tokenInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') setTokenFromInput();
-  });
+  // tokenInput は common.js で処理されるので、ここでは不要
 });
-
-// ============================================================
-// Toast
-// ============================================================
-
-function showToast(msg) {
-  const el = document.getElementById('toast');
-  if (!el) return;
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(el._timer);
-  el._timer = setTimeout(() => el.classList.remove('show'), 3000);
-}
 
 // グローバル公開
 window.addRangeWithSubject = addRangeWithSubject;
@@ -1001,7 +930,6 @@ window.saveToGitHub = saveToGitHub;
 window.loadFromGitHub = loadFromGitHub;
 window.exportData = exportData;
 window.importData = importData;
-window.setTokenFromInput = setTokenFromInput;
 window.toggleSubject = toggleSubject;
 </script>
   
