@@ -9,7 +9,7 @@ const NAV_LINKS = [
     { href: 'sakura.html', icon: 'fa-cherry-blossom', label: '桜蔭' },
     { href: 'schedule.html', icon: 'fa-calendar-alt', label: '年間予定' },
     { href: 'exam.html', icon: 'fa-pencil-alt', label: '試験' },
-    { href: 'homework.html', icon: 'fa-book', label: '宿題' }
+    { href: 'homework.html', icon: 'fa-book', label: '宿題1' }
 ];
 
 // ==================== 导航生成 ====================
