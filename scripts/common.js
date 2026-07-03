@@ -34,8 +34,7 @@ function renderNavbar() {
     
     navHtml += `
             </div>
-            <div class="nav-right">
-                
+            <div class="nav-right">                
                 <div class="data-actions" id="dataActions">
                     <span id="statusInfo">
                         <span class="status-dot offline" id="statusDot"></span>
