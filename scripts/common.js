@@ -11,12 +11,12 @@ const NAV_LINKS = [
     { href: 'tetsu.html', icon: 'fa-flag', label: '鉄律会' },
     { href: 'sakura.html', icon: 'fa-cherry-blossom', label: '桜蔭' },
     { href: 'schedule.html', icon: 'fa-calendar-alt', label: '年間予定' },
-    { href: 'exam.html', icon: 'fa-pencil-alt', label: '試験' }
+    { href: 'exam.html', icon: 'fa-pencil-alt', label: '試験' },
+    { href: 'homework.html', icon: 'fa-book', label: '宿題' }
 ];
 
 // ==================== 导航生成 ====================
 function renderNavbar() {
-    // 获取当前页面文件名
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     
     let navHtml = `
@@ -39,26 +39,51 @@ function renderNavbar() {
             </div>
             <div class="nav-right">
                 <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
-                <div class="data-actions">
+                <div class="data-actions" id="dataActions">
                     <span id="statusInfo">
                         <span class="status-dot offline" id="statusDot"></span>
                         <span id="statusText">オフライン</span>
                     </span>
                     <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
                     <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
-                    <button onclick="exportData()"><i class="fas fa-file-export"></i></button>
-                    <button onclick="document.getElementById('fileInput').click()"><i class="fas fa-file-import"></i></button>
-                    <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
                 </div>
             </div>
         </nav>
     `;
     
-    // 插入导航
     const navContainer = document.getElementById('navbarContainer');
     if (navContainer) {
         navContainer.innerHTML = navHtml;
     }
+    
+    // データ操作用ボタンを追加（ページごとにカスタマイズ可能）
+    renderDataActions();
+}
+
+// ==================== データ操作用ボタン（import/export） ====================
+function renderDataActions() {
+    const container = document.getElementById('dataActions');
+    if (!container) return;
+    
+    // ページごとの設定（各ページで window.SHOW_DATA_BUTTONS を設定可能）
+    const showExport = window.SHOW_EXPORT !== undefined ? window.SHOW_EXPORT : true;
+    const showImport = window.SHOW_IMPORT !== undefined ? window.SHOW_IMPORT : true;
+    
+    let html = container.innerHTML; // 既存の statusInfo + save/load ボタンを保持
+    
+    // export/import ボタンを追加
+    if (showExport || showImport) {
+        html += `<span style="margin-left:4px;">|</span>`;
+        if (showExport) {
+            html += `<button onclick="exportData()" title="データをエクスポート（JSONファイル）"><i class="fas fa-file-export"></i></button>`;
+        }
+        if (showImport) {
+            html += `<button onclick="document.getElementById('fileInput').click()" title="データをインポート（JSONファイル）"><i class="fas fa-file-import"></i></button>`;
+            html += `<input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importData(event)">`;
+        }
+    }
+    
+    container.innerHTML = html;
 }
 
 // ==================== Token 栏生成 ====================
@@ -125,7 +150,6 @@ function updateStatus() {
 function showToast(msg) {
     const el = document.getElementById('toast');
     if (!el) {
-        // 如果当前页面没有toast元素，创建一个
         const newToast = document.createElement('div');
         newToast.id = 'toast';
         newToast.className = 'toast-msg';
@@ -147,13 +171,12 @@ function showToast(msg) {
     el._timer = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-// ==================== 初始化 ====================
+// ==================== 初期化 ====================
 document.addEventListener('DOMContentLoaded', function() {
     renderNavbar();
     renderTokenBar();
     updateStatus();
     
-    // Enter キーで Token 設定
     const tokenInput = document.getElementById('tokenInput');
     if (tokenInput) {
         tokenInput.addEventListener('keydown', function(e) {
@@ -164,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// 导出函数供其他页面使用
+// グローバル公開
 window.getToken = getToken;
 window.setTokenFromInput = setTokenFromInput;
 window.updateStatus = updateStatus;
