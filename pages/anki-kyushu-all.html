@@ -11,7 +11,7 @@
     body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
     .app-wrapper { max-width: 1000px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
 
-    /* 导航（共通化） */
+    /* 导航（共通化）- 简化为只有品牌和链接，没有数据操作按钮 */
     .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 24px; color: #f0ebe3; }
     .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
     .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
@@ -19,8 +19,6 @@
     .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
     .nav-links a:hover { background: #3f352b; color: #fff; }
     .nav-links a.active { background: #5f4b38; color: #fff2e0; }
-    .nav-right { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; flex-wrap: wrap; }
-    .nav-right .user-badge { background: #3f352b; padding: 6px 18px 6px 14px; border-radius: 40px; display: flex; align-items: center; gap: 8px; }
 
     .page-title { font-size: 1.8rem; font-weight: 700; color: #2a221b; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .page-title i { color: #8f735b; }
@@ -114,9 +112,18 @@
 
 <div class="app-wrapper">
 
-  <!-- ===== 导航コンテナ（共通JSで自動生成） ===== -->
-  <div id="navbarContainer"></div>
-  <!-- Token 栏は非表示（表示しない） -->
+  <!-- ===== 导航（共通ナビゲーションのみ、データ操作ボタンなし） ===== -->
+  <nav class="navbar">
+    <div class="nav-brand"><i class="fas fa-compass"></i><span>学び航路</span></div>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> ダッシュボード</a>
+      <a href="tetsu.html"><i class="fas fa-flag"></i> 鉄律会</a>
+      <a href="sakura.html"><i class="fas fa-cherry-blossom"></i> 桜蔭</a>
+      <a href="schedule.html"><i class="fas fa-calendar-alt"></i> 年間予定</a>
+      <a class="active" href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
+      <a href="homework.html"><i class="fas fa-book"></i> 宿題</a>
+    </div>
+  </nav>
 
   <!-- ===== ページタイトル ===== -->
   <div class="page-title">
@@ -209,15 +216,6 @@
   <div class="toast-msg" id="toast"></div>
 </div>
 
-<script>
-// ============================================================
-// 🔧 データボタン表示設定（このページでは非表示）
-// ============================================================
-window.SHOW_EXPORT = false;
-window.SHOW_IMPORT = false;
-// ============================================================
-</script>
-<script src="../scripts/common.js"></script>
 <script>
 // ============================================================
 // 📦 共通データ
