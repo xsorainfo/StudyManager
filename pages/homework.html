@@ -76,9 +76,9 @@
     .hw-list { list-style: none; padding: 0; }
     .hw-list li {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      padding: 10px 0;
+      padding: 12px 0;
       border-bottom: 1px solid #ede6dd;
       gap: 12px;
       flex-wrap: wrap;
@@ -86,9 +86,10 @@
     .hw-list li:last-child { border-bottom: 0; }
     .hw-list .hw-left {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 12px;
       flex: 1;
+      min-width: 200px;
     }
     .hw-list .hw-check {
       width: 22px;
@@ -96,15 +97,31 @@
       cursor: pointer;
       accent-color: #3d6b4a;
       flex-shrink: 0;
+      margin-top: 2px;
     }
     .hw-list .hw-text {
       font-size: 0.95rem;
       word-break: break-word;
       flex: 1;
+      white-space: pre-wrap;
+      line-height: 1.6;
     }
     .hw-list .hw-text.done {
       text-decoration: line-through;
       color: #b7a086;
+    }
+    .hw-list .hw-text .title {
+      font-weight: 700;
+      display: block;
+    }
+    .hw-list .hw-text .desc {
+      display: block;
+      margin-top: 2px;
+      font-weight: 400;
+    }
+    .hw-list .hw-text.done .title,
+    .hw-list .hw-text.done .desc {
+      text-decoration: line-through;
     }
     .hw-list .hw-meta {
       font-size: 0.75rem;
@@ -113,6 +130,7 @@
       display: flex;
       gap: 8px;
       align-items: center;
+      flex-wrap: wrap;
     }
     .hw-list .hw-meta .date-done {
       color: #2e7d32;
@@ -228,6 +246,7 @@
       gap: 10px;
       cursor: pointer;
       user-select: none;
+      flex-wrap: wrap;
     }
     .subject-card .subject-title .count {
       font-size: 0.75rem;
@@ -356,7 +375,7 @@ const ALL_SUBJECTS = ['国語', '文法', '代数', '幾何', '英語', '地理'
 // データ構造
 // ============================================================
 // homeworkData[grade][semester][subject] = { tasks: [], links: [] }
-// task: { id, text, done, doneDate, createdAt }
+// task: { id, title, desc, done, doneDate, createdAt }
 
 const DEFAULT_HOMEWORK_DATA = {
   '1': {}, '2': {}, '3': {}, '4': {}, '5': {}, '6': {}
@@ -706,7 +725,10 @@ function renderContent() {
                 <li>
                   <div class="hw-left">
                     <input type="checkbox" class="hw-check" ${t.done ? 'checked' : ''} onchange="toggleTask('${subject}', ${i})">
-                    <span class="hw-text ${t.done ? 'done' : ''}">${t.text}</span>
+                    <span class="hw-text ${t.done ? 'done' : ''}">
+                      ${t.title ? `<span class="title">${t.title}</span>` : ''}
+                      ${t.desc ? `<span class="desc">${t.desc}</span>` : ''}
+                    </span>
                   </div>
                   <div class="hw-meta">
                     ${t.done ? `<span class="date-done">✅ ${formatDate(t.doneDate)}</span>` : ''}
@@ -748,7 +770,7 @@ function renderContent() {
     `;
   }
 
-  // 追加エリア
+  // ★ 追加エリア（タイトル + 内容 分離） ★
   html += `
     <div class="card" style="margin-top:16px; border: 2px dashed #d8cdbf;">
       <div class="card-header">
@@ -763,11 +785,17 @@ function renderContent() {
         </select>
       </div>
 
-      <div class="add-area">
-        <textarea id="newTaskInput" placeholder="宿題内容を入力（Shift+Enter で改行、Enter で送信）"></textarea>
-        <div class="add-btn-group">
-          <button class="btn btn-sm btn-success" onclick="addTask()"><i class="fas fa-plus"></i> 追加</button>
-          <span class="hint">Shift+Enter 改行</span>
+      <!-- ★ タイトル + 内容 分離 ★ -->
+      <div class="add-area" style="flex-direction:column; gap:10px;">
+        <div style="display:flex; gap:10px; flex-wrap:wrap; width:100%;">
+          <input type="text" id="newTaskTitle" placeholder="タイトル（例: 数学問題集 p.36-39）" style="flex:2; min-width:200px; padding:10px 16px; border:2px solid #d8cdbf; border-radius:16px; font-size:0.9rem; outline:none; background:white;">
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; width:100%; align-items:flex-start;">
+          <textarea id="newTaskDesc" placeholder="内容（詳細を入力、Shift+Enter で改行）" style="flex:3; min-width:200px; padding:10px 16px; border:2px solid #d8cdbf; border-radius:16px; font-size:0.9rem; outline:none; background:white; font-family:inherit; resize:vertical; line-height:1.6; min-height:70px;"></textarea>
+          <div class="add-btn-group">
+            <button class="btn btn-sm btn-success" onclick="addTask()"><i class="fas fa-plus"></i> 追加</button>
+            <span class="hint">Shift+Enter 改行</span>
+          </div>
         </div>
       </div>
 
@@ -785,9 +813,9 @@ function renderContent() {
   area.innerHTML = html;
 
   // Enter キーイベント
-  const taskInput = document.getElementById('newTaskInput');
-  if (taskInput) {
-    taskInput.addEventListener('keydown', function(e) {
+  const taskDesc = document.getElementById('newTaskDesc');
+  if (taskDesc) {
+    taskDesc.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         addTask();
@@ -823,11 +851,15 @@ function getSelectedLinkSubject() {
   return select ? select.value : '歴史';
 }
 
+// ★ 修正: タイトル + 内容 ★
 function addTask() {
-  const input = document.getElementById('newTaskInput');
-  if (!input) return;
-  const val = input.value.trim();
-  if (!val) { showToast('❌ 宿題内容を入力してください'); return; }
+  const titleInput = document.getElementById('newTaskTitle');
+  const descInput = document.getElementById('newTaskDesc');
+  if (!titleInput || !descInput) return;
+
+  const title = titleInput.value.trim();
+  const desc = descInput.value.trim();
+  if (!title && !desc) { showToast('❌ タイトルまたは内容を入力してください'); return; }
 
   const subject = getSelectedSubject();
   const data = getSubjectData(subject);
@@ -835,14 +867,16 @@ function addTask() {
 
   data.tasks.push({
     id: generateId(),
-    text: val,
+    title: title,
+    desc: desc,
     done: false,
     doneDate: null,
     createdAt: new Date().toISOString()
   });
 
   setSubjectData(subject, data);
-  input.value = '';
+  titleInput.value = '';
+  descInput.value = '';
   renderContent();
   showToast(`✅ ${subject} に宿題を追加しました`);
 }
