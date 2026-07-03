@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ★ iPad/iPhone ホーム画面アイコン ★ -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/StudyManager/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/StudyManager/favicon.png">
+
+  <title>宿題 · 学び航路</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
+    body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .app-wrapper { max-width: 1400px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
+
+    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 20px; color: #f0ebe3; }
+    .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
+    .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 500; }
+    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover { background: #3f352b; color: #fff; }
+    .nav-links a.active { background: #5f4b38; color: #fff2e0; }
+    .nav-right { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; flex-wrap: wrap; }
+    .nav-right .user-badge { background: #3f352b; padding: 6px 18px 6px 14px; border-radius: 40px; display: flex; align-items: center; gap: 8px; }
+    .nav-right .data-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .nav-right .data-actions button { background: #3f352b; border: none; color: #e8dfd5; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; transition: 0.15s; display: flex; align-items: center; gap: 5px; }
+    .nav-right .data-actions button:hover { background: #5f4b38; color: #fff; }
+    .nav-right .data-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
+    .status-dot.online { background: #4CAF50; }
+    .status-dot.offline { background: #f44336; }
+    .status-dot.saving { background: #ff9800; animation: pulse 0.8s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .token-bar { background: #f0ebe4; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .token-bar .label { font-weight: 600; color: #3d3229; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
+    .token-bar input { flex: 1; min-width: 200px; padding: 8px 16px; border: 2px solid #d8cdbf; border-radius: 40px; font-size: 0.85rem; outline: none; background: white; font-family: monospace; }
+    .token-bar input:focus { border-color: #8f735b; }
+    .token-bar .token-status { font-size: 0.8rem; color: #6b5d4e; white-space: nowrap; }
+    .token-bar .btn-set { background: #2c241c; border: none; color: white; padding: 6px 20px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.15s; }
+    .token-bar .btn-set:hover { background: #4d3b2c; }
+
+    .page-title { font-size: 1.8rem; font-weight: 700; color: #2a221b; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .page-title i { color: #8f735b; }
+    .page-title .sub { font-size: 0.9rem; font-weight: 400; color: #6b5d4e; margin-left: 12px; }
+
+    .grade-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; }
+    .grade-tabs .tab { padding: 8px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
+    .grade-tabs .tab:hover { background: #e3d9ce; }
+    .grade-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
+
+    .semester-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .semester-tabs .tab { padding: 6px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
+    .semester-tabs .tab:hover { background: #e3d9ce; }
+    .semester-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
+
+    .card { background: #fffffffa; border-radius: 28px; padding: 22px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid #ede8e0; margin-bottom: 24px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .card-header h2 { font-size: 1.2rem; font-weight: 600; color: #2a221b; display: flex; align-items: center; gap: 10px; }
+    .card-header h2 i { color: #8f735b; }
+    .card-header .badge { background: #e7ddd2; border-radius: 40px; padding: 2px 14px; font-size: 0.75rem; font-weight: 600; color: #3d3229; }
+
+    .btn { background: #2c241c; border: none; color: white; padding: 8px 20px; border-radius: 60px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn:hover { background: #4d3b2c; transform: scale(0.97); }
+    .btn-sm { padding: 4px 14px; font-size: 0.75rem; }
+    .btn-outline { background: transparent; color: #2c241c; border: 2px solid #d8cdbf; }
+    .btn-outline:hover { background: #f0ebe4; }
+    .btn-success { background: #3d6b4a; }
+    .btn-success:hover { background: #2d5238; }
+    .btn-danger { background: #8f4a4a; }
+    .btn-danger:hover { background: #6d3838; }
+
+    /* 宿題リスト */
+    .hw-list { list-style: none; padding: 0; }
+    .hw-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #ede6dd;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hw-list li:last-child { border-bottom: 0; }
+    .hw-list .hw-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+    .hw-list .hw-check {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      accent-color: #3d6b4a;
+      flex-shrink: 0;
+    }
+    .hw-list .hw-text {
+      font-size: 0.95rem;
+      word-break: break-word;
+      flex: 1;
+    }
+    .hw-list .hw-text.done {
+      text-decoration: line-through;
+      color: #b7a086;
+    }
+    .hw-list .hw-meta {
+      font-size: 0.75rem;
+      color: #6b5d4e;
+      flex-shrink: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .hw-list .hw-meta .date-done {
+      color: #2e7d32;
+    }
+    .hw-list .hw-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .hw-list .hw-actions button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #8f4a4a;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+    .hw-list .hw-actions button:hover { background: #f5e0e0; }
+
+    .hw-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .hw-link {
+      background: #f0ebe4;
+      padding: 4px 14px;
+      border-radius: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: #2c241c;
+      font-size: 0.8rem;
+      border: 1px solid transparent;
+      transition: 0.15s;
+    }
+    .hw-link:hover { border-color: #8f735b; background: #e8dfd5; }
+    .hw-link .del-link { color: #8f4a4a; cursor: pointer; font-size: 0.7rem; }
+
+    .add-area { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: flex-start; }
+    .add-area select {
+      padding: 10px 16px;
+      border: 2px solid #d8cdbf;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      outline: none;
+      background: white;
+      min-width: 120px;
+    }
+    .add-area select:focus { border-color: #8f735b; }
+    .add-area textarea {
+      flex: 3;
+      min-width: 200px;
+      padding: 10px 16px;
+      border: 2px solid #d8cdbf;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      outline: none;
+      background: white;
+      font-family: inherit;
+      resize: vertical;
+      line-height: 1.6;
+      min-height: 70px;
+    }
+    .add-area textarea:focus { border-color: #8f735b; }
+    .add-area .add-btn-group { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+    .add-area .add-btn-group .hint { font-size: 0.7rem; color: #b7a086; text-align: center; }
+
+    .add-link-area { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+    .add-link-area select {
+      padding: 8px 16px;
+      border: 2px solid #d8cdbf;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      outline: none;
+      background: white;
+      min-width: 120px;
+    }
+    .add-link-area select:focus { border-color: #8f735b; }
+    .add-link-area input[type="text"],
+    .add-link-area input[type="url"] {
+      padding: 8px 16px;
+      border: 2px solid #d8cdbf;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      outline: none;
+      background: white;
+      flex: 1;
+      min-width: 150px;
+    }
+    .add-link-area input:focus { border-color: #8f735b; }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: #b7a086; }
+    .empty-state i { font-size: 2.5rem; margin-bottom: 12px; }
+
+    .subject-card {
+      background: #fcf9f4;
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      border-left: 4px solid #8f735b;
+    }
+    .subject-card .subject-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #2a221b;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .subject-card .subject-title .count {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #6b5d4e;
+      background: #f0ebe4;
+      padding: 0 12px;
+      border-radius: 40px;
+    }
+    .subject-card .subject-title .toggle-icon {
+      margin-left: auto;
+      font-size: 0.9rem;
+      color: #8f735b;
+      background: #f0ebe4;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+    .subject-card .subject-title .toggle-icon:hover { background: #e3d9ce; }
+    .subject-card .subject-title .toggle-icon.open { background: #8f735b; color: white; }
+
+    .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
+    .toast-msg.show { opacity: 1; }
+    #fileInput { display: none; }
+
+    @media (max-width: 768px) {
+      .grade-tabs .tab { padding: 6px 14px; font-size: 0.8rem; }
+      .semester-tabs .tab { padding: 4px 12px; font-size: 0.8rem; }
+      .add-area textarea { min-width: 100px; min-height: 60px; }
+      .add-area select { min-width: 100px; }
+      .hw-list li { flex-wrap: wrap; }
+      .hw-list .hw-meta { width: 100%; margin-left: 34px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ===== 导航 ===== -->
+  <nav class="navbar">
+    <div class="nav-brand"><i class="fas fa-compass"></i><span>学び航路</span></div>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> ダッシュボード</a>
+      <a href="tetsu.html"><i class="fas fa-flag"></i> 鉄律会</a>
+      <a href="sakura.html"><i class="fas fa-cherry-blossom"></i> 桜蔭</a>
+      <a href="schedule.html"><i class="fas fa-calendar-alt"></i> 年間予定</a>
+      <a href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
+      <a class="active" href="homework.html"><i class="fas fa-book"></i> 宿題</a>
+    </div>
+    <div class="nav-right">
+      <div class="data-actions">
+        <span id="statusInfo">
+          <span class="status-dot offline" id="statusDot"></span>
+          <span id="statusText">オフライン</span>
+        </span>
+        <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
+        <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
+        <button onclick="exportData()"><i class="fas fa-file-export"></i></button>
+        <button onclick="document.getElementById('fileInput').click()"><i class="fas fa-file-import"></i></button>
+        <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== Token 栏 ===== -->
+  <div class="token-bar">
+    <span class="label"><i class="fab fa-github"></i> Token:</span>
+    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx を入力" autocomplete="off">
+    <button class="btn-set" onclick="setTokenFromInput()">設定</button>
+    <span class="token-status" id="tokenStatus">🔑 未設定</span>
+  </div>
+
+  <!-- ===== 页面标题 ===== -->
+  <div class="page-title">
+    <i class="fas fa-book"></i> 宿題管理
+    <span class="sub">宿題・課題を管理</span>
+  </div>
+
+  <!-- ===== 学年タブ ===== -->
+  <div class="grade-tabs" id="gradeTabs">
+    <button class="tab" data-grade="1">中1</button>
+    <button class="tab active" data-grade="2">中2</button>
+    <button class="tab" data-grade="3">中3</button>
+    <button class="tab" data-grade="4">高1</button>
+    <button class="tab" data-grade="5">高2</button>
+    <button class="tab" data-grade="6">高3</button>
+  </div>
+
+  <!-- ===== 学期タブ ===== -->
+  <div class="semester-tabs" id="semesterTabs">
+    <button class="tab active" data-semester="1">一学期</button>
+    <button class="tab" data-semester="2">二学期</button>
+    <button class="tab" data-semester="3">三学期</button>
+  </div>
+
+  <!-- ===== コンテンツエリア ===== -->
+  <div id="contentArea"></div>
+
+  <div class="toast-msg" id="toast"></div>
+</div>
+
+<script>
+// ============================================================
+// 🔧 デフォルト設定
+// ============================================================
+const DEFAULT_GRADE = '2';
+const DEFAULT_SEMESTER = '1';
+// ============================================================
+
+// ============================================================
+// 設定
+// ============================================================
+const GITHUB_OWNER = 'xsorainfo';
+const GITHUB_REPO = 'StudyManager';
+const GITHUB_PATH = 'data/homework_data.json';
+const GITHUB_BRANCH = 'main';
+
+const ALL_SUBJECTS = ['国語', '文法', '代数', '幾何', '英語', '地理', '歴史', '理科1', '理科2', '音楽', '美術', '技術・家庭', '保健体育', '礼法', '公民'];
+
+// ============================================================
+// データ構造
+// ============================================================
+// homeworkData[grade][semester][subject] = { tasks: [], links: [] }
+// task: { id, text, done, doneDate, createdAt }
+
+const DEFAULT_HOMEWORK_DATA = {
+  '1': {}, '2': {}, '3': {}, '4': {}, '5': {}, '6': {}
+};
+
+// ============================================================
+// 状態管理
+// ============================================================
+
+let currentGrade = DEFAULT_GRADE;
+let currentSemester = DEFAULT_SEMESTER;
+let homeworkData = {};
+
+function loadHomeworkData() {
+  const saved = localStorage.getItem('homework_data');
+  if (saved) {
+    try {
+      homeworkData = JSON.parse(saved);
+      for (let g of ['1','2','3','4','5','6']) {
+        if (!homeworkData[g]) homeworkData[g] = {};
+      }
+      return;
+    } catch(e) {}
+  }
+  homeworkData = JSON.parse(JSON.stringify(DEFAULT_HOMEWORK_DATA));
+}
+
+function saveHomeworkData() {
+  localStorage.setItem('homework_data', JSON.stringify(homeworkData));
+  showToast('💾 ローカルに保存しました');
+}
+
+// ============================================================
+// Token 管理
+// ============================================================
+
+function getToken() {
+  return localStorage.getItem('github_token') || '';
+}
+
+function setTokenFromInput() {
+  const input = document.getElementById('tokenInput');
+  if (!input) return;
+  const token = input.value.trim();
+  if (!token) { showToast('❌ Token を入力してください'); return; }
+  if (!token.startsWith('ghp_')) { showToast('❌ Token は ghp_ で始まる必要があります'); return; }
+  localStorage.setItem('github_token', token);
+  input.value = '';
+  updateStatus();
+  showToast('✅ Token を設定しました');
+}
+
+function updateStatus() {
+  const token = getToken();
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  const status = document.getElementById('tokenStatus');
+  const saveBtn = document.getElementById('saveBtn');
+  const loadBtn = document.getElementById('loadBtn');
+
+  if (token) {
+    dot.className = 'status-dot online';
+    text.textContent = 'オンライン';
+    status.textContent = '✅ ' + token.substring(0, 8) + '...';
+    saveBtn.disabled = false;
+    loadBtn.disabled = false;
+  } else {
+    dot.className = 'status-dot offline';
+    text.textContent = 'オフライン';
+    status.textContent = '🔑 未設定';
+    saveBtn.disabled = true;
+    loadBtn.disabled = true;
+  }
+}
+
+// ============================================================
+// GitHub 保存・読込
+// ============================================================
+
+function getHeaders() {
+  const token = getToken();
+  if (!token) return null;
+  return {
+    'Authorization': `token ${token}`,
+    'Accept': 'application/vnd.github.v3+json'
+  };
+}
+
+async function saveToGitHub() {
+  const token = getToken();
+  if (!token) {
+    showToast('❌ Token が設定されていません');
+    return;
+  }
+  saveHomeworkData();
+
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  dot.className = 'status-dot saving';
+  text.textContent = '保存中...';
+
+  try {
+    const content = JSON.stringify(homeworkData, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(content)));
+    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+    const headers = getHeaders();
+
+    let sha = null;
+    const checkRes = await fetch(url, { headers });
+    if (checkRes.ok) {
+      const fileData = await checkRes.json();
+      sha = fileData.sha;
+    }
+
+    const body = {
+      message: `📝 宿題データ更新: ${new Date().toISOString()}`,
+      content: encoded,
+      branch: GITHUB_BRANCH
+    };
+    if (sha) body.sha = sha;
+
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: headers,
+      body: JSON.stringify(body)
+    });
+
+    if (response.ok) {
+      dot.className = 'status-dot online';
+      text.textContent = 'オンライン';
+      showToast('✅ GitHub に保存しました');
+    } else {
+      const err = await response.json();
+      throw new Error(err.message || `HTTP ${response.status}`);
+    }
+  } catch(e) {
+    dot.className = 'status-dot offline';
+    text.textContent = 'エラー';
+    showToast('❌ 保存失敗: ' + e.message);
+  }
+}
+
+async function loadFromGitHub() {
+  const token = getToken();
+  if (!token) {
+    showToast('❌ Token が設定されていません');
+    return;
+  }
+
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  dot.className = 'status-dot saving';
+  text.textContent = '読込中...';
+
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+    const headers = getHeaders();
+    const response = await fetch(url, { headers });
+
+    if (response.status === 404) {
+      showToast('📭 GitHub にデータがありません');
+      dot.className = 'status-dot online';
+      text.textContent = 'オンライン';
+      return;
+    }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const fileData = await response.json();
+    const content = decodeURIComponent(escape(atob(fileData.content)));
+    const loadedData = JSON.parse(content);
+
+    for (let g of ['1','2','3','4','5','6']) {
+      if (!loadedData[g]) loadedData[g] = {};
+    }
+
+    homeworkData = loadedData;
+    localStorage.setItem('homework_data', JSON.stringify(homeworkData));
+
+    dot.className = 'status-dot online';
+    text.textContent = 'オンライン';
+    renderContent();
+    showToast('✅ GitHub から読み込みました');
+  } catch(e) {
+    dot.className = 'status-dot offline';
+    text.textContent = 'エラー';
+    showToast('❌ 読込失敗: ' + e.message);
+  }
+}
+
+// ============================================================
+// インポート/エクスポート
+// ============================================================
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(homeworkData, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `homework_data_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('📁 エクスポートしました');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      for (let g of ['1','2','3','4','5','6']) {
+        if (!imported[g]) imported[g] = {};
+      }
+      if (confirm('現在のデータをインポートデータで上書きしますか？')) {
+        homeworkData = imported;
+        localStorage.setItem('homework_data', JSON.stringify(homeworkData));
+        renderContent();
+        showToast('📁 インポートしました');
+      }
+    } catch(err) {
+      showToast('❌ ファイル読み込み失敗');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ============================================================
+// データ取得・設定
+// ============================================================
+
+function getSubjectData(subject) {
+  const gradeData = homeworkData[currentGrade] || {};
+  const semesterData = gradeData[currentSemester] || {};
+  const subjectData = semesterData[subject] || { tasks: [], links: [] };
+  return subjectData;
+}
+
+function setSubjectData(subject, data) {
+  if (!homeworkData[currentGrade]) homeworkData[currentGrade] = {};
+  if (!homeworkData[currentGrade][currentSemester]) homeworkData[currentGrade][currentSemester] = {};
+  homeworkData[currentGrade][currentSemester][subject] = data;
+  saveHomeworkData();
+}
+
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+}
+
+// ============================================================
+// 折りたたみ
+// ============================================================
+
+function toggleSubject(id) {
+  const body = document.getElementById(id + '_body');
+  const icon = document.getElementById(id + '_icon');
+  if (!body) return;
+  if (body.style.display === 'none') {
+    body.style.display = '';
+    if (icon) {
+      icon.className = 'toggle-icon open';
+      icon.innerHTML = '<i class="fas fa-minus"></i>';
+    }
+  } else {
+    body.style.display = 'none';
+    if (icon) {
+      icon.className = 'toggle-icon';
+      icon.innerHTML = '<i class="fas fa-plus"></i>';
+    }
+  }
+}
+
+// ============================================================
+// レンダリング
+// ============================================================
+
+function renderContent() {
+  const area = document.getElementById('contentArea');
+
+  const gradeNames = { '1':'中1', '2':'中2', '3':'中3', '4':'高1', '5':'高2', '6':'高3' };
+  const semesterNames = { '1':'一学期', '2':'二学期', '3':'三学期' };
+
+  let html = `
+    <div style="font-size:0.85rem; color:#6b5d4e; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap;">
+      <span><strong>${gradeNames[currentGrade]}</strong></span>
+      <span>›</span>
+      <span><strong>${semesterNames[currentSemester]}</strong></span>
+      <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
+    </div>
+  `;
+
+  let totalTasks = 0;
+  let doneTasks = 0;
+  let hasData = false;
+  let subjectIdx = 0;
+
+  ALL_SUBJECTS.forEach(subject => {
+    const data = getSubjectData(subject);
+    const tasks = data.tasks || [];
+    const links = data.links || [];
+
+    if (tasks.length === 0 && links.length === 0) {
+      return;
+    }
+
+    hasData = true;
+    totalTasks += tasks.length;
+    doneTasks += tasks.filter(t => t.done).length;
+    const sid = 'hw_' + subjectIdx++;
+
+    const isOpen = false;
+    const iconHtml = isOpen ? '<i class="fas fa-minus"></i>' : '<i class="fas fa-plus"></i>';
+    const iconClass = isOpen ? 'toggle-icon open' : 'toggle-icon';
+
+    html += `
+      <div class="subject-card">
+        <div class="subject-title" onclick="toggleSubject('${sid}')">
+          <span>${subject}</span>
+          <span class="count">${tasks.filter(t => !t.done).length} 残り / ${tasks.length} 件</span>
+          ${links.length > 0 ? `
+            <span style="display:inline-flex; gap:4px; flex-wrap:wrap; margin-left:4px;">
+              ${links.map((l, i) => `
+                <a href="${l.url}" target="_blank" class="hw-link" onclick="event.stopPropagation();" style="font-size:0.7rem; padding:2px 10px;">
+                  <i class="fas fa-external-link-alt" style="font-size:0.6rem;"></i>
+                  ${l.label}
+                  <span class="del-link" onclick="event.preventDefault(); event.stopPropagation(); deleteLink('${subject}', ${i})">
+                    <i class="fas fa-times"></i>
+                  </span>
+                </a>
+              `).join('')}
+            </span>
+          ` : ''}
+          <span class="${iconClass}" id="${sid}_icon">
+            ${iconHtml}
+          </span>
+        </div>
+        <div class="subject-body" id="${sid}_body" style="${isOpen ? '' : 'display:none;'}">
+          ${tasks.length > 0 ? `
+            <ul class="hw-list">
+              ${tasks.map((t, i) => `
+                <li>
+                  <div class="hw-left">
+                    <input type="checkbox" class="hw-check" ${t.done ? 'checked' : ''} onchange="toggleTask('${subject}', ${i})">
+                    <span class="hw-text ${t.done ? 'done' : ''}">${t.text}</span>
+                  </div>
+                  <div class="hw-meta">
+                    ${t.done ? `<span class="date-done">✅ ${formatDate(t.doneDate)}</span>` : ''}
+                    <span style="font-size:0.65rem; color:#b7a086;">${formatDate(t.createdAt)}</span>
+                  </div>
+                  <div class="hw-actions">
+                    <button onclick="deleteTask('${subject}', ${i})"><i class="fas fa-trash"></i></button>
+                  </div>
+                </li>
+              `).join('')}
+            </ul>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  // 進捗サマリー
+  if (hasData) {
+    const rate = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+    html += `
+      <div style="margin-top:12px; padding:12px 18px; background:#f0ebe4; border-radius:20px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <span>📊 進捗: <strong>${doneTasks}</strong> / ${totalTasks} 完了</span>
+        <span>🎯 達成率: <strong>${rate}%</strong></span>
+        <span style="font-size:0.8rem; color:#6b5d4e;">
+          ${doneTasks === totalTasks && totalTasks > 0 ? '🎉 すべて完了！おめでとう！' : `残り ${totalTasks - doneTasks} 件`}
+        </span>
+      </div>
+    `;
+  }
+
+  if (!hasData) {
+    html += `
+      <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <p>宿題がありません</p>
+        <p style="font-size:0.85rem; color:#b7a086;">下の追加エリアから宿題を追加してください</p>
+      </div>
+    `;
+  }
+
+  // 追加エリア
+  html += `
+    <div class="card" style="margin-top:16px; border: 2px dashed #d8cdbf;">
+      <div class="card-header">
+        <h2><i class="fas fa-plus-circle"></i> 宿題を追加</h2>
+        <span class="badge">学科を選択して追加</span>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-weight:500; font-size:0.85rem; color:#3d3229; display:block; margin-bottom:4px;">📚 学科を選択</label>
+        <select id="addSubjectSelect" style="padding:8px 16px; border:2px solid #d8cdbf; border-radius:16px; font-size:0.9rem; outline:none; background:white; width:100%; max-width:300px;">
+          ${ALL_SUBJECTS.map(s => `<option value="${s}">${s}</option>`).join('')}
+        </select>
+      </div>
+
+      <div class="add-area">
+        <textarea id="newTaskInput" placeholder="宿題内容を入力（Shift+Enter で改行、Enter で送信）"></textarea>
+        <div class="add-btn-group">
+          <button class="btn btn-sm btn-success" onclick="addTask()"><i class="fas fa-plus"></i> 追加</button>
+          <span class="hint">Shift+Enter 改行</span>
+        </div>
+      </div>
+
+      <div class="add-link-area" style="margin-top:12px;">
+        <select id="addLinkSubjectSelect" style="padding:8px 16px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.85rem; outline:none; background:white; min-width:120px;">
+          ${ALL_SUBJECTS.map(s => `<option value="${s}">${s}</option>`).join('')}
+        </select>
+        <input type="text" id="newLinkLabel" placeholder="ラベル（例: 📜 参考資料）" style="flex:1;">
+        <input type="url" id="newLinkUrl" placeholder="URL" style="flex:2;">
+        <button class="btn btn-sm btn-success" onclick="addLink()"><i class="fas fa-plus"></i> リンク追加</button>
+      </div>
+    </div>
+  `;
+
+  area.innerHTML = html;
+
+  // Enter キーイベント
+  const taskInput = document.getElementById('newTaskInput');
+  if (taskInput) {
+    taskInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        addTask();
+      }
+    });
+  }
+
+  const labelInput = document.getElementById('newLinkLabel');
+  const urlInput = document.getElementById('newLinkUrl');
+  if (labelInput && urlInput) {
+    const doAddLink = function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        addLink();
+      }
+    };
+    labelInput.addEventListener('keydown', doAddLink);
+    urlInput.addEventListener('keydown', doAddLink);
+  }
+}
+
+// ============================================================
+// 操作関数
+// ============================================================
+
+function getSelectedSubject() {
+  const select = document.getElementById('addSubjectSelect');
+  return select ? select.value : '歴史';
+}
+
+function getSelectedLinkSubject() {
+  const select = document.getElementById('addLinkSubjectSelect');
+  return select ? select.value : '歴史';
+}
+
+function addTask() {
+  const input = document.getElementById('newTaskInput');
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) { showToast('❌ 宿題内容を入力してください'); return; }
+
+  const subject = getSelectedSubject();
+  const data = getSubjectData(subject);
+  if (!data.tasks) data.tasks = [];
+
+  data.tasks.push({
+    id: generateId(),
+    text: val,
+    done: false,
+    doneDate: null,
+    createdAt: new Date().toISOString()
+  });
+
+  setSubjectData(subject, data);
+  input.value = '';
+  renderContent();
+  showToast(`✅ ${subject} に宿題を追加しました`);
+}
+
+function toggleTask(subject, index) {
+  const data = getSubjectData(subject);
+  if (!data.tasks || !data.tasks[index]) return;
+
+  const task = data.tasks[index];
+  task.done = !task.done;
+  task.doneDate = task.done ? new Date().toISOString() : null;
+
+  setSubjectData(subject, data);
+  renderContent();
+  showToast(task.done ? '✅ 完了しました！' : '↩️ 未完了に戻しました');
+}
+
+function deleteTask(subject, index) {
+  if (!confirm(`「${subject}」の宿題を削除しますか？`)) return;
+  const data = getSubjectData(subject);
+  data.tasks.splice(index, 1);
+  setSubjectData(subject, data);
+  renderContent();
+  showToast('🗑️ 削除しました');
+}
+
+function addLink() {
+  const labelInput = document.getElementById('newLinkLabel');
+  const urlInput = document.getElementById('newLinkUrl');
+  if (!labelInput || !urlInput) return;
+  const label = labelInput.value.trim();
+  const url = urlInput.value.trim();
+  if (!label || !url) { showToast('❌ ラベルとURLを入力してください'); return; }
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    showToast('❌ URLは http:// または https:// で始めてください');
+    return;
+  }
+
+  const subject = getSelectedLinkSubject();
+  const data = getSubjectData(subject);
+  if (!data.links) data.links = [];
+
+  data.links.push({ id: generateId(), label, url });
+  setSubjectData(subject, data);
+
+  labelInput.value = '';
+  urlInput.value = '';
+  renderContent();
+  showToast(`✅ ${subject} にリンクを追加しました`);
+}
+
+function deleteLink(subject, index) {
+  if (!confirm(`「${subject}」のリンクを削除しますか？`)) return;
+  const data = getSubjectData(subject);
+  data.links.splice(index, 1);
+  setSubjectData(subject, data);
+  renderContent();
+  showToast('🗑️ 削除しました');
+}
+
+// ============================================================
+// 初期表示
+// ============================================================
+
+function applyDefaultTabs() {
+  document.querySelectorAll('#gradeTabs .tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.grade === DEFAULT_GRADE);
+  });
+  document.querySelectorAll('#semesterTabs .tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.semester === DEFAULT_SEMESTER);
+  });
+}
+
+// ============================================================
+// イベントハンドラ
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  loadHomeworkData();
+  applyDefaultTabs();
+
+  document.querySelectorAll('#gradeTabs .tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#gradeTabs .tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentGrade = this.dataset.grade;
+      renderContent();
+    });
+  });
+
+  document.querySelectorAll('#semesterTabs .tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#semesterTabs .tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentSemester = this.dataset.semester;
+      renderContent();
+    });
+  });
+
+  updateStatus();
+  renderContent();
+
+  document.getElementById('tokenInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') setTokenFromInput();
+  });
+});
+
+// ============================================================
+// Toast
+// ============================================================
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// グローバル公開
+window.addTask = addTask;
+window.toggleTask = toggleTask;
+window.deleteTask = deleteTask;
+window.addLink = addLink;
+window.deleteLink = deleteLink;
+window.saveToGitHub = saveToGitHub;
+window.loadFromGitHub = loadFromGitHub;
+window.exportData = exportData;
+window.importData = importData;
+window.setTokenFromInput = setTokenFromInput;
+window.toggleSubject = toggleSubject;
+</script>
+</body>
+</html>
