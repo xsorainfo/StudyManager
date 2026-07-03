@@ -35,7 +35,7 @@ function renderNavbar() {
     navHtml += `
             </div>
             <div class="nav-right">
-                <span class="user-badge"><i class="fas fa-user-circle"></i> 中2・山田</span>
+                
                 <div class="data-actions" id="dataActions">
                     <span id="statusInfo">
                         <span class="status-dot offline" id="statusDot"></span>
