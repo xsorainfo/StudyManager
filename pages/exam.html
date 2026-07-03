@@ -553,12 +553,12 @@ function setSubjectData(subject, data) {
 // 🗓️ 時間割表（ここを編集すればOK）
 // ============================================================
 function renderSchedule() {
-  // ★ 折りたたみ用のID
-  const scheduleId = 'schedule_body';
-  const iconId = 'schedule_icon';
+  // ★ 共通のIDを使用 ★
+  const bodyId = 'schedule_submit_body';
+  const iconId = 'schedule_submit_icon';
   
   return `
-    <!-- ===== 時間割表（折りたたみ） ===== -->
+    <!-- ===== 時間割表 ===== -->
     <div class="card" style="background: #f8f4ef; border-left: 6px solid #8f735b;">
       <div class="card-header" style="cursor:pointer; user-select:none;" onclick="toggleSchedule()">
         <h2><i class="fas fa-clock"></i> 定期試験時間割</h2>
@@ -569,7 +569,7 @@ function renderSchedule() {
           </span>
         </div>
       </div>
-      <div id="${scheduleId}" style="display:none;">
+      <div id="${bodyId}" style="display:none;">
         <div style="overflow-x:auto;">
           <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:500px;">
             <thead>
@@ -610,26 +610,20 @@ function renderSchedule() {
           <span>📌 試験後HR (12:30には終了)</span>
           <span style="font-size:0.75rem;">発表: 6/24 (水)</span>
         </div>
-      </div>
-    </div>
 
-    <!-- ===== 提出物（折りたたみ） ===== -->
-    <div class="card" style="background: #f8f4ef; border-left: 6px solid #8f735b; margin-top:-8px;">
-      <div class="card-header" style="cursor:pointer; user-select:none;" onclick="toggleSchedule()">
-        <h2><i class="fas fa-paperclip"></i> 提出物</h2>
-        <div style="display:flex; align-items:center; gap:12px;">
-          <span class="badge">要確認</span>
-          <!-- ★ 同じアイコンを使う ★ -->
-          <span class="toggle-icon" style="font-size:0.9rem; color:#8f735b; background:#f0ebe4; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s;">
-            <i class="fas fa-plus"></i>
-          </span>
-        </div>
-      </div>
-      <div id="${scheduleId}" style="display:none;">
-        <div style="display:flex; flex-wrap:wrap; gap:16px; font-size:0.9rem;">
-          <span>📘 漢字直しノート</span>
-          <span>📗 代数問題集ノート</span>
-          <span>📙 幾何問題集ノート</span>
+        <!-- ===== 提出物（時間割と同じ枠内に配置） ===== -->
+        <div style="margin-top:16px; padding-top:16px; border-top:2px solid #ede6dd;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+            <h2 style="font-size:1.0rem; font-weight:600; color:#2a221b; display:flex; align-items:center; gap:8px;">
+              <i class="fas fa-paperclip" style="color:#8f735b;"></i> 提出物
+            </h2>
+            <span class="badge" style="background:#e7ddd2; border-radius:40px; padding:2px 14px; font-size:0.7rem; font-weight:600; color:#3d3229;">要確認</span>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:16px; font-size:0.9rem;">
+            <span>📘 漢字直しノート</span>
+            <span>📗 代数問題集ノート</span>
+            <span>📙 幾何問題集ノート</span>
+          </div>
         </div>
       </div>
     </div>
@@ -819,17 +813,18 @@ function renderContent() {
     urlInput.addEventListener('keydown', doAddLink);
   }
 }
+
 // ============================================================
-// 🗓️ 時間割・提出物 折りたたみ関数
+// 🗓️ 時間割・提出物 折りたたみ関数（一体型）
 // ============================================================
 
 function toggleSchedule() {
-  const body = document.getElementById('schedule_body');
-  const icon = document.getElementById('schedule_icon');
+  const body = document.getElementById('schedule_submit_body');
+  const icon = document.getElementById('schedule_submit_icon');
   if (!body) return;
   
-  if (body.style.display === 'none') {
-    body.style.display = '';
+  if (body.style.display === 'none' || body.style.display === '') {
+    body.style.display = 'block';
     if (icon) {
       icon.innerHTML = '<i class="fas fa-minus"></i>';
     }
