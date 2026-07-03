@@ -248,39 +248,10 @@
 <body>
 
 <div class="app-wrapper">
-
-  <!-- ===== 导航 ===== -->
-  <nav class="navbar">
-    <div class="nav-brand"><i class="fas fa-compass"></i><span>学び航路</span></div>
-    <div class="nav-links">
-      <a href="index.html"><i class="fas fa-home"></i> ダッシュボード</a>
-      <a href="tetsu.html"><i class="fas fa-flag"></i> 鉄律会</a>
-      <a href="sakura.html"><i class="fas fa-cherry-blossom"></i> 桜蔭</a>
-      <a href="schedule.html"><i class="fas fa-calendar-alt"></i> 年間予定</a>
-      <a class="active" href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
-    </div>
-    <div class="nav-right">
-      <div class="data-actions">
-        <span id="statusInfo">
-          <span class="status-dot offline" id="statusDot"></span>
-          <span id="statusText">オフライン</span>
-        </span>
-        <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
-        <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
-        <button onclick="exportData()"><i class="fas fa-file-export"></i></button>
-        <button onclick="document.getElementById('fileInput').click()"><i class="fas fa-file-import"></i></button>
-        <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
-      </div>
-    </div>
-  </nav>
-
-  <!-- ===== Token 栏 ===== -->
-  <div class="token-bar">
-    <span class="label"><i class="fab fa-github"></i> Token:</span>
-    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx を入力" autocomplete="off">
-    <button class="btn-set" onclick="setTokenFromInput()">設定</button>
-    <span class="token-status" id="tokenStatus">🔑 未設定</span>
-  </div>
+  <!-- 导航コンテナ（共通JSで自動生成） -->
+  <div id="navbarContainer"></div>
+  <div id="tokenBarContainer"></div>
+  
 
   <!-- ===== 页面标题 ===== -->
   <div class="page-title">
@@ -319,6 +290,9 @@
 </div>
 
 <script>
+
+window.SHOW_EXPORT = false;
+window.SHOW_IMPORT = false;
 // ============================================================
 // 🔧 デフォルト設定（ここを編集してください）
 // ============================================================
