@@ -58,6 +58,9 @@ function renderNavbar() {
     
     // データ操作用ボタンを追加（ページごとにカスタマイズ可能）
     renderDataActions();
+    
+    // ★ ナビゲーション描画後に状態を更新 ★
+    updateStatus();
 }
 
 // ==================== データ操作用ボタン（import/export） ====================
@@ -65,13 +68,20 @@ function renderDataActions() {
     const container = document.getElementById('dataActions');
     if (!container) return;
     
-    // ページごとの設定（各ページで window.SHOW_DATA_BUTTONS を設定可能）
     const showExport = window.SHOW_EXPORT !== undefined ? window.SHOW_EXPORT : true;
     const showImport = window.SHOW_IMPORT !== undefined ? window.SHOW_IMPORT : true;
     
-    let html = container.innerHTML; // 既存の statusInfo + save/load ボタンを保持
+    // statusInfo と save/load ボタンを保持
+    const statusInfo = container.querySelector('#statusInfo');
+    const saveBtn = container.querySelector('#saveBtn');
+    const loadBtn = container.querySelector('#loadBtn');
     
-    // export/import ボタンを追加
+    let html = '';
+    if (statusInfo) html += statusInfo.outerHTML;
+    
+    if (saveBtn) html += saveBtn.outerHTML;
+    if (loadBtn) html += loadBtn.outerHTML;
+    
     if (showExport || showImport) {
         html += `<span style="margin-left:4px;">|</span>`;
         if (showExport) {
@@ -79,7 +89,10 @@ function renderDataActions() {
         }
         if (showImport) {
             html += `<button onclick="document.getElementById('fileInput').click()" title="データをインポート（JSONファイル）"><i class="fas fa-file-import"></i></button>`;
-            html += `<input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importData(event)">`;
+            // fileInput が既に存在する場合は追加しない
+            if (!document.getElementById('fileInput')) {
+                html += `<input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importData(event)">`;
+            }
         }
     }
     
@@ -123,6 +136,7 @@ function setTokenFromInput() {
     showToast('✅ Token を設定しました');
 }
 
+// ★ 修正: 要素が存在しない場合はエラーを出さない ★
 function updateStatus() {
     const token = getToken();
     const dot = document.getElementById('statusDot');
@@ -131,16 +145,22 @@ function updateStatus() {
     const saveBtn = document.getElementById('saveBtn');
     const loadBtn = document.getElementById('loadBtn');
     
+    // ★ 要素が存在しない場合は何もしない ★
+    if (!dot || !text || !status) {
+        // console.log('⏳ ステータス要素が見つかりません（レンダリング待ち）');
+        return;
+    }
+    
     if (token) {
-        if (dot) dot.className = 'status-dot online';
-        if (text) text.textContent = 'オンライン';
-        if (status) status.textContent = '✅ ' + token.substring(0, 8) + '...';
+        dot.className = 'status-dot online';
+        text.textContent = 'オンライン';
+        status.textContent = '✅ ' + token.substring(0, 8) + '...';
         if (saveBtn) saveBtn.disabled = false;
         if (loadBtn) loadBtn.disabled = false;
     } else {
-        if (dot) dot.className = 'status-dot offline';
-        if (text) text.textContent = 'オフライン';
-        if (status) status.textContent = '🔑 未設定';
+        dot.className = 'status-dot offline';
+        text.textContent = 'オフライン';
+        status.textContent = '🔑 未設定';
         if (saveBtn) saveBtn.disabled = true;
         if (loadBtn) loadBtn.disabled = true;
     }
@@ -175,7 +195,6 @@ function showToast(msg) {
 document.addEventListener('DOMContentLoaded', function() {
     renderNavbar();
     renderTokenBar();
-    updateStatus();
     
     const tokenInput = document.getElementById('tokenInput');
     if (tokenInput) {
