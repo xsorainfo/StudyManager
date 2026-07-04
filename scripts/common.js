@@ -31,7 +31,7 @@ function renderNavbar() {
     
     navHtml += `
             </div>
-            <div class="nav-right">                
+            <div class="nav-right">
                 <div class="data-actions" id="dataActions">
                     <span id="statusInfo">
                         <span class="status-dot offline" id="statusDot"></span>
@@ -51,6 +51,7 @@ function renderNavbar() {
     
     // データ操作用ボタンを追加（ページごとにカスタマイズ可能）
     renderDataActions();
+    updateStatus();
 }
 
 // ==================== データ操作用ボタン ====================
@@ -61,15 +62,27 @@ function renderDataActions() {
     const showExport = window.SHOW_EXPORT !== undefined ? window.SHOW_EXPORT : true;
     const showImport = window.SHOW_IMPORT !== undefined ? window.SHOW_IMPORT : true;
     
-    // 既存のボタンを保持
+    // ★ 現在のページが index.html かどうか判定 ★
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const isHomePage = (currentPage === 'index.html');
+    
+    // statusInfo と save/load ボタンを保持
     const statusInfo = container.querySelector('#statusInfo');
     const saveBtn = container.querySelector('#saveBtn');
     const loadBtn = container.querySelector('#loadBtn');
     
     let html = '';
     if (statusInfo) html += statusInfo.outerHTML;
+    
     if (saveBtn) html += saveBtn.outerHTML;
     if (loadBtn) html += loadBtn.outerHTML;
+    
+    // ★ 一括エクスポートボタン（ホームページのみ表示） ★
+    if (isHomePage) {
+        html += `<button onclick="exportAllData()" title="全データを一括エクスポート" style="background:#5f4b38; color:#fff; border:none; padding:6px 14px; border-radius:40px; cursor:pointer; font-size:0.8rem; display:flex; align-items:center; gap:5px;">
+            <i class="fas fa-file-export"></i> 一括
+        </button>`;
+    }
     
     if (showExport || showImport) {
         html += `<span style="margin-left:4px;">|</span>`;
