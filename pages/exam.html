@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" href="/StudyManager/favicon.png">
   
   <title>試験</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
     body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -179,24 +179,26 @@
 
     .empty-state { text-align: center; padding: 40px 20px; color: #b7a086; }
     .empty-state i { font-size: 2.5rem; margin-bottom: 12px; }
-	/* 成績標註 */
-	.score-badge {
-	  display: inline-block;
-	  padding: 2px 10px;
-	  border-radius: 40px;
-	  font-size: 0.7rem;
-	  font-weight: 600;
-	  margin-right: 6px;
-	  white-space: nowrap;
-	}
-	.score-badge.excellent { background: #c6282820; color: #c62828; }
-	.score-badge.good { background: #e6510020; color: #e65100; }
-	.score-badge.standard { background: #2e7d3220; color: #2e7d32; }
-	.score-badge.effort { background: #0d47a120; color: #0d47a1; }
-	.score-badge.warning { background: #8f4a4a20; color: #8f4a4a; }
-	.score-badge.high { background: #c6282820; color: #c62828; }
-	.score-badge.low { background: #8f4a4a20; color: #8f4a4a; }
-	.score-badge.avg { background: #2e7d3220; color: #2e7d32; }
+    
+    /* 成績標註 */
+    .score-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-right: 6px;
+      white-space: nowrap;
+    }
+    .score-badge.excellent { background: #c6282820; color: #c62828; }
+    .score-badge.good { background: #e6510020; color: #e65100; }
+    .score-badge.standard { background: #2e7d3220; color: #2e7d32; }
+    .score-badge.effort { background: #0d47a120; color: #0d47a1; }
+    .score-badge.warning { background: #8f4a4a20; color: #8f4a4a; }
+    .score-badge.high { background: #c6282820; color: #c62828; }
+    .score-badge.low { background: #8f4a4a20; color: #8f4a4a; }
+    .score-badge.avg { background: #2e7d3220; color: #2e7d32; }
+    
     .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
     .toast-msg.show { opacity: 1; }
     #fileInput { display: none; }
@@ -295,9 +297,7 @@
 
   <!-- ===== 考试类型タブ ===== -->
   <div class="exam-type-tabs" id="examTypeTabs">
-    <button class="tab" data-type="middle">中間テスト</button>
-    <button class="tab active" data-type="regular">定期テスト</button>
-    <button class="tab" data-type="final">期末テスト</button>
+    <!-- JavaScript で動的生成 -->
   </div>
 
   <!-- ===== コンテンツエリア ===== -->
@@ -565,6 +565,52 @@ function setSubjectData(subject, data) {
   examData[currentGrade][subject][currentSemester][currentType] = data;
   saveExamData();
 }
+
+// ============================================================
+// 📋 考试类型タブを動的生成
+// ============================================================
+
+function renderExamTypeTabs() {
+  const container = document.getElementById('examTypeTabs');
+  if (!container) return;
+  
+  // 現在の学期に応じて表示するテスト種別を決定
+  let types = [];
+  if (currentSemester === '3') {
+    // 三学期：期末テストのみ
+    types = [
+      { value: 'final', label: '期末テスト' }
+    ];
+  } else {
+    // 一学期・二学期：中間テスト + 定期テスト
+    types = [
+      { value: 'middle', label: '中間テスト' },
+      { value: 'regular', label: '定期テスト' }
+    ];
+  }
+  
+  // HTML生成
+  let html = '';
+  types.forEach(type => {
+    const active = (type.value === currentType) ? ' active' : '';
+    html += `
+      <button class="tab${active}" data-type="${type.value}">${type.label}</button>
+    `;
+  });
+  
+  container.innerHTML = html;
+  
+  // クリックイベントを再設定
+  container.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentType = this.dataset.type;
+      renderContent();
+    });
+  });
+}
+
 // ============================================================
 // 📊 成績データ管理（定期テスト用）
 // ============================================================
@@ -625,6 +671,7 @@ function deleteScore(index) {
   scores.splice(index, 1);
   saveScoresForCurrentPeriod(scores);
 }
+
 // ============================================================
 // 🗓️ 時間割表（ここを編集すればOK）
 // ============================================================
@@ -706,7 +753,6 @@ function renderSchedule() {
   `;
 }
 
-
 // ============================================================
 // 折りたたみ関数
 // ============================================================
@@ -731,6 +777,204 @@ function toggleSubject(id) {
 }
 
 // ============================================================
+// 🗓️ 時間割・提出物 折りたたみ関数（一体型）
+// ============================================================
+
+function toggleSchedule() {
+  const body = document.getElementById('schedule_submit_body');
+  const icon = document.getElementById('schedule_submit_icon');
+  if (!body) return;
+  
+  if (body.style.display === 'none' || body.style.display === '') {
+    body.style.display = 'block';
+    if (icon) {
+      icon.innerHTML = '<i class="fas fa-minus"></i>';
+    }
+  } else {
+    body.style.display = 'none';
+    if (icon) {
+      icon.innerHTML = '<i class="fas fa-plus"></i>';
+    }
+  }
+}
+
+// ============================================================
+// 📊 成績の状態を判定する関数（偏差値：上限10，平均7）
+// ============================================================
+
+function getScoreStatus(score, total, avg, deviation) {
+  // 得点が未入力の場合
+  if (score === null || score === undefined || score === '') {
+    return { label: '未入力', color: '#b7a086', bg: '#f5f0e8', icon: 'fa-minus' };
+  }
+  
+  // 得点率（得点 / 总分 × 100）を計算
+  let scoreRate = null;
+  if (total && total > 0) {
+    scoreRate = (score / total) * 100;
+  }
+  
+  // ===== 偏差値が入力されている場合（優先） =====
+  // 偏差値：上限10，平均7
+  if (deviation !== null && deviation !== undefined && deviation !== '') {
+    if (deviation >= 9) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
+    if (deviation >= 8) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
+    if (deviation >= 7.0) return { label: '✅ 標準', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-check' };
+    if (deviation >= 5.5) return { label: '📈 要努力', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-up' };
+    return { label: '⚠️ 要注意', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-exclamation-triangle' };
+  }
+  
+  // ===== 平均点がある場合（偏差値なし） =====
+  if (avg !== null && avg !== undefined && avg !== '' && avg > 0) {
+    const diff = score - avg;
+    if (scoreRate !== null) {
+      if (scoreRate >= 90 && diff >= 5) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
+      if (scoreRate >= 80 && diff >= 0) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
+    }
+    if (diff >= 15) return { label: '▲ 高', color: '#c62828', bg: '#c6282820', icon: 'fa-arrow-up' };
+    if (diff >= 5) return { label: '↑ やや高', color: '#e65100', bg: '#e6510020', icon: 'fa-arrow-up' };
+    if (diff >= -5) return { label: '→ 平均的', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-minus' };
+    if (diff >= -15) return { label: '↓ やや低', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-down' };
+    return { label: '▼ 低', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-arrow-down' };
+  }
+  
+  // ===== 得点のみの場合（平均点・偏差値なし） =====
+  if (scoreRate !== null) {
+    if (scoreRate >= 90) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
+    if (scoreRate >= 80) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
+    if (scoreRate >= 70) return { label: '✅ 標準', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-check' };
+    if (scoreRate >= 60) return { label: '📈 要努力', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-up' };
+    return { label: '⚠️ 要注意', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-exclamation-triangle' };
+  }
+  
+  // 得点のみ（总分なし）
+  if (score >= 90) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
+  if (score >= 80) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
+  if (score >= 70) return { label: '✅ 標準', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-check' };
+  if (score >= 60) return { label: '📈 要努力', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-up' };
+  return { label: '⚠️ 要注意', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-exclamation-triangle' };
+}
+
+// ============================================================
+// 📊 成績編集機能
+// ============================================================
+
+// 編集モードに切り替え
+function editScore(index) {
+  // 表示行を隠す
+  const viewRow = document.getElementById(`score_row_${index}`);
+  if (viewRow) viewRow.style.display = 'none';
+  
+  // 編集行を表示
+  const editRow = document.getElementById(`score_edit_${index}`);
+  if (editRow) editRow.style.display = 'table-row';
+}
+
+// 編集をキャンセル
+function cancelEdit(index) {
+  // 表示行を再表示
+  const viewRow = document.getElementById(`score_row_${index}`);
+  if (viewRow) viewRow.style.display = 'table-row';
+  
+  // 編集行を隠す
+  const editRow = document.getElementById(`score_edit_${index}`);
+  if (editRow) editRow.style.display = 'none';
+}
+
+// 編集を保存
+function saveEdit(index) {
+  const subject = document.getElementById(`edit_subject_${index}`)?.value;
+  const score = parseInt(document.getElementById(`edit_score_${index}`)?.value);
+  const total = parseInt(document.getElementById(`edit_total_${index}`)?.value) || null;
+  const avg = parseFloat(document.getElementById(`edit_avg_${index}`)?.value) || null;
+  const deviation = parseFloat(document.getElementById(`edit_dev_${index}`)?.value) || null;
+  const note = document.getElementById(`edit_note_${index}`)?.value.trim() || '';
+  
+  if (!subject || isNaN(score) || score < 0 || score > 100) {
+    showToast('❌ 科目と得点（0-100）を入力してください');
+    return;
+  }
+  
+  const scores = getScoresForCurrentPeriod();
+  if (index >= scores.length) {
+    showToast('❌ データが見つかりません');
+    return;
+  }
+  
+  // データを更新
+  scores[index] = { subject, score, total, avg, deviation, note };
+  saveScoresForCurrentPeriod(scores);
+  
+  // 編集モードを解除
+  cancelEdit(index);
+  showToast('✅ 成績を更新しました');
+}
+
+// ============================================================
+// 操作関数
+// ============================================================
+
+function getSelectedSubject() {
+  const select = document.getElementById('addSubjectSelect');
+  return select ? select.value : '歴史';
+}
+
+function addRangeWithSubject() {
+  const input = document.getElementById('newRangeInput');
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) { showToast('❌ 試験範囲を入力してください'); return; }
+  const subject = getSelectedSubject();
+  const data = getSubjectData(subject);
+  if (!data.ranges) data.ranges = [];
+  data.ranges.push(val);
+  setSubjectData(subject, data);
+  input.value = '';
+  renderContent();
+  showToast(`✅ ${subject} に試験範囲を追加しました`);
+}
+
+function deleteRange(subject, index) {
+  if (!confirm(`「${subject}」の試験範囲を削除しますか？`)) return;
+  const data = getSubjectData(subject);
+  data.ranges.splice(index, 1);
+  setSubjectData(subject, data);
+  renderContent();
+  showToast('🗑️ 削除しました');
+}
+
+function addLinkWithSubject() {
+  const labelInput = document.getElementById('newLinkLabel');
+  const urlInput = document.getElementById('newLinkUrl');
+  if (!labelInput || !urlInput) return;
+  const label = labelInput.value.trim();
+  const url = urlInput.value.trim();
+  if (!label || !url) { showToast('❌ ラベルとURLを入力してください'); return; }
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    showToast('❌ URLは http:// または https:// で始めてください');
+    return;
+  }
+  const subject = getSelectedSubject();
+  const data = getSubjectData(subject);
+  if (!data.links) data.links = [];
+  data.links.push({ label, url });
+  setSubjectData(subject, data);
+  labelInput.value = '';
+  urlInput.value = '';
+  renderContent();
+  showToast(`✅ ${subject} に練習リンクを追加しました`);
+}
+
+function deleteLink(subject, index) {
+  if (!confirm(`「${subject}」のリンクを削除しますか？`)) return;
+  const data = getSubjectData(subject);
+  data.links.splice(index, 1);
+  setSubjectData(subject, data);
+  renderContent();
+  showToast('🗑️ 削除しました');
+}
+
+// ============================================================
 // レンダリング（全学科一覧 + 折りたたみ）
 // ============================================================
 
@@ -740,6 +984,9 @@ function renderContent() {
   const gradeNames = { '1':'中1', '2':'中2', '3':'中3', '4':'高1', '5':'高2', '6':'高3' };
   const typeNames = { 'middle':'中間テスト', 'regular':'定期テスト', 'final':'期末テスト' };
   const semesterNames = { '1':'一学期', '2':'二学期', '3':'三学期' };
+
+  // ★ テスト種別タブを再生成 ★
+  renderExamTypeTabs();
 
   // ★ 成績データを取得 ★
   const scores = getScoresForCurrentPeriod();
@@ -755,120 +1002,90 @@ function renderContent() {
     </div>
 
     <!-- ★★★ 成績一覧（編集機能付き） ★★★ -->
-	<div class="card" style="background: #f8f4ef; border-left: 6px solid #8f735b;">
-	  <div class="card-header">
-	    <h2><i class="fas fa-star" style="color:#8f735b;"></i> 成績一覧</h2>
-	    <span class="badge">${scores.length} 件</span>
-	  </div>
-	  
-	  ${scores.length === 0 ? `
-	    <div style="text-align:center; padding:20px; color:#b7a086; font-size:0.9rem;">
-	      <i class="fas fa-inbox" style="font-size:1.5rem; display:block; margin-bottom:6px;"></i>
-	      成績データがありません
-	    </div>
-	  ` : `
-	    <div style="overflow-x:auto;">
-	      <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:600px;">
-			<thead>
-			  <tr style="background:#2c241c; color:#f0ebe3;">
-			    <th style="padding:8px 12px; text-align:left; border:1px solid #ddd; width:17%;">科目</th>
-			    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">得点</th>
-			    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">总分</th>
-			    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">平均点</th>
-			    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">偏差</th>
-			    <th style="padding:8px 12px; text-align:left; border:1px solid #ddd; width:33%;">备注</th>
-			    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">操作</th>
-			  </tr>
-			</thead>
-	        <tbody>
-	          ${scores.map((s, i) => {
-				  const status = getScoreStatus(s.score, s.avg, s.deviation);
-				  return `
-				    <tr id="score_row_${i}" style="border-bottom:1px solid #ede6dd;">
-				      <td style="padding:8px 12px; border:1px solid #ddd; font-weight:500; cursor:pointer;" onclick="editScore(${i})">${s.subject}</td>
-				      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; font-weight:600; cursor:pointer;" onclick="editScore(${i})">${s.score}</td>
-				      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer;" onclick="editScore(${i})">${s.total || '-'}</td>
-				      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer;" onclick="editScore(${i})">${s.avg || '-'}</td>
-				      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; ${s.deviation && s.deviation >= 60 ? 'color:#c62828; font-weight:700;' : ''} cursor:pointer;" onclick="editScore(${i})">${s.deviation || '-'}</td>
-				      <td style="padding:8px 12px; border:1px solid #ddd; font-size:0.8rem; cursor:pointer; word-break:break-word;" onclick="editScore(${i})">
-				        <span style="display:inline-block; background:${status.color}20; color:${status.color}; padding:2px 10px; border-radius:40px; font-size:0.7rem; font-weight:600; margin-right:6px;">
-				          <i class="fas ${status.icon}" style="font-size:0.6rem;"></i> ${status.label}
-				        </span>
-				        ${s.note || ''}
-				      </td>
-				      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; white-space:nowrap;">
-				        <button onclick="editScore(${i})" style="background:none; border:none; cursor:pointer; color:#2c241c; font-size:0.85rem; padding:4px 8px; border-radius:4px;">
-				          <i class="fas fa-edit"></i>
-				        </button>
-				        <button onclick="deleteScore(${i})" style="background:none; border:none; cursor:pointer; color:#8f4a4a; font-size:0.9rem; padding:4px 8px; border-radius:4px;">
-				          <i class="fas fa-trash"></i>
-				        </button>
-				      </td>
-				    </tr>
-				    <!-- ★ 編集モード ★ -->
-				    <tr id="score_edit_${i}" style="display:none; background:#f8f4ef;">
-				      <td colspan="7" style="padding:8px 12px; border:1px solid #ddd;">
-				        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-				          <select id="edit_subject_${i}" style="padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white; min-width:90px;">
-				            <option value="国語" ${s.subject === '国語' ? 'selected' : ''}>国語</option>
-				            <option value="文法" ${s.subject === '文法' ? 'selected' : ''}>文法</option>
-				            <option value="代数" ${s.subject === '代数' ? 'selected' : ''}>代数</option>
-				            <option value="幾何" ${s.subject === '幾何' ? 'selected' : ''}>幾何</option>
-				            <option value="英語" ${s.subject === '英語' ? 'selected' : ''}>英語</option>
-					        <option value="英語ｻｲﾄﾞﾘｰﾀﾞ" ${s.subject === '英語ｻｲﾄﾞﾘｰﾀﾞ' ? 'selected' : ''}>英語ｻｲﾄﾞﾘｰﾀﾞ</option>
-				            <option value="地理" ${s.subject === '地理' ? 'selected' : ''}>地理</option>
-				            <option value="歴史" ${s.subject === '歴史' ? 'selected' : ''}>歴史</option>
-				            <option value="理科1" ${s.subject === '理科1' ? 'selected' : ''}>理科1</option>
-				            <option value="理科2" ${s.subject === '理科2' ? 'selected' : ''}>理科2</option>
-				            <option value="音楽" ${s.subject === '音楽' ? 'selected' : ''}>音楽</option>
-				            <option value="美術" ${s.subject === '美術' ? 'selected' : ''}>美術</option>
-				            <option value="技術・家庭" ${s.subject === '技術・家庭' ? 'selected' : ''}>技術・家庭</option>
-				            <option value="保健体育" ${s.subject === '保健体育' ? 'selected' : ''}>保健体育</option>
-				            <option value="礼法" ${s.subject === '礼法' ? 'selected' : ''}>礼法</option>
-				            <option value="公民" ${s.subject === '公民' ? 'selected' : ''}>公民</option>
-				          </select>
-				          <input type="number" id="edit_score_${i}" value="${s.score}" placeholder="得点" style="width:60px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-				          <input type="number" id="edit_total_${i}" value="${s.total || ''}" placeholder="总分" style="width:60px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-				          <input type="number" id="edit_avg_${i}" value="${s.avg || ''}" placeholder="平均点" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-				          <input type="number" id="edit_dev_${i}" value="${s.deviation || ''}" placeholder="偏差" step="0.1" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-				          <input type="text" id="edit_note_${i}" value="${s.note || ''}" placeholder="备注" style="flex:1; min-width:120px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-				          <button onclick="saveEdit(${i})" style="background:#2e7d32; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
-				            <i class="fas fa-check"></i> 保存
-				          </button>
-				          <button onclick="cancelEdit(${i})" style="background:#8f4a4a; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
-				            <i class="fas fa-times"></i> 取消
-				          </button>
-				        </div>
-				      </td>
-				    </tr>
-				  `;
-				}).join('')}
-	        </tbody>
-	      </table>
-	    </div>
-	  `}
-	  
-
+    <div class="card" style="background: #f8f4ef; border-left: 6px solid #8f735b;">
+      <div class="card-header">
+        <h2><i class="fas fa-star" style="color:#8f735b;"></i> 成績一覧</h2>
+        <span class="badge">${scores.length} 件</span>
+      </div>
+      
+      ${scores.length === 0 ? `
+        <div style="text-align:center; padding:20px; color:#b7a086; font-size:0.9rem;">
+          <i class="fas fa-inbox" style="font-size:1.5rem; display:block; margin-bottom:6px;"></i>
+          成績データがありません
+        </div>
+      ` : `
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:600px;">
+            <thead>
+              <tr style="background:#2c241c; color:#f0ebe3;">
+                <th style="padding:8px 12px; text-align:left; border:1px solid #ddd; width:17%;">科目</th>
+                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">得点</th>
+                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">总分</th>
+                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">平均点</th>
+                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">偏差</th>
+                <th style="padding:8px 12px; text-align:left; border:1px solid #ddd; width:33%;">备注</th>
+                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${scores.map((s, i) => {
+                const status = getScoreStatus(s.score, s.total, s.avg, s.deviation);
+                return `
+                  <tr id="score_row_${i}" style="border-bottom:1px solid #ede6dd;">
+                    <td style="padding:8px 12px; border:1px solid #ddd; font-weight:500; cursor:pointer;" onclick="editScore(${i})">${s.subject}</td>
+                    <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; font-weight:600; cursor:pointer;" onclick="editScore(${i})">${s.score}</td>
+                    <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer;" onclick="editScore(${i})">${s.total || '-'}</td>
+                    <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer;" onclick="editScore(${i})">${s.avg || '-'}</td>
+                    <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; ${s.deviation && s.deviation >= 8 ? 'color:#c62828; font-weight:700;' : ''} cursor:pointer;" onclick="editScore(${i})">${s.deviation || '-'}</td>
+                    <td style="padding:8px 12px; border:1px solid #ddd; font-size:0.8rem; cursor:pointer; word-break:break-word;" onclick="editScore(${i})">
+                      <span style="display:inline-block; background:${status.color}20; color:${status.color}; padding:2px 10px; border-radius:40px; font-size:0.7rem; font-weight:600; margin-right:6px;">
+                        <i class="fas ${status.icon}" style="font-size:0.6rem;"></i> ${status.label}
+                      </span>
+                      ${s.note || ''}
+                    </td>
+                    <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; white-space:nowrap;">
+                      <button onclick="editScore(${i})" style="background:none; border:none; cursor:pointer; color:#2c241c; font-size:0.85rem; padding:4px 8px; border-radius:4px;">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button onclick="deleteScore(${i})" style="background:none; border:none; cursor:pointer; color:#8f4a4a; font-size:0.9rem; padding:4px 8px; border-radius:4px;">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- ★ 編集モード ★ -->
+                  <tr id="score_edit_${i}" style="display:none; background:#f8f4ef;">
+                    <td colspan="7" style="padding:8px 12px; border:1px solid #ddd;">
+                      <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                        <select id="edit_subject_${i}" style="padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white; min-width:90px;">
+                          ${ALL_SUBJECTS.map(sub => `
+                            <option value="${sub}" ${s.subject === sub ? 'selected' : ''}>${sub}</option>
+                          `).join('')}
+                        </select>
+                        <input type="number" id="edit_score_${i}" value="${s.score}" placeholder="得点" style="width:60px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+                        <input type="number" id="edit_total_${i}" value="${s.total || ''}" placeholder="总分" style="width:60px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+                        <input type="number" id="edit_avg_${i}" value="${s.avg || ''}" placeholder="平均点" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+                        <input type="number" id="edit_dev_${i}" value="${s.deviation || ''}" placeholder="偏差" step="0.1" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+                        <input type="text" id="edit_note_${i}" value="${s.note || ''}" placeholder="备注" style="flex:1; min-width:120px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+                        <button onclick="saveEdit(${i})" style="background:#2e7d32; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+                          <i class="fas fa-check"></i> 保存
+                        </button>
+                        <button onclick="cancelEdit(${i})" style="background:#8f4a4a; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+                          <i class="fas fa-times"></i> 取消
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `}
       
       <!-- ★ 成績追加フォーム（常に表示） ★ -->
       <div style="margin-top:12px; padding:12px 16px; background:#f0ebe4; border-radius:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
         <select id="scoreSubject" style="padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white; min-width:100px;">
-          <option value="国語">国語</option>
-          <option value="文法">文法</option>
-          <option value="代数">代数</option>
-          <option value="幾何">幾何</option>
-          <option value="英語">英語</option>
-		  <option value="英語ｻｲﾄﾞﾘｰﾀﾞ">英語ｻｲﾄﾞﾘｰﾀﾞ</option>
-          <option value="地理">地理</option>
-          <option value="歴史">歴史</option>
-          <option value="理科1">理科1</option>
-          <option value="理科2">理科2</option>
-          <option value="音楽">音楽</option>
-          <option value="美術">美術</option>
-          <option value="技術・家庭">技術・家庭</option>
-          <option value="保健体育">保健体育</option>
-          <option value="礼法">礼法</option>
-          <option value="公民">公民</option>
+          ${ALL_SUBJECTS.map(s => `<option value="${s}">${s}</option>`).join('')}
         </select>
         <input type="number" id="scoreScore" placeholder="得点" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
         <input type="number" id="scoreTotal" placeholder="总分" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
@@ -1025,202 +1242,6 @@ function renderContent() {
 }
 
 // ============================================================
-// 🗓️ 時間割・提出物 折りたたみ関数（一体型）
-// ============================================================
-
-function toggleSchedule() {
-  const body = document.getElementById('schedule_submit_body');
-  const icon = document.getElementById('schedule_submit_icon');
-  if (!body) return;
-  
-  if (body.style.display === 'none' || body.style.display === '') {
-    body.style.display = 'block';
-    if (icon) {
-      icon.innerHTML = '<i class="fas fa-minus"></i>';
-    }
-  } else {
-    body.style.display = 'none';
-    if (icon) {
-      icon.innerHTML = '<i class="fas fa-plus"></i>';
-    }
-  }
-}
-// ★ 成績の状態を判定する関数
-// ============================================================
-// 📊 成績の状態を判定する関数（偏差値：上限10，平均7）
-// ============================================================
-
-function getScoreStatus(score, total, avg, deviation) {
-  // 得点が未入力の場合
-  if (score === null || score === undefined || score === '') {
-    return { label: '未入力', color: '#b7a086', bg: '#f5f0e8', icon: 'fa-minus' };
-  }
-  
-  // 得点率（得点 / 总分 × 100）を計算
-  let scoreRate = null;
-  if (total && total > 0) {
-    scoreRate = (score / total) * 100;
-  }
-  
-  // ===== 偏差値が入力されている場合（優先） =====
-  // 偏差値：上限10，平均7
-  if (deviation !== null && deviation !== undefined && deviation !== '') {
-    if (deviation >= 9) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
-    if (deviation >= 8) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
-    if (deviation >= 7.0) return { label: '✅ 標準', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-check' };
-    if (deviation >= 5.5) return { label: '📈 要努力', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-up' };
-    return { label: '⚠️ 要注意', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-exclamation-triangle' };
-  }
-  
-  // ===== 平均点がある場合（偏差値なし） =====
-  if (avg !== null && avg !== undefined && avg !== '' && avg > 0) {
-    const diff = score - avg;
-    if (scoreRate !== null) {
-      if (scoreRate >= 90 && diff >= 5) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
-      if (scoreRate >= 80 && diff >= 0) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
-    }
-    if (diff >= 15) return { label: '▲ 高', color: '#c62828', bg: '#c6282820', icon: 'fa-arrow-up' };
-    if (diff >= 5) return { label: '↑ やや高', color: '#e65100', bg: '#e6510020', icon: 'fa-arrow-up' };
-    if (diff >= -5) return { label: '→ 平均的', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-minus' };
-    if (diff >= -15) return { label: '↓ やや低', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-down' };
-    return { label: '▼ 低', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-arrow-down' };
-  }
-  
-  // ===== 得点のみの場合（平均点・偏差値なし） =====
-  if (scoreRate !== null) {
-    if (scoreRate >= 90) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
-    if (scoreRate >= 80) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
-    if (scoreRate >= 70) return { label: '✅ 標準', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-check' };
-    if (scoreRate >= 60) return { label: '📈 要努力', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-up' };
-    return { label: '⚠️ 要注意', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-exclamation-triangle' };
-  }
-  
-  // 得点のみ（总分なし）
-  if (score >= 90) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
-  if (score >= 80) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
-  if (score >= 70) return { label: '✅ 標準', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-check' };
-  if (score >= 60) return { label: '📈 要努力', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-up' };
-  return { label: '⚠️ 要注意', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-exclamation-triangle' };
-}
-// ============================================================
-// 📊 成績編集機能
-// ============================================================
-
-// 編集モードに切り替え
-function editScore(index) {
-  // 表示行を隠す
-  const viewRow = document.getElementById(`score_row_${index}`);
-  if (viewRow) viewRow.style.display = 'none';
-  
-  // 編集行を表示
-  const editRow = document.getElementById(`score_edit_${index}`);
-  if (editRow) editRow.style.display = 'table-row';
-}
-
-// 編集をキャンセル
-function cancelEdit(index) {
-  // 表示行を再表示
-  const viewRow = document.getElementById(`score_row_${index}`);
-  if (viewRow) viewRow.style.display = 'table-row';
-  
-  // 編集行を隠す
-  const editRow = document.getElementById(`score_edit_${index}`);
-  if (editRow) editRow.style.display = 'none';
-}
-
-// 編集を保存
-function saveEdit(index) {
-  const subject = document.getElementById(`edit_subject_${index}`)?.value;
-  const score = parseInt(document.getElementById(`edit_score_${index}`)?.value);
-  const total = parseInt(document.getElementById(`edit_total_${index}`)?.value) || null;
-  const avg = parseFloat(document.getElementById(`edit_avg_${index}`)?.value) || null;
-  const deviation = parseFloat(document.getElementById(`edit_dev_${index}`)?.value) || null;
-  const note = document.getElementById(`edit_note_${index}`)?.value.trim() || '';
-  
-  if (!subject || isNaN(score) || score < 0 || score > 100) {
-    showToast('❌ 科目と得点（0-100）を入力してください');
-    return;
-  }
-  
-  const scores = getScoresForCurrentPeriod();
-  if (index >= scores.length) {
-    showToast('❌ データが見つかりません');
-    return;
-  }
-  
-  // データを更新
-  scores[index] = { subject, score, total, avg, deviation, note };
-  saveScoresForCurrentPeriod(scores);
-  
-  // 編集モードを解除
-  cancelEdit(index);
-  showToast('✅ 成績を更新しました');
-}
-// ============================================================
-// 操作関数
-// ============================================================
-
-function getSelectedSubject() {
-  const select = document.getElementById('addSubjectSelect');
-  return select ? select.value : '歴史';
-}
-
-function addRangeWithSubject() {
-  const input = document.getElementById('newRangeInput');
-  if (!input) return;
-  const val = input.value.trim();
-  if (!val) { showToast('❌ 試験範囲を入力してください'); return; }
-  const subject = getSelectedSubject();
-  const data = getSubjectData(subject);
-  if (!data.ranges) data.ranges = [];
-  data.ranges.push(val);
-  setSubjectData(subject, data);
-  input.value = '';
-  renderContent();
-  showToast(`✅ ${subject} に試験範囲を追加しました`);
-}
-
-function deleteRange(subject, index) {
-  if (!confirm(`「${subject}」の試験範囲を削除しますか？`)) return;
-  const data = getSubjectData(subject);
-  data.ranges.splice(index, 1);
-  setSubjectData(subject, data);
-  renderContent();
-  showToast('🗑️ 削除しました');
-}
-
-function addLinkWithSubject() {
-  const labelInput = document.getElementById('newLinkLabel');
-  const urlInput = document.getElementById('newLinkUrl');
-  if (!labelInput || !urlInput) return;
-  const label = labelInput.value.trim();
-  const url = urlInput.value.trim();
-  if (!label || !url) { showToast('❌ ラベルとURLを入力してください'); return; }
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    showToast('❌ URLは http:// または https:// で始めてください');
-    return;
-  }
-  const subject = getSelectedSubject();
-  const data = getSubjectData(subject);
-  if (!data.links) data.links = [];
-  data.links.push({ label, url });
-  setSubjectData(subject, data);
-  labelInput.value = '';
-  urlInput.value = '';
-  renderContent();
-  showToast(`✅ ${subject} に練習リンクを追加しました`);
-}
-
-function deleteLink(subject, index) {
-  if (!confirm(`「${subject}」のリンクを削除しますか？`)) return;
-  const data = getSubjectData(subject);
-  data.links.splice(index, 1);
-  setSubjectData(subject, data);
-  renderContent();
-  showToast('🗑️ 削除しました');
-}
-
-// ============================================================
 // 初期表示
 // ============================================================
 
@@ -1231,9 +1252,7 @@ function applyDefaultTabs() {
   document.querySelectorAll('#semesterTabs .tab').forEach(t => {
     t.classList.toggle('active', t.dataset.semester === DEFAULT_SEMESTER);
   });
-  document.querySelectorAll('#examTypeTabs .tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.type === DEFAULT_EXAM_TYPE);
-  });
+  // テスト種別タブは renderExamTypeTabs() で生成されるため、ここでは不要
 }
 
 // ============================================================
@@ -1243,6 +1262,9 @@ function applyDefaultTabs() {
 document.addEventListener('DOMContentLoaded', function() {
   loadExamData();
   applyDefaultTabs();
+
+  // ★ 初期表示時にテスト種別タブを生成 ★
+  renderExamTypeTabs();
 
   document.querySelectorAll('#gradeTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
@@ -1258,18 +1280,22 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('#semesterTabs .tab').forEach(t => t.classList.remove('active'));
       this.classList.add('active');
       currentSemester = this.dataset.semester;
+      
+      // ★ 学期が変わったらテスト種別タブを再生成 ★
+      renderExamTypeTabs();
+      
+      // デフォルトのテスト種別を設定
+      if (currentSemester === '3') {
+        currentType = 'final';
+      } else {
+        currentType = 'regular';
+      }
+      
       renderContent();
     });
   });
 
-  document.querySelectorAll('#examTypeTabs .tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-      document.querySelectorAll('#examTypeTabs .tab').forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-      currentType = this.dataset.type;
-      renderContent();
-    });
-  });
+  // examTypeTabs のイベントは renderExamTypeTabs() 内部で設定済み
 
   renderContent();
 
@@ -1286,6 +1312,12 @@ window.loadFromGitHub = loadFromGitHub;
 window.exportData = exportData;
 window.importData = importData;
 window.toggleSubject = toggleSubject;
+window.toggleSchedule = toggleSchedule;
+window.addScore = addScore;
+window.deleteScore = deleteScore;
+window.editScore = editScore;
+window.saveEdit = saveEdit;
+window.cancelEdit = cancelEdit;
 </script>
   
 </body>
