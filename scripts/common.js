@@ -80,7 +80,7 @@ function renderDataActions() {
     if (isHomePage) {
         html += `
             <button onclick="exportAllData()" title="全データをZIPで一括エクスポート" style="background:#5f4b38; color:#fff; border:none; padding:6px 14px; border-radius:40px; cursor:pointer; font-size:0.8rem; display:flex; align-items:center; gap:5px;">
-                <i class="fas fa-file-archive"></i> 一括出力
+                <i class="fas fa-file-archive"></i> 一括
             </button>
         `;
     }
