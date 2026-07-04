@@ -73,15 +73,16 @@ function renderDataActions() {
     
     let html = '';
     if (statusInfo) html += statusInfo.outerHTML;
-    
     if (saveBtn) html += saveBtn.outerHTML;
     if (loadBtn) html += loadBtn.outerHTML;
     
-    // ★ 一括エクスポートボタン（ホームページのみ表示） ★
+    // ★ ホームページのみ一括エクスポートボタン ★
     if (isHomePage) {
-        html += `<button onclick="exportAllData()" title="全データを一括エクスポート" style="background:#5f4b38; color:#fff; border:none; padding:6px 14px; border-radius:40px; cursor:pointer; font-size:0.8rem; display:flex; align-items:center; gap:5px;">
-            <i class="fas fa-file-export"></i> 一括
-        </button>`;
+        html += `
+            <button onclick="exportAllData()" title="全データをZIPで一括エクスポート" style="background:#5f4b38; color:#fff; border:none; padding:6px 14px; border-radius:40px; cursor:pointer; font-size:0.8rem; display:flex; align-items:center; gap:5px;">
+                <i class="fas fa-file-archive"></i> 一括出力
+            </button>
+        `;
     }
     
     if (showExport || showImport) {
