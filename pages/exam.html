@@ -616,9 +616,6 @@ function renderSchedule() {
   const bodyId = 'schedule_submit_body';
   const iconId = 'schedule_submit_icon';
   
-  // ★ 成績データを取得
-  const scores = getScoresForCurrentPeriod();
-  
   return `
     <!-- ===== 時間割表 ===== -->
     <div class="card" style="background: #f8f4ef; border-left: 6px solid #8f735b;">
@@ -632,90 +629,6 @@ function renderSchedule() {
         </div>
       </div>
       <div id="${bodyId}" style="display:none;">
-        
-        <!-- ★★★ 成績リスト（新規追加） ★★★ -->
-        <div style="margin-bottom:16px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-            <h3 style="font-size:1.05rem; font-weight:600; color:#2a221b; display:flex; align-items:center; gap:8px;">
-              <i class="fas fa-star" style="color:#8f735b;"></i> 成績一覧
-            </h3>
-            <span class="badge" style="background:#e7ddd2; border-radius:40px; padding:2px 14px; font-size:0.7rem; font-weight:600; color:#3d3229;">${scores.length} 件</span>
-          </div>
-          
-          ${scores.length === 0 ? `
-            <div style="text-align:center; padding:20px; color:#b7a086; font-size:0.9rem;">
-              <i class="fas fa-inbox" style="font-size:1.5rem; display:block; margin-bottom:6px;"></i>
-              成績データがありません
-            </div>
-          ` : `
-            <div style="overflow-x:auto;">
-              <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:600px;">
-                <thead>
-                  <tr style="background:#2c241c; color:#f0ebe3;">
-                    <th style="padding:8px 12px; text-align:left; border:1px solid #ddd;">科目</th>
-                    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">得点</th>
-                    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">总分</th>
-                    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">平均点</th>
-                    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">偏差</th>
-                    <th style="padding:8px 12px; text-align:left; border:1px solid #ddd;">备注</th>
-                    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:50px;"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${scores.map((s, i) => `
-                    <tr style="border-bottom:1px solid #ede6dd;">
-                      <td style="padding:8px 12px; border:1px solid #ddd; font-weight:500;">${s.subject}</td>
-                      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; font-weight:600;">${s.score}</td>
-                      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd;">${s.total || '-'}</td>
-                      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd;">${s.avg || '-'}</td>
-                      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; ${s.deviation && s.deviation >= 60 ? 'color:#c62828; font-weight:700;' : ''}">${s.deviation || '-'}</td>
-                      <td style="padding:8px 12px; border:1px solid #ddd; font-size:0.8rem;">${s.note || ''}</td>
-                      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd;">
-                        <button onclick="deleteScore(${i})" style="background:none; border:none; cursor:pointer; color:#8f4a4a; font-size:0.9rem;">
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-          `}
-          
-          <!-- ★ 成績追加フォーム ★ -->
-          <div style="margin-top:12px; padding:12px 16px; background:#f0ebe4; border-radius:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-            <select id="scoreSubject" style="padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white; min-width:100px;">
-              <option value="国語">国語</option>
-              <option value="文法">文法</option>
-              <option value="代数">代数</option>
-              <option value="幾何">幾何</option>
-              <option value="英語">英語</option>
-              <option value="地理">地理</option>
-              <option value="歴史">歴史</option>
-              <option value="理科1">理科1</option>
-              <option value="理科2">理科2</option>
-              <option value="音楽">音楽</option>
-              <option value="美術">美術</option>
-              <option value="技術・家庭">技術・家庭</option>
-              <option value="保健体育">保健体育</option>
-              <option value="礼法">礼法</option>
-              <option value="公民">公民</option>
-            </select>
-            <input type="number" id="scoreScore" placeholder="得点" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-            <input type="number" id="scoreTotal" placeholder="总分" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-            <input type="number" id="scoreAvg" placeholder="平均点" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-            <input type="number" id="scoreDev" placeholder="偏差" step="0.1" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-            <input type="text" id="scoreNote" placeholder="备注" style="flex:1; min-width:100px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-            <button onclick="addScore()" style="background:#2c241c; border:none; color:white; padding:6px 18px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600; white-space:nowrap;">
-              <i class="fas fa-plus"></i> 追加
-            </button>
-          </div>
-          <div style="font-size:0.7rem; color:#b7a086; margin-top:4px; text-align:right;">
-            <i class="fas fa-info-circle"></i> 得点は必須、他は任意
-          </div>
-        </div>
-        
-        <!-- ===== 時間割表（既存） ===== -->
         <div style="overflow-x:auto;">
           <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:500px;">
             <thead>
@@ -776,6 +689,7 @@ function renderSchedule() {
   `;
 }
 
+
 // ============================================================
 // 折りたたみ関数
 // ============================================================
@@ -810,6 +724,9 @@ function renderContent() {
   const typeNames = { 'middle':'中間テスト', 'regular':'定期テスト', 'final':'期末テスト' };
   const semesterNames = { '1':'一学期', '2':'二学期', '3':'三学期' };
 
+  // ★ 成績データを取得 ★
+  const scores = getScoresForCurrentPeriod();
+
   let html = `
     <div style="font-size:0.85rem; color:#6b5d4e; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap;">
       <span><strong>${gradeNames[currentGrade]}</strong></span>
@@ -818,6 +735,85 @@ function renderContent() {
       <span>›</span>
       <span><strong>${typeNames[currentType]}</strong></span>
       <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
+    </div>
+	<!-- ★★★ 成績一覧（時間割の前に独立表示） ★★★ -->
+    <div class="card" style="background: #f8f4ef; border-left: 6px solid #8f735b;">
+      <div class="card-header">
+        <h2><i class="fas fa-star" style="color:#8f735b;"></i> 成績一覧</h2>
+        <span class="badge">${scores.length} 件</span>
+      </div>
+      
+      ${scores.length === 0 ? `
+        <div style="text-align:center; padding:20px; color:#b7a086; font-size:0.9rem;">
+          <i class="fas fa-inbox" style="font-size:1.5rem; display:block; margin-bottom:6px;"></i>
+          成績データがありません
+        </div>
+      ` : `
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:600px;">
+            <thead>
+              <tr style="background:#2c241c; color:#f0ebe3;">
+                <th style="padding:8px 12px; text-align:left; border:1px solid #ddd;">科目</th>
+                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">得点</th>
+                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">总分</th>
+                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">平均点</th>
+                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">偏差</th>
+                <th style="padding:8px 12px; text-align:left; border:1px solid #ddd;">备注</th>
+                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:50px;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${scores.map((s, i) => `
+                <tr style="border-bottom:1px solid #ede6dd;">
+                  <td style="padding:8px 12px; border:1px solid #ddd; font-weight:500;">${s.subject}</td>
+                  <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; font-weight:600;">${s.score}</td>
+                  <td style="padding:8px 12px; text-align:center; border:1px solid #ddd;">${s.total || '-'}</td>
+                  <td style="padding:8px 12px; text-align:center; border:1px solid #ddd;">${s.avg || '-'}</td>
+                  <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; ${s.deviation && s.deviation >= 60 ? 'color:#c62828; font-weight:700;' : ''}">${s.deviation || '-'}</td>
+                  <td style="padding:8px 12px; border:1px solid #ddd; font-size:0.8rem;">${s.note || ''}</td>
+                  <td style="padding:8px 12px; text-align:center; border:1px solid #ddd;">
+                    <button onclick="deleteScore(${i})" style="background:none; border:none; cursor:pointer; color:#8f4a4a; font-size:0.9rem; padding:4px 8px; border-radius:4px;">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `}
+      
+      <!-- ★ 成績追加フォーム（常に表示） ★ -->
+      <div style="margin-top:12px; padding:12px 16px; background:#f0ebe4; border-radius:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+        <select id="scoreSubject" style="padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white; min-width:100px;">
+          <option value="国語">国語</option>
+          <option value="文法">文法</option>
+          <option value="代数">代数</option>
+          <option value="幾何">幾何</option>
+          <option value="英語">英語</option>
+          <option value="地理">地理</option>
+          <option value="歴史">歴史</option>
+          <option value="理科1">理科1</option>
+          <option value="理科2">理科2</option>
+          <option value="音楽">音楽</option>
+          <option value="美術">美術</option>
+          <option value="技術・家庭">技術・家庭</option>
+          <option value="保健体育">保健体育</option>
+          <option value="礼法">礼法</option>
+          <option value="公民">公民</option>
+        </select>
+        <input type="number" id="scoreScore" placeholder="得点" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+        <input type="number" id="scoreTotal" placeholder="总分" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+        <input type="number" id="scoreAvg" placeholder="平均点" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+        <input type="number" id="scoreDev" placeholder="偏差" step="0.1" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+        <input type="text" id="scoreNote" placeholder="备注" style="flex:1; min-width:100px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+        <button onclick="addScore()" style="background:#2c241c; border:none; color:white; padding:6px 18px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600; white-space:nowrap;">
+          <i class="fas fa-plus"></i> 追加
+        </button>
+      </div>
+      <div style="font-size:0.7rem; color:#b7a086; margin-top:4px; text-align:right;">
+        <i class="fas fa-info-circle"></i> 得点は必須、他は任意
+      </div>
     </div>
 
     ${renderSchedule()}
