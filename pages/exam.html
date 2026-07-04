@@ -1046,34 +1046,61 @@ function toggleSchedule() {
   }
 }
 // ★ 成績の状態を判定する関数
-function getScoreStatus(score, avg, deviation) {
-  if (!score) return { label: '未入力', color: '#b7a086', icon: 'fa-minus' };
+// ============================================================
+// 📊 成績の状態を判定する関数（偏差値：上限10，平均7）
+// ============================================================
+
+function getScoreStatus(score, total, avg, deviation) {
+  // 得点が未入力の場合
+  if (score === null || score === undefined || score === '') {
+    return { label: '未入力', color: '#b7a086', bg: '#f5f0e8', icon: 'fa-minus' };
+  }
   
-  // 偏差値がある場合
+  // 得点率（得点 / 总分 × 100）を計算
+  let scoreRate = null;
+  if (total && total > 0) {
+    scoreRate = (score / total) * 100;
+  }
+  
+  // ===== 偏差値が入力されている場合（優先） =====
+  // 偏差値：上限10，平均7
   if (deviation !== null && deviation !== undefined && deviation !== '') {
-    if (deviation >= 65) return { label: '優秀', color: '#c62828', icon: 'fa-crown' };
-    if (deviation >= 60) return { label: '良好', color: '#e65100', icon: 'fa-star' };
-    if (deviation >= 50) return { label: '標準', color: '#2e7d32', icon: 'fa-check' };
-    if (deviation >= 40) return { label: '要努力', color: '#0d47a1', icon: 'fa-arrow-up' };
-    return { label: '要注意', color: '#8f4a4a', icon: 'fa-exclamation-triangle' };
+    if (deviation >= 9) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
+    if (deviation >= 8) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
+    if (deviation >= 7.0) return { label: '✅ 標準', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-check' };
+    if (deviation >= 5.5) return { label: '📈 要努力', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-up' };
+    return { label: '⚠️ 要注意', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-exclamation-triangle' };
   }
   
-  // 平均点がある場合
-  if (avg !== null && avg !== undefined && avg !== '') {
+  // ===== 平均点がある場合（偏差値なし） =====
+  if (avg !== null && avg !== undefined && avg !== '' && avg > 0) {
     const diff = score - avg;
-    if (diff >= 15) return { label: '▲ 高', color: '#c62828', icon: 'fa-arrow-up' };
-    if (diff >= 5) return { label: '↑ やや高', color: '#e65100', icon: 'fa-arrow-up' };
-    if (diff >= -5) return { label: '→ 平均的', color: '#2e7d32', icon: 'fa-minus' };
-    if (diff >= -15) return { label: '↓ やや低', color: '#0d47a1', icon: 'fa-arrow-down' };
-    return { label: '▼ 低', color: '#8f4a4a', icon: 'fa-arrow-down' };
+    if (scoreRate !== null) {
+      if (scoreRate >= 90 && diff >= 5) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
+      if (scoreRate >= 80 && diff >= 0) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
+    }
+    if (diff >= 15) return { label: '▲ 高', color: '#c62828', bg: '#c6282820', icon: 'fa-arrow-up' };
+    if (diff >= 5) return { label: '↑ やや高', color: '#e65100', bg: '#e6510020', icon: 'fa-arrow-up' };
+    if (diff >= -5) return { label: '→ 平均的', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-minus' };
+    if (diff >= -15) return { label: '↓ やや低', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-down' };
+    return { label: '▼ 低', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-arrow-down' };
   }
   
-  // 得点のみの場合
-  if (score >= 90) return { label: '優秀', color: '#c62828', icon: 'fa-crown' };
-  if (score >= 80) return { label: '良好', color: '#e65100', icon: 'fa-star' };
-  if (score >= 60) return { label: '標準', color: '#2e7d32', icon: 'fa-check' };
-  if (score >= 40) return { label: '要努力', color: '#0d47a1', icon: 'fa-arrow-up' };
-  return { label: '要注意', color: '#8f4a4a', icon: 'fa-exclamation-triangle' };
+  // ===== 得点のみの場合（平均点・偏差値なし） =====
+  if (scoreRate !== null) {
+    if (scoreRate >= 90) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
+    if (scoreRate >= 80) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
+    if (scoreRate >= 70) return { label: '✅ 標準', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-check' };
+    if (scoreRate >= 60) return { label: '📈 要努力', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-up' };
+    return { label: '⚠️ 要注意', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-exclamation-triangle' };
+  }
+  
+  // 得点のみ（总分なし）
+  if (score >= 90) return { label: '🏆 優秀', color: '#c62828', bg: '#c6282820', icon: 'fa-crown' };
+  if (score >= 80) return { label: '⭐ 良好', color: '#e65100', bg: '#e6510020', icon: 'fa-star' };
+  if (score >= 70) return { label: '✅ 標準', color: '#2e7d32', bg: '#2e7d3220', icon: 'fa-check' };
+  if (score >= 60) return { label: '📈 要努力', color: '#0d47a1', bg: '#0d47a120', icon: 'fa-arrow-up' };
+  return { label: '⚠️ 要注意', color: '#8f4a4a', bg: '#8f4a4a20', icon: 'fa-exclamation-triangle' };
 }
 // ============================================================
 // 📊 成績編集機能
