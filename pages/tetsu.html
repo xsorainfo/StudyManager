@@ -162,8 +162,8 @@
 // ============================================================
 // 🔧 データボタン表示設定
 // ============================================================
-window.SHOW_EXPORT = false;
-window.SHOW_IMPORT = false;
+window.SHOW_EXPORT = true;
+window.SHOW_IMPORT = true;
 // ============================================================
 </script>
 <script src="../scripts/common.js"></script>
@@ -430,13 +430,255 @@ document.addEventListener('DOMContentLoaded', function() {
 // ============================================================
 
 // ============================================================
-// ダミー関数（他のページから呼ばれる）
+// 鉄律会データの保存・読込・エクスポート・インポート
 // ============================================================
 
-function saveToGitHub() { showToast('💾 GitHub保存機能は後日実装予定'); }
-function loadFromGitHub() { showToast('📥 GitHub読込機能は後日実装予定'); }
-function exportData() { showToast('📁 バックアップ機能は後日実装予定'); }
-function importData() { showToast('📁 復元機能は後日実装予定'); }
+// ============================================================
+// 設定
+// ============================================================
+const GITHUB_OWNER = 'xsorainfo';
+const GITHUB_REPO = 'StudyManager';
+const GITHUB_PATH = 'data/tetsu_data.json';
+const GITHUB_BRANCH = 'main';
+
+// ============================================================
+// データ管理
+// ============================================================
+
+// 鉄律会データのキー
+const TETSU_STORAGE_KEY = 'tetsu_data';
+
+// データを読み込む（localStorage）
+function loadTetsuData() {
+  const saved = localStorage.getItem(TETSU_STORAGE_KEY);
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch(e) {
+      console.error('データ読み込みエラー:', e);
+    }
+  }
+  // デフォルトデータ（window.TETSU_DATA からコピー）
+  return JSON.parse(JSON.stringify(window.TETSU_DATA || {}));
+}
+
+// データを保存する（localStorage）
+function saveTetsuData(data) {
+  localStorage.setItem(TETSU_STORAGE_KEY, JSON.stringify(data));
+  // グローバルデータも更新
+  if (window.TETSU_DATA) {
+    window.TETSU_DATA = data;
+  }
+  showToast('💾 ローカルに保存しました');
+}
+
+// ============================================================
+// GitHub 保存
+// ============================================================
+
+function getHeaders() {
+  const token = getToken();
+  if (!token) return null;
+  return {
+    'Authorization': `token ${token}`,
+    'Accept': 'application/vnd.github.v3+json'
+  };
+}
+
+async function saveToGitHub() {
+  const token = getToken();
+  if (!token) {
+    showToast('❌ Token が設定されていません');
+    return;
+  }
+
+  // 現在のデータを取得
+  const data = loadTetsuData();
+  
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  if (dot) dot.className = 'status-dot saving';
+  if (text) text.textContent = '保存中...';
+
+  try {
+    const content = JSON.stringify(data, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(content)));
+    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+    const headers = getHeaders();
+
+    // ファイルの存在確認とSHA取得
+    let sha = null;
+    const checkRes = await fetch(url, { headers });
+    if (checkRes.ok) {
+      const fileData = await checkRes.json();
+      sha = fileData.sha;
+    }
+
+    const body = {
+      message: `📝 鉄律会データ更新: ${new Date().toISOString()}`,
+      content: encoded,
+      branch: GITHUB_BRANCH
+    };
+    if (sha) body.sha = sha;
+
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: headers,
+      body: JSON.stringify(body)
+    });
+
+    if (response.ok) {
+      if (dot) dot.className = 'status-dot online';
+      if (text) text.textContent = 'オンライン';
+      showToast('✅ GitHub に保存しました');
+    } else {
+      const err = await response.json();
+      throw new Error(err.message || `HTTP ${response.status}`);
+    }
+  } catch(e) {
+    if (dot) dot.className = 'status-dot offline';
+    if (text) text.textContent = 'エラー';
+    showToast('❌ 保存失敗: ' + e.message);
+  }
+}
+
+// ============================================================
+// GitHub 読込
+// ============================================================
+
+async function loadFromGitHub() {
+  const token = getToken();
+  if (!token) {
+    showToast('❌ Token が設定されていません');
+    return;
+  }
+
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  if (dot) dot.className = 'status-dot saving';
+  if (text) text.textContent = '読込中...';
+
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+    const headers = getHeaders();
+    const response = await fetch(url, { headers });
+
+    if (response.status === 404) {
+      showToast('📭 GitHub にデータがありません');
+      if (dot) dot.className = 'status-dot online';
+      if (text) text.textContent = 'オンライン';
+      return;
+    }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const fileData = await response.json();
+    const content = decodeURIComponent(escape(atob(fileData.content)));
+    const loadedData = JSON.parse(content);
+
+    // データを保存
+    localStorage.setItem(TETSU_STORAGE_KEY, JSON.stringify(loadedData));
+    if (window.TETSU_DATA) {
+      window.TETSU_DATA = loadedData;
+    }
+
+    if (dot) dot.className = 'status-dot online';
+    if (text) text.textContent = 'オンライン';
+    
+    // 再描画
+    renderContent();
+    showToast('✅ GitHub から読み込みました');
+  } catch(e) {
+    if (dot) dot.className = 'status-dot offline';
+    if (text) text.textContent = 'エラー';
+    showToast('❌ 読込失敗: ' + e.message);
+  }
+}
+
+// ============================================================
+// エクスポート（JSONファイル）
+// ============================================================
+
+function exportData() {
+  const data = loadTetsuData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `tetsu_data_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+  showToast('📁 エクスポートしました');
+}
+
+// ============================================================
+// インポート（JSONファイル）
+// ============================================================
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      
+      // データ構造の簡易チェック
+      if (typeof imported !== 'object' || imported === null) {
+        showToast('❌ データ形式が正しくありません');
+        return;
+      }
+      
+      // 少なくとも1つの学年データがあるかチェック
+      const hasValidData = ['1','2','3','4','5','6'].some(g => imported[g]);
+      if (!hasValidData) {
+        showToast('❌ 有効なデータが含まれていません');
+        return;
+      }
+      
+      if (confirm('現在のデータをインポートデータで上書きしますか？')) {
+        localStorage.setItem(TETSU_STORAGE_KEY, JSON.stringify(imported));
+        if (window.TETSU_DATA) {
+          window.TETSU_DATA = imported;
+        }
+        // 再描画
+        renderContent();
+        showToast('📁 インポートしました');
+      }
+    } catch(err) {
+      showToast('❌ ファイル読み込み失敗');
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+  // ファイル入力をリセット
+  event.target.value = '';
+}
+
+// ============================================================
+// 初期化時にデータを読み込む
+// ============================================================
+
+// ページ読み込み時にデータを復元
+(function initTetsuData() {
+  const saved = localStorage.getItem(TETSU_STORAGE_KEY);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      if (window.TETSU_DATA) {
+        // 既存データにマージ（不足している学年を補充）
+        for (let g of ['1','2','3','4','5','6']) {
+          if (!data[g]) data[g] = {};
+          if (!window.TETSU_DATA[g]) window.TETSU_DATA[g] = {};
+        }
+        window.TETSU_DATA = data;
+      }
+    } catch(e) {
+      console.error('データ復元エラー:', e);
+    }
+  }
+})();
 </script>
 </body>
 </html>
