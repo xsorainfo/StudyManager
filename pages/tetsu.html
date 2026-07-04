@@ -359,6 +359,19 @@ function renderTests(area, data) {
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
+  // ★ 鉄律会データを localStorage に保存（一括出力用） ★
+  if (window.TETSU_DATA) {
+    const saved = localStorage.getItem('tetsu_data');
+    if (!saved) {
+      try {
+        localStorage.setItem('tetsu_data', JSON.stringify(window.TETSU_DATA));
+        console.log('✅ 鉄律会デフォルトデータをlocalStorageに保存しました');
+      } catch(e) {
+        console.error('鉄律会データ保存エラー:', e);
+      }
+    }
+  }
+
   // 学年タブ
   document.querySelectorAll('#gradeTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
