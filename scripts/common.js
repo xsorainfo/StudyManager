@@ -18,11 +18,8 @@ function renderNavbar() {
     
     let navHtml = `
         <nav class="navbar">
-            <div class="nav-brand">
-                <i class="fas fa-compass"></i>
-            </div>
             <div class="nav-links">
-                <i class="fas fa-compass"></i>
+                <span class="nav-icon"><i class="fas fa-compass"></i></span>
     `;
     
     NAV_LINKS.forEach(link => {
