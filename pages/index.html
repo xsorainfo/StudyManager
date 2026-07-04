@@ -7,40 +7,15 @@
   <link rel="icon" type="image/png" href="/StudyManager/favicon.png">
   
   <title>学びの航路 · 中学六年学习管理系统</title>
+  <!-- ★ 共通スタイル ★ -->
+  <link rel="stylesheet" href="/StudyManager/scripts/common.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
     body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
     .app-wrapper { max-width: 1400px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
 
-    /* 导航（共通化） */
-    .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 32px; color: #f0ebe3; }
-    .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
-    .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
-    .nav-links { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 500; }
-    .nav-links a { color: #e8dfd5; text-decoration: none; padding: 6px 12px; border-radius: 40px; transition: 0.15s; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; cursor: pointer; }
-    .nav-links a:hover { background: #3f352b; color: #fff; }
-    .nav-links a.active { background: #5f4b38; color: #fff2e0; }
-    .nav-right { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; flex-wrap: wrap; }
-    .nav-right .user-badge { background: #3f352b; padding: 6px 18px 6px 14px; border-radius: 40px; display: flex; align-items: center; gap: 8px; }
-    .nav-right .data-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-    .nav-right .data-actions button { background: #3f352b; border: none; color: #e8dfd5; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; transition: 0.15s; display: flex; align-items: center; gap: 5px; }
-    .nav-right .data-actions button:hover { background: #5f4b38; color: #fff; }
-    .nav-right .data-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
-    .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
-    .status-dot.online { background: #4CAF50; }
-    .status-dot.offline { background: #f44336; }
-    .status-dot.saving { background: #ff9800; animation: pulse 0.8s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-    /* Token 栏 */
-    .token-bar { background: #f0ebe4; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-    .token-bar .label { font-weight: 600; color: #3d3229; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
-    .token-bar input { flex: 1; min-width: 200px; padding: 8px 16px; border: 2px solid #d8cdbf; border-radius: 40px; font-size: 0.85rem; outline: none; background: white; font-family: monospace; }
-    .token-bar input:focus { border-color: #8f735b; }
-    .token-bar .token-status { font-size: 0.8rem; color: #6b5d4e; white-space: nowrap; }
-    .token-bar .btn-set { background: #2c241c; border: none; color: white; padding: 6px 20px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.15s; }
-    .token-bar .btn-set:hover { background: #4d3b2c; }
+    
 
     .dashboard-grid { display: grid; grid-template-columns: 2fr 1.2fr; gap: 28px; margin-top: 10px; }
     .card { background: #fffffffa; border-radius: 28px; padding: 22px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid #ede8e0; margin-bottom: 24px; }
