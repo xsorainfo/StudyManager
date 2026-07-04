@@ -20,7 +20,7 @@ function renderNavbar() {
         <nav class="navbar">
             <div class="nav-brand">
                 <i class="fas fa-compass"></i>
-                <span>学び航路</span>
+                <span></span>
             </div>
             <div class="nav-links">
     `;
@@ -145,13 +145,13 @@ function updateStatus() {
     
     if (token) {
         dot.className = 'status-dot online';
-        text.textContent = 'オンライン';
+        text.textContent = 'On';
         status.textContent = '✅ ' + token.substring(0, 8) + '...';
         if (saveBtn) saveBtn.disabled = false;
         if (loadBtn) loadBtn.disabled = false;
     } else {
         dot.className = 'status-dot offline';
-        text.textContent = 'オフライン';
+        text.textContent = 'Off';
         status.textContent = '🔑 未設定';
         if (saveBtn) saveBtn.disabled = true;
         if (loadBtn) loadBtn.disabled = true;
