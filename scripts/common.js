@@ -197,15 +197,20 @@ function showToast(msg) {
 // 📦 プロジェクト全データを一括エクスポート
 // ============================================================
 
+// ============================================================
+// 📦 プロジェクト全データをZIPで一括エクスポート
+// ============================================================
+
 function exportAllData() {
-  const allData = {
-    exportedAt: new Date().toISOString(),
-    version: '1.0.0',
-    totalItems: 0,
-    data: {}
-  };
+  // JSZipが読み込まれているかチェック
+  if (typeof JSZip === 'undefined') {
+    showToast('❌ JSZipライブラリが読み込まれていません');
+    return;
+  }
   
-  let totalCount = 0;
+  const zip = new JSZip();
+  const dateStr = new Date().toISOString().slice(0,10);
+  let fileCount = 0;
   
   // 1. ダッシュボードデータ (study_*)
   const dashboardData = {};
@@ -215,42 +220,38 @@ function exportAllData() {
     if (val) {
       try {
         dashboardData['study_' + key] = JSON.parse(val);
-        if (Array.isArray(dashboardData['study_' + key])) {
-          totalCount += dashboardData['study_' + key].length;
-        }
       } catch(e) {}
     }
   });
   if (Object.keys(dashboardData).length > 0) {
-    allData.data.dashboard = dashboardData;
+    zip.file(`dashboard_backup_${dateStr}.json`, JSON.stringify(dashboardData, null, 2));
+    fileCount++;
   }
   
   // 2. 試験管理データ
   const examRaw = localStorage.getItem('exam_data');
   if (examRaw) {
     try {
-      allData.data.exam = JSON.parse(examRaw);
-      totalCount += Object.keys(allData.data.exam).length;
+      zip.file(`exam_data_${dateStr}.json`, JSON.stringify(JSON.parse(examRaw), null, 2));
+      fileCount++;
     } catch(e) {}
   }
   
-  // 3. 宿題管理データ
-  const homeworkRaw = localStorage.getItem('homework_data');
-  if (homeworkRaw) {
-    try {
-      allData.data.homework = JSON.parse(homeworkRaw);
-      totalCount += Object.keys(allData.data.homework).length;
-    } catch(e) {}
-  }
-  
-  // 4. 成績データ（試験管理の成績）
+  // 3. 成績データ
   const scoreRaw = localStorage.getItem('exam_scores');
   if (scoreRaw) {
     try {
-      allData.data.examScores = JSON.parse(scoreRaw);
-      if (Array.isArray(allData.data.examScores)) {
-        totalCount += allData.data.examScores.length;
-      }
+      zip.file(`exam_scores_${dateStr}.json`, JSON.stringify(JSON.parse(scoreRaw), null, 2));
+      fileCount++;
+    } catch(e) {}
+  }
+  
+  // 4. 宿題管理データ
+  const homeworkRaw = localStorage.getItem('homework_data');
+  if (homeworkRaw) {
+    try {
+      zip.file(`homework_data_${dateStr}.json`, JSON.stringify(JSON.parse(homeworkRaw), null, 2));
+      fileCount++;
     } catch(e) {}
   }
   
@@ -258,8 +259,8 @@ function exportAllData() {
   const tetsuRaw = localStorage.getItem('tetsu_data');
   if (tetsuRaw) {
     try {
-      allData.data.tetsu = JSON.parse(tetsuRaw);
-      totalCount += Object.keys(allData.data.tetsu).length;
+      zip.file(`tetsu_data_${dateStr}.json`, JSON.stringify(JSON.parse(tetsuRaw), null, 2));
+      fileCount++;
     } catch(e) {}
   }
   
@@ -267,26 +268,35 @@ function exportAllData() {
   const defaultRaw = localStorage.getItem('exam_defaults');
   if (defaultRaw) {
     try {
-      allData.data.examDefaults = JSON.parse(defaultRaw);
+      zip.file(`exam_defaults_${dateStr}.json`, JSON.stringify(JSON.parse(defaultRaw), null, 2));
+      fileCount++;
     } catch(e) {}
   }
   
-  allData.totalItems = totalCount;
+  if (fileCount === 0) {
+    showToast('📭 エクスポートするデータがありません');
+    return;
+  }
   
-  // JSONファイルとしてダウンロード
-  const json = JSON.stringify(allData, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `study_all_backup_${new Date().toISOString().slice(0,10)}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  
-  showToast(`📁 全データをエクスポートしました (${totalCount}件)`);
+  // ZIPを生成してダウンロード
+  zip.generateAsync({ type: 'blob' })
+    .then(function(content) {
+      const url = URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `study_all_backup_${dateStr}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(`📁 ${fileCount} 個のファイルをZIPにまとめてエクスポートしました`);
+    })
+    .catch(function(err) {
+      showToast('❌ ZIP生成に失敗しました: ' + err.message);
+      console.error(err);
+    });
 }
+
 
 // グローバル公開
 window.exportAllData = exportAllData;
