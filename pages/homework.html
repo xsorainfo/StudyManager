@@ -325,7 +325,7 @@ const GITHUB_REPO = 'StudyManager';
 const GITHUB_PATH = 'data/homework_data.json';
 const GITHUB_BRANCH = 'main';
 
-const ALL_SUBJECTS = ['国語', '文法', '代数', '幾何', '英語', '地理', '歴史', '理科1', '理科2', '音楽', '美術', '技術・家庭', '保健体育', '礼法', '公民'];
+const ALL_SUBJECTS = ['国語', '文法', '代数', '幾何', '英語', '地理', '歴史', '理科1', '理科2', '音楽', '美術', '技術・家庭', '保健体育', '礼法', '公民', '理科', '数学'];
 
 // ============================================================
 // データ構造
@@ -609,8 +609,8 @@ function renderContent() {
     totalTasks += tasks.length;
     doneTasks += tasks.filter(t => t.done).length;
     const sid = 'hw_' + subjectIdx++;
-
-    const isOpen = false;
+    //默认打开/折叠isOpen = false
+    const isOpen = true;
     const iconHtml = isOpen ? '<i class="fas fa-minus"></i>' : '<i class="fas fa-plus"></i>';
     const iconClass = isOpen ? 'toggle-icon open' : 'toggle-icon';
 
