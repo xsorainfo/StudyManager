@@ -20,9 +20,9 @@ function renderNavbar() {
         <nav class="navbar">
             <div class="nav-brand">
                 <i class="fas fa-compass"></i>
-                <span></span>
             </div>
             <div class="nav-links">
+                <i class="fas fa-compass"></i>
     `;
     
     NAV_LINKS.forEach(link => {
