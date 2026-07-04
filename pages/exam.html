@@ -179,7 +179,24 @@
 
     .empty-state { text-align: center; padding: 40px 20px; color: #b7a086; }
     .empty-state i { font-size: 2.5rem; margin-bottom: 12px; }
-
+	/* 成績標註 */
+	.score-badge {
+	  display: inline-block;
+	  padding: 2px 10px;
+	  border-radius: 40px;
+	  font-size: 0.7rem;
+	  font-weight: 600;
+	  margin-right: 6px;
+	  white-space: nowrap;
+	}
+	.score-badge.excellent { background: #c6282820; color: #c62828; }
+	.score-badge.good { background: #e6510020; color: #e65100; }
+	.score-badge.standard { background: #2e7d3220; color: #2e7d32; }
+	.score-badge.effort { background: #0d47a120; color: #0d47a1; }
+	.score-badge.warning { background: #8f4a4a20; color: #8f4a4a; }
+	.score-badge.high { background: #c6282820; color: #c62828; }
+	.score-badge.low { background: #8f4a4a20; color: #8f4a4a; }
+	.score-badge.avg { background: #2e7d3220; color: #2e7d32; }
     .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
     .toast-msg.show { opacity: 1; }
     #fileInput { display: none; }
@@ -752,73 +769,80 @@ function renderContent() {
 	  ` : `
 	    <div style="overflow-x:auto;">
 	      <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:600px;">
-	        <thead>
-	          <tr style="background:#2c241c; color:#f0ebe3;">
-	            <th style="padding:8px 12px; text-align:left; border:1px solid #ddd;">科目</th>
-	            <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">得点</th>
-	            <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">总分</th>
-	            <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">平均点</th>
-	            <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">偏差</th>
-	            <th style="padding:8px 12px; text-align:left; border:1px solid #ddd;">备注</th>
-	            <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:100px;">操作</th>
-	          </tr>
-	        </thead>
+			<thead>
+			  <tr style="background:#2c241c; color:#f0ebe3;">
+			    <th style="padding:8px 12px; text-align:left; border:1px solid #ddd; width:80px;">科目</th>
+			    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:60px;">得点</th>
+			    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:60px;">总分</th>
+			    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:70px;">平均点</th>
+			    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:70px;">偏差</th>
+			    <th style="padding:8px 12px; text-align:left; border:1px solid #ddd; width:auto;">备注</th>
+			    <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:100px;">操作</th>
+			  </tr>
+			</thead>
 	        <tbody>
-	          ${scores.map((s, i) => `
-	            <tr id="score_row_${i}" style="border-bottom:1px solid #ede6dd;">
-	              <!-- ★ 表示モード ★ -->
-	              <td id="score_view_${i}" style="padding:8px 12px; border:1px solid #ddd; font-weight:500; cursor:pointer;" onclick="editScore(${i})">${s.subject}</td>
-	              <td id="score_view_${i}" style="padding:8px 12px; text-align:center; border:1px solid #ddd; font-weight:600; cursor:pointer;" onclick="editScore(${i})">${s.score}</td>
-	              <td id="score_view_${i}" style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer;" onclick="editScore(${i})">${s.total || '-'}</td>
-	              <td id="score_view_${i}" style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer;" onclick="editScore(${i})">${s.avg || '-'}</td>
-	              <td id="score_view_${i}" style="padding:8px 12px; text-align:center; border:1px solid #ddd; ${s.deviation && s.deviation >= 60 ? 'color:#c62828; font-weight:700;' : ''} cursor:pointer;" onclick="editScore(${i})">${s.deviation || '-'}</td>
-	              <td id="score_view_${i}" style="padding:8px 12px; border:1px solid #ddd; font-size:0.8rem; cursor:pointer;" onclick="editScore(${i})">${s.note || ''}</td>
-	              <td id="score_actions_${i}" style="padding:8px 12px; text-align:center; border:1px solid #ddd;">
-	                <button onclick="editScore(${i})" style="background:none; border:none; cursor:pointer; color:#2c241c; font-size:0.85rem; padding:4px 8px; border-radius:4px;">
-	                  <i class="fas fa-edit"></i>
-	                </button>
-	                <button onclick="deleteScore(${i})" style="background:none; border:none; cursor:pointer; color:#8f4a4a; font-size:0.9rem; padding:4px 8px; border-radius:4px;">
-	                  <i class="fas fa-trash"></i>
-	                </button>
-	              </td>
-	            </tr>
-	            <!-- ★ 編集モード（初期非表示） ★ -->
-	            <tr id="score_edit_${i}" style="display:none; background:#f8f4ef;">
-	              <td colspan="7" style="padding:8px 12px; border:1px solid #ddd;">
-	                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-	                  <select id="edit_subject_${i}" style="padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white; min-width:100px;">
-	                    <option value="国語" ${s.subject === '国語' ? 'selected' : ''}>国語</option>
-	                    <option value="文法" ${s.subject === '文法' ? 'selected' : ''}>文法</option>
-	                    <option value="代数" ${s.subject === '代数' ? 'selected' : ''}>代数</option>
-	                    <option value="幾何" ${s.subject === '幾何' ? 'selected' : ''}>幾何</option>
-	                    <option value="英語" ${s.subject === '英語' ? 'selected' : ''}>英語</option>
-	                    <option value="英語ｻｲﾄﾞﾘｰﾀﾞ" ${s.subject === '英語ｻｲﾄﾞﾘｰﾀﾞ' ? 'selected' : ''}>英語ｻｲﾄﾞﾘｰﾀﾞ</option>						
-	                    <option value="地理" ${s.subject === '地理' ? 'selected' : ''}>地理</option>
-	                    <option value="歴史" ${s.subject === '歴史' ? 'selected' : ''}>歴史</option>
-	                    <option value="理科1" ${s.subject === '理科1' ? 'selected' : ''}>理科1</option>
-	                    <option value="理科2" ${s.subject === '理科2' ? 'selected' : ''}>理科2</option>
-	                    <option value="音楽" ${s.subject === '音楽' ? 'selected' : ''}>音楽</option>
-	                    <option value="美術" ${s.subject === '美術' ? 'selected' : ''}>美術</option>
-	                    <option value="技術・家庭" ${s.subject === '技術・家庭' ? 'selected' : ''}>技術・家庭</option>
-	                    <option value="保健体育" ${s.subject === '保健体育' ? 'selected' : ''}>保健体育</option>
-	                    <option value="礼法" ${s.subject === '礼法' ? 'selected' : ''}>礼法</option>
-	                    <option value="公民" ${s.subject === '公民' ? 'selected' : ''}>公民</option>
-	                  </select>
-	                  <input type="number" id="edit_score_${i}" value="${s.score}" placeholder="得点" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-	                  <input type="number" id="edit_total_${i}" value="${s.total || ''}" placeholder="总分" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-	                  <input type="number" id="edit_avg_${i}" value="${s.avg || ''}" placeholder="平均点" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-	                  <input type="number" id="edit_dev_${i}" value="${s.deviation || ''}" placeholder="偏差" step="0.1" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-	                  <input type="text" id="edit_note_${i}" value="${s.note || ''}" placeholder="备注" style="flex:1; min-width:100px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-	                  <button onclick="saveEdit(${i})" style="background:#2e7d32; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
-	                    <i class="fas fa-check"></i> 保存
-	                  </button>
-	                  <button onclick="cancelEdit(${i})" style="background:#8f4a4a; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
-	                    <i class="fas fa-times"></i> キャンセル
-	                  </button>
-	                </div>
-	              </td>
-	            </tr>
-	          `).join('')}
+	          ${scores.map((s, i) => {
+				  const status = getScoreStatus(s.score, s.avg, s.deviation);
+				  return `
+				    <tr id="score_row_${i}" style="border-bottom:1px solid #ede6dd;">
+				      <td style="padding:8px 12px; border:1px solid #ddd; font-weight:500; cursor:pointer;" onclick="editScore(${i})">${s.subject}</td>
+				      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; font-weight:600; cursor:pointer;" onclick="editScore(${i})">${s.score}</td>
+				      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer;" onclick="editScore(${i})">${s.total || '-'}</td>
+				      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer;" onclick="editScore(${i})">${s.avg || '-'}</td>
+				      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; ${s.deviation && s.deviation >= 60 ? 'color:#c62828; font-weight:700;' : ''} cursor:pointer;" onclick="editScore(${i})">${s.deviation || '-'}</td>
+				      <td style="padding:8px 12px; border:1px solid #ddd; font-size:0.8rem; cursor:pointer; word-break:break-word;" onclick="editScore(${i})">
+				        <span style="display:inline-block; background:${status.color}20; color:${status.color}; padding:2px 10px; border-radius:40px; font-size:0.7rem; font-weight:600; margin-right:6px;">
+				          <i class="fas ${status.icon}" style="font-size:0.6rem;"></i> ${status.label}
+				        </span>
+				        ${s.note || ''}
+				      </td>
+				      <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; white-space:nowrap;">
+				        <button onclick="editScore(${i})" style="background:none; border:none; cursor:pointer; color:#2c241c; font-size:0.85rem; padding:4px 8px; border-radius:4px;">
+				          <i class="fas fa-edit"></i>
+				        </button>
+				        <button onclick="deleteScore(${i})" style="background:none; border:none; cursor:pointer; color:#8f4a4a; font-size:0.9rem; padding:4px 8px; border-radius:4px;">
+				          <i class="fas fa-trash"></i>
+				        </button>
+				      </td>
+				    </tr>
+				    <!-- ★ 編集モード ★ -->
+				    <tr id="score_edit_${i}" style="display:none; background:#f8f4ef;">
+				      <td colspan="7" style="padding:8px 12px; border:1px solid #ddd;">
+				        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+				          <select id="edit_subject_${i}" style="padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white; min-width:90px;">
+				            <option value="国語" ${s.subject === '国語' ? 'selected' : ''}>国語</option>
+				            <option value="文法" ${s.subject === '文法' ? 'selected' : ''}>文法</option>
+				            <option value="代数" ${s.subject === '代数' ? 'selected' : ''}>代数</option>
+				            <option value="幾何" ${s.subject === '幾何' ? 'selected' : ''}>幾何</option>
+				            <option value="英語" ${s.subject === '英語' ? 'selected' : ''}>英語</option>
+					        <option value="英語ｻｲﾄﾞﾘｰﾀﾞ" ${s.subject === '英語ｻｲﾄﾞﾘｰﾀﾞ' ? 'selected' : ''}>英語ｻｲﾄﾞﾘｰﾀﾞ</option>
+				            <option value="地理" ${s.subject === '地理' ? 'selected' : ''}>地理</option>
+				            <option value="歴史" ${s.subject === '歴史' ? 'selected' : ''}>歴史</option>
+				            <option value="理科1" ${s.subject === '理科1' ? 'selected' : ''}>理科1</option>
+				            <option value="理科2" ${s.subject === '理科2' ? 'selected' : ''}>理科2</option>
+				            <option value="音楽" ${s.subject === '音楽' ? 'selected' : ''}>音楽</option>
+				            <option value="美術" ${s.subject === '美術' ? 'selected' : ''}>美術</option>
+				            <option value="技術・家庭" ${s.subject === '技術・家庭' ? 'selected' : ''}>技術・家庭</option>
+				            <option value="保健体育" ${s.subject === '保健体育' ? 'selected' : ''}>保健体育</option>
+				            <option value="礼法" ${s.subject === '礼法' ? 'selected' : ''}>礼法</option>
+				            <option value="公民" ${s.subject === '公民' ? 'selected' : ''}>公民</option>
+				          </select>
+				          <input type="number" id="edit_score_${i}" value="${s.score}" placeholder="得点" style="width:60px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+				          <input type="number" id="edit_total_${i}" value="${s.total || ''}" placeholder="总分" style="width:60px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+				          <input type="number" id="edit_avg_${i}" value="${s.avg || ''}" placeholder="平均点" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+				          <input type="number" id="edit_dev_${i}" value="${s.deviation || ''}" placeholder="偏差" step="0.1" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+				          <input type="text" id="edit_note_${i}" value="${s.note || ''}" placeholder="备注" style="flex:1; min-width:120px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+				          <button onclick="saveEdit(${i})" style="background:#2e7d32; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+				            <i class="fas fa-check"></i> 保存
+				          </button>
+				          <button onclick="cancelEdit(${i})" style="background:#8f4a4a; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+				            <i class="fas fa-times"></i> 取消
+				          </button>
+				        </div>
+				      </td>
+				    </tr>
+				  `;
+				}).join('')}
 	        </tbody>
 	      </table>
 	    </div>
@@ -1020,6 +1044,36 @@ function toggleSchedule() {
       icon.innerHTML = '<i class="fas fa-plus"></i>';
     }
   }
+}
+// ★ 成績の状態を判定する関数
+function getScoreStatus(score, avg, deviation) {
+  if (!score) return { label: '未入力', color: '#b7a086', icon: 'fa-minus' };
+  
+  // 偏差値がある場合
+  if (deviation !== null && deviation !== undefined && deviation !== '') {
+    if (deviation >= 65) return { label: '優秀', color: '#c62828', icon: 'fa-crown' };
+    if (deviation >= 60) return { label: '良好', color: '#e65100', icon: 'fa-star' };
+    if (deviation >= 50) return { label: '標準', color: '#2e7d32', icon: 'fa-check' };
+    if (deviation >= 40) return { label: '要努力', color: '#0d47a1', icon: 'fa-arrow-up' };
+    return { label: '要注意', color: '#8f4a4a', icon: 'fa-exclamation-triangle' };
+  }
+  
+  // 平均点がある場合
+  if (avg !== null && avg !== undefined && avg !== '') {
+    const diff = score - avg;
+    if (diff >= 15) return { label: '▲ 高', color: '#c62828', icon: 'fa-arrow-up' };
+    if (diff >= 5) return { label: '↑ やや高', color: '#e65100', icon: 'fa-arrow-up' };
+    if (diff >= -5) return { label: '→ 平均的', color: '#2e7d32', icon: 'fa-minus' };
+    if (diff >= -15) return { label: '↓ やや低', color: '#0d47a1', icon: 'fa-arrow-down' };
+    return { label: '▼ 低', color: '#8f4a4a', icon: 'fa-arrow-down' };
+  }
+  
+  // 得点のみの場合
+  if (score >= 90) return { label: '優秀', color: '#c62828', icon: 'fa-crown' };
+  if (score >= 80) return { label: '良好', color: '#e65100', icon: 'fa-star' };
+  if (score >= 60) return { label: '標準', color: '#2e7d32', icon: 'fa-check' };
+  if (score >= 40) return { label: '要努力', color: '#0d47a1', icon: 'fa-arrow-up' };
+  return { label: '要注意', color: '#8f4a4a', icon: 'fa-exclamation-triangle' };
 }
 // ============================================================
 // 📊 成績編集機能
