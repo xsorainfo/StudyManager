@@ -180,6 +180,104 @@ function showToast(msg) {
     el._timer = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
+// ============================================================
+// 📦 プロジェクト全データを一括エクスポート
+// ============================================================
+
+function exportAllData() {
+  const allData = {
+    exportedAt: new Date().toISOString(),
+    version: '1.0.0',
+    totalItems: 0,
+    data: {}
+  };
+  
+  let totalCount = 0;
+  
+  // 1. ダッシュボードデータ (study_*)
+  const dashboardData = {};
+  const studyKeys = ['years', 'scores', 'reviews', 'tetsu', 'schedules', 'exams'];
+  studyKeys.forEach(key => {
+    const val = localStorage.getItem('study_' + key);
+    if (val) {
+      try {
+        dashboardData['study_' + key] = JSON.parse(val);
+        if (Array.isArray(dashboardData['study_' + key])) {
+          totalCount += dashboardData['study_' + key].length;
+        }
+      } catch(e) {}
+    }
+  });
+  if (Object.keys(dashboardData).length > 0) {
+    allData.data.dashboard = dashboardData;
+  }
+  
+  // 2. 試験管理データ
+  const examRaw = localStorage.getItem('exam_data');
+  if (examRaw) {
+    try {
+      allData.data.exam = JSON.parse(examRaw);
+      totalCount += Object.keys(allData.data.exam).length;
+    } catch(e) {}
+  }
+  
+  // 3. 宿題管理データ
+  const homeworkRaw = localStorage.getItem('homework_data');
+  if (homeworkRaw) {
+    try {
+      allData.data.homework = JSON.parse(homeworkRaw);
+      totalCount += Object.keys(allData.data.homework).length;
+    } catch(e) {}
+  }
+  
+  // 4. 成績データ（試験管理の成績）
+  const scoreRaw = localStorage.getItem('exam_scores');
+  if (scoreRaw) {
+    try {
+      allData.data.examScores = JSON.parse(scoreRaw);
+      if (Array.isArray(allData.data.examScores)) {
+        totalCount += allData.data.examScores.length;
+      }
+    } catch(e) {}
+  }
+  
+  // 5. 鉄律会データ
+  const tetsuRaw = localStorage.getItem('tetsu_data');
+  if (tetsuRaw) {
+    try {
+      allData.data.tetsu = JSON.parse(tetsuRaw);
+      totalCount += Object.keys(allData.data.tetsu).length;
+    } catch(e) {}
+  }
+  
+  // 6. デフォルト設定
+  const defaultRaw = localStorage.getItem('exam_defaults');
+  if (defaultRaw) {
+    try {
+      allData.data.examDefaults = JSON.parse(defaultRaw);
+    } catch(e) {}
+  }
+  
+  allData.totalItems = totalCount;
+  
+  // JSONファイルとしてダウンロード
+  const json = JSON.stringify(allData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `study_all_backup_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  showToast(`📁 全データをエクスポートしました (${totalCount}件)`);
+}
+
+// グローバル公開
+window.exportAllData = exportAllData;
+
 // ==================== 初期化 ====================
 document.addEventListener('DOMContentLoaded', function() {
     // 1. ナビゲーションを描画
