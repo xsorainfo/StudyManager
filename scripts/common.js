@@ -145,13 +145,13 @@ function updateStatus() {
     
     if (token) {
         dot.className = 'status-dot online';
-        text.textContent = 'On';
+        text.textContent = '';
         status.textContent = '✅ ' + token.substring(0, 8) + '...';
         if (saveBtn) saveBtn.disabled = false;
         if (loadBtn) loadBtn.disabled = false;
     } else {
         dot.className = 'status-dot offline';
-        text.textContent = 'Off';
+        text.textContent = '';
         status.textContent = '🔑 未設定';
         if (saveBtn) saveBtn.disabled = true;
         if (loadBtn) loadBtn.disabled = true;
