@@ -633,27 +633,26 @@ function renderExamTypeTabs() {
 }
 
 // ============================================================
-// 📊 成績データ管理
+// 📊 成績データ管理（学年モードは専用キー）
 // ============================================================
 
 // 成績データのキー
 const SCORE_STORAGE_KEY = 'exam_scores';
 
 // ============================================================
-// 📊 成績データ取得（学年平均対応）
+// 📊 成績データ取得（学年モードは専用キーを使用）
 // ============================================================
 
 function getScoresForCurrentPeriod() {
   const allScores = JSON.parse(localStorage.getItem(SCORE_STORAGE_KEY) || '[]');
   
+  // ★ 学年モードの場合：専用キー '学年' のデータのみを取得 ★
   if (currentSemester === 'all' || currentType === 'year_avg') {
-    const gradeKey = currentGrade;
-    return allScores.filter(s => {
-      const parts = s.key.split('_');
-      return parts[0] === gradeKey;
-    });
+    const key = `${currentGrade}_year_avg`;
+    return allScores.filter(s => s.key === key);
   }
   
+  // 通常時：学年_学期_テスト種別でフィルタリング
   const key = `${currentGrade}_${currentSemester}_${currentType}`;
   return allScores.filter(s => s.key === key);
 }
@@ -661,8 +660,15 @@ function getScoresForCurrentPeriod() {
 // 成績データを保存
 function saveScoresForCurrentPeriod(scores) {
   const allScores = JSON.parse(localStorage.getItem(SCORE_STORAGE_KEY) || '[]');
-  const key = `${currentGrade}_${currentSemester}_${currentType}`;
-  // 同じキーのデータを削除して新しいデータを追加
+  
+  // ★ 学年モードの場合：専用キー '学年' を使用 ★
+  let key;
+  if (currentSemester === 'all' || currentType === 'year_avg') {
+    key = `${currentGrade}_year_avg`;
+  } else {
+    key = `${currentGrade}_${currentSemester}_${currentType}`;
+  }
+  
   const filtered = allScores.filter(s => s.key !== key);
   const newData = scores.map(s => ({ ...s, key }));
   localStorage.setItem(SCORE_STORAGE_KEY, JSON.stringify([...filtered, ...newData]));
@@ -750,7 +756,10 @@ function addScore() {
   const subject = document.getElementById('scoreSubject').value;
   const note = document.getElementById('scoreNote').value.trim() || '';
   
-  if (scoreInputMode === 'devonly') {
+  const isYearMode = (currentSemester === 'all' || currentType === 'year_avg');
+  
+  // ★ 学年モードの場合は強制的に偏差値のみモード ★
+  if (isYearMode || scoreInputMode === 'devonly') {
     const deviation = parseFloat(document.getElementById('scoreDevOnly').value);
     if (!subject) { showToast('❌ 科目を選択してください'); return; }
     if (isNaN(deviation) || deviation < 0 || deviation > 10) {
@@ -766,6 +775,7 @@ function addScore() {
     return;
   }
   
+  // 通常モード
   const scoreInput = document.getElementById('scoreScore').value;
   const total = parseInt(document.getElementById('scoreTotal').value) || null;
   const avg = parseFloat(document.getElementById('scoreAvg').value) || null;
@@ -833,11 +843,12 @@ function saveEdit(index) {
     return;
   }
   
-  const existing = scores[index];
+  const isYearMode = (currentSemester === 'all' || currentType === 'year_avg');
   const devOnlyField = document.getElementById(`edit_devonly_${index}`);
   
-  if (devOnlyField) {
-    const deviation = parseFloat(devOnlyField.value);
+  // ★ 学年モードまたは偏差値のみの編集 ★
+  if (isYearMode || devOnlyField) {
+    const deviation = parseFloat(devOnlyField ? devOnlyField.value : document.getElementById(`edit_devonly_${index}`)?.value);
     if (!subject) { showToast('❌ 科目を選択してください'); return; }
     if (isNaN(deviation) || deviation < 0 || deviation > 10) {
       showToast('❌ 偏差値は0-10の範囲で入力してください');
@@ -1025,13 +1036,18 @@ function renderContent() {
   // ★ テスト種別タブを再生成 ★
   renderExamTypeTabs();
   
-  // ★ 成績データを取得 ★
   const scores = getScoresForCurrentPeriod();
-  const validScores = scores.filter(s => s.score !== null && s.score !== undefined && s.score !== '');
-  const avgScore = validScores.length > 0 ? Math.round(validScores.reduce((sum, s) => sum + s.score, 0) / validScores.length) : null;
+  const isYearMode = (currentSemester === 'all' || currentType === 'year_avg');
+  
+  // 学年モード時は偏差値のみの平均を計算
+  let avgDev = null;
+  if (isYearMode) {
+    const validDev = scores.filter(s => s.deviation !== null && s.deviation !== undefined && s.deviation !== '');
+    avgDev = validDev.length > 0 ? Math.round(validDev.reduce((sum, s) => sum + s.deviation, 0) / validDev.length * 10) / 10 : null;
+  }
   
   // 表示用の学期名
-  const displaySemester = currentSemester === 'all' ? '📊 学年' : semesterNames[currentSemester];
+  const displaySemester = isYearMode ? '📊 学年' : semesterNames[currentSemester];
   const displayType = typeNames[currentType] || currentType;
   
   let html = `
@@ -1039,16 +1055,17 @@ function renderContent() {
       <span><strong>${gradeNames[currentGrade]}</strong></span>
       <span>›</span>
       <span><strong>${displaySemester}</strong></span>
-      ${currentSemester !== 'all' ? `<span>›</span><span><strong>${displayType}</strong></span>` : ''}
-      ${avgScore !== null ? `
+      ${!isYearMode ? `<span>›</span><span><strong>${displayType}</strong></span>` : ''}
+      ${isYearMode && avgDev !== null ? `
         <span style="background:#2c241c; color:#f0ebe3; padding:2px 14px; border-radius:40px; font-size:0.75rem; font-weight:600;">
-          📊 平均: ${avgScore} 点 (${validScores.length}件)
+          📊 平均偏差値: ${avgDev}
         </span>
-      ` : `
-        <span style="background:#f0ebe4; color:#6b5d4e; padding:2px 14px; border-radius:40px; font-size:0.75rem;">
-          データなし
+      ` : ''}
+      ${!isYearMode && scores.length > 0 ? `
+        <span style="background:#2c241c; color:#f0ebe3; padding:2px 14px; border-radius:40px; font-size:0.75rem; font-weight:600;">
+          📊 ${scores.length}件
         </span>
-      `}
+      ` : ''}
       <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
     </div>
   `;
@@ -1057,7 +1074,7 @@ function renderContent() {
   html += `
     <div class="card" style="background: #f8f4ef; border-left: 6px solid #8f735b;">
       <div class="card-header">
-        <h2><i class="fas fa-star" style="color:#8f735b;"></i> 成績一覧</h2>
+        <h2><i class="fas fa-star" style="color:#8f735b;"></i> ${isYearMode ? '学年偏差値一覧' : '成績一覧'}</h2>
         <span class="badge">${scores.length} 件</span>
       </div>
   `;
@@ -1066,10 +1083,78 @@ function renderContent() {
     html += `
       <div style="text-align:center; padding:20px; color:#b7a086; font-size:0.9rem;">
         <i class="fas fa-inbox" style="font-size:1.5rem; display:block; margin-bottom:6px;"></i>
-        成績データがありません
+        ${isYearMode ? '学年偏差値データがありません' : '成績データがありません'}
+      </div>
+    `;
+  } else if (isYearMode) {
+    // ===== 学年モード：偏差値のみ表示 =====
+    html += `
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:400px;">
+          <thead>
+            <tr style="background:#2c241c; color:#f0ebe3;">
+              <th style="padding:8px 12px; text-align:left; border:1px solid #ddd; width:30%;">科目</th>
+              <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:25%;">偏差値</th>
+              <th style="padding:8px 12px; text-align:left; border:1px solid #ddd; width:35%;">备注</th>
+              <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:10%;">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    
+    scores.forEach((s, i) => {
+      const isDevOnly = s.isDevOnly || (s.score === null && s.deviation !== null);
+      const devColor = s.deviation !== null && s.deviation !== undefined && s.deviation !== '' 
+        ? (s.deviation >= 8 ? 'color:#c62828; font-weight:700;' : s.deviation < 7 ? 'color:#2e7d32; font-weight:600;' : '') 
+        : '';
+      
+      html += `
+        <tr id="score_row_${i}" style="border-bottom:1px solid #ede6dd;">
+          <td style="padding:8px 12px; border:1px solid #ddd; font-weight:500; cursor:pointer;" onclick="editScore(${i})">${s.subject}</td>
+          <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer; ${devColor}" onclick="editScore(${i})">
+            ${s.deviation || '-'}
+            ${isDevOnly ? ' <span style="font-size:0.6rem; color:#8f735b;">(偏差値のみ)</span>' : ''}
+          </td>
+          <td style="padding:8px 12px; border:1px solid #ddd; font-size:0.8rem; cursor:pointer; word-break:break-word;" onclick="editScore(${i})">
+            ${s.note || ''}
+          </td>
+          <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; white-space:nowrap;">
+            <button onclick="editScore(${i})" style="background:none; border:none; cursor:pointer; color:#2c241c; font-size:0.85rem; padding:4px 8px; border-radius:4px;">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="deleteScore(${i})" style="background:none; border:none; cursor:pointer; color:#8f4a4a; font-size:0.9rem; padding:4px 8px; border-radius:4px;">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr id="score_edit_${i}" style="display:none; background:#f8f4ef;">
+          <td colspan="4" style="padding:8px 12px; border:1px solid #ddd;">
+            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+              <select id="edit_subject_${i}" style="padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white; min-width:90px;">
+                ${ALL_SUBJECTS.map(sub => `<option value="${sub}" ${s.subject === sub ? 'selected' : ''}>${sub}</option>`).join('')}
+              </select>
+              <input type="number" id="edit_devonly_${i}" value="${s.deviation || ''}" placeholder="偏差値" step="0.1" style="width:100px; padding:6px 12px; border:2px solid #8f735b; border-radius:40px; font-size:0.8rem; outline:none; background:white; border-color:#8f735b;">
+              <span style="font-size:0.7rem; color:#6b5d4e;">偏差値のみ</span>
+              <input type="text" id="edit_note_${i}" value="${s.note || ''}" placeholder="备注" style="flex:1; min-width:120px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+              <button onclick="saveEdit(${i})" style="background:#2e7d32; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+                <i class="fas fa-check"></i> 保存
+              </button>
+              <button onclick="cancelEdit(${i})" style="background:#8f4a4a; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+                <i class="fas fa-times"></i> 取消
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+    
+    html += `
+          </tbody>
+        </table>
       </div>
     `;
   } else {
+    // ===== 通常モード：全項目表示 =====
     html += `
       <div style="overflow-x:auto;">
         <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:600px;">
@@ -1155,34 +1240,49 @@ function renderContent() {
   }
   
   // ★ 成績追加フォーム ★
+  const isYearModeForm = (currentSemester === 'all' || currentType === 'year_avg');
   html += `
       <div style="margin-top:12px; padding:12px 16px; background:#f0ebe4; border-radius:16px;">
-        <div style="display:flex; gap:8px; margin-bottom:10px; align-items:center;">
-          <span style="font-size:0.8rem; font-weight:500; color:#3d3229;">入力モード:</span>
-          <button id="scoreModeNormal" class="btn-mode active" onclick="setScoreMode('normal')">得点＋偏差値</button>
-          <button id="scoreModeDevOnly" class="btn-mode" onclick="setScoreMode('devonly')">偏差値のみ</button>
-        </div>
+        ${!isYearModeForm ? `
+          <div style="display:flex; gap:8px; margin-bottom:10px; align-items:center;">
+            <span style="font-size:0.8rem; font-weight:500; color:#3d3229;">入力モード:</span>
+            <button id="scoreModeNormal" class="btn-mode active" onclick="setScoreMode('normal')">得点＋偏差値</button>
+            <button id="scoreModeDevOnly" class="btn-mode" onclick="setScoreMode('devonly')">偏差値のみ</button>
+          </div>
+        ` : `
+          <div style="display:flex; gap:8px; margin-bottom:10px; align-items:center;">
+            <span style="font-size:0.8rem; font-weight:500; color:#3d3229;">入力モード:</span>
+            <span style="background:#2c241c; color:white; padding:4px 16px; border-radius:40px; font-size:0.75rem; font-weight:600;">偏差値のみ（学年モード）</span>
+          </div>
+        `}
         <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
           <select id="scoreSubject" style="padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white; min-width:100px;">
             ${ALL_SUBJECTS.map(s => `<option value="${s}">${s}</option>`).join('')}
           </select>
-          <div id="scoreNormalFields" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-            <input type="number" id="scoreScore" placeholder="得点" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-            <input type="number" id="scoreTotal" placeholder="总分" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-            <input type="number" id="scoreAvg" placeholder="平均点" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-            <input type="number" id="scoreDev" placeholder="偏差" step="0.1" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
-          </div>
-          <div id="scoreDevOnlyFields" style="display:none; flex-wrap:wrap; gap:8px; align-items:center;">
-            <input type="number" id="scoreDevOnly" placeholder="偏差値" step="0.1" style="width:100px; padding:6px 12px; border:2px solid #8f735b; border-radius:40px; font-size:0.8rem; outline:none; background:white; border-color:#8f735b;">
-            <span style="font-size:0.75rem; color:#6b5d4e;">偏差値のみ（上限10, 平均7）</span>
-          </div>
+          ${!isYearModeForm ? `
+            <div id="scoreNormalFields" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+              <input type="number" id="scoreScore" placeholder="得点" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+              <input type="number" id="scoreTotal" placeholder="总分" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+              <input type="number" id="scoreAvg" placeholder="平均点" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+              <input type="number" id="scoreDev" placeholder="偏差" step="0.1" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+            </div>
+            <div id="scoreDevOnlyFields" style="display:none; flex-wrap:wrap; gap:8px; align-items:center;">
+              <input type="number" id="scoreDevOnly" placeholder="偏差値" step="0.1" style="width:100px; padding:6px 12px; border:2px solid #8f735b; border-radius:40px; font-size:0.8rem; outline:none; background:white; border-color:#8f735b;">
+              <span style="font-size:0.75rem; color:#6b5d4e;">偏差値のみ（上限10, 平均7）</span>
+            </div>
+          ` : `
+            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+              <input type="number" id="scoreDevOnly" placeholder="偏差値" step="0.1" style="width:100px; padding:6px 12px; border:2px solid #8f735b; border-radius:40px; font-size:0.8rem; outline:none; background:white; border-color:#8f735b;">
+              <span style="font-size:0.75rem; color:#6b5d4e;">偏差値のみ（上限10, 平均7）</span>
+            </div>
+          `}
           <input type="text" id="scoreNote" placeholder="备注" style="flex:1; min-width:100px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
           <button onclick="addScore()" style="background:#2c241c; border:none; color:white; padding:6px 18px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600; white-space:nowrap;">
             <i class="fas fa-plus"></i> 追加
           </button>
         </div>
         <div style="font-size:0.7rem; color:#b7a086; margin-top:4px; text-align:right;">
-          <i class="fas fa-info-circle"></i> 偏差値のみモードでは偏差値のみ保存されます
+          <i class="fas fa-info-circle"></i> ${isYearModeForm ? '学年モードでは偏差値のみ入力可能です' : '偏差値のみモードでは偏差値のみ保存されます'}
         </div>
       </div>
     </div>
