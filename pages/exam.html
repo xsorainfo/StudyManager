@@ -293,7 +293,9 @@
     <button class="tab active" data-semester="1">一学期</button>
     <button class="tab" data-semester="2">二学期</button>
     <button class="tab" data-semester="3">三学期</button>
+    <button class="tab" data-semester="all" style="background:#8f735b; color:white;">📊 学年</button>
   </div>
+
 
   <!-- ===== 考试类型タブ ===== -->
   <div class="exam-type-tabs" id="examTypeTabs">
@@ -566,6 +568,7 @@ function setSubjectData(subject, data) {
   saveExamData();
 }
 
+
 // ============================================================
 // 📋 考试类型タブを動的生成
 // ============================================================
@@ -574,9 +577,17 @@ function renderExamTypeTabs() {
   const container = document.getElementById('examTypeTabs');
   if (!container) return;
   
-  // 現在の学期に応じて表示するテスト種別を決定
+  // 現在の選択状態に応じて表示するテスト種別を決定
   let types = [];
-  if (currentSemester === '3') {
+  
+  // 現在の学期が「学年」かどうかをチェック
+  // currentSemester が 'all' の場合は学年モード
+  if (currentSemester === 'all') {
+    // 学年モード：学年平均のみ
+    types = [
+      { value: 'year_avg', label: '📊 学年平均' }
+    ];
+  } else if (currentSemester === '3') {
     // 三学期：期末テストのみ
     types = [
       { value: 'final', label: '期末テスト' }
@@ -601,16 +612,15 @@ function renderExamTypeTabs() {
   container.innerHTML = html;
   
   // クリックイベントを再設定
-  container.querySelectorAll('.tab').forEach(tab => {
+  container.querySelectorAll('.tab[data-type]').forEach(tab => {
     tab.addEventListener('click', function() {
-      container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.tab[data-type]').forEach(t => t.classList.remove('active'));
       this.classList.add('active');
       currentType = this.dataset.type;
       renderContent();
     });
   });
 }
-
 // ============================================================
 // 📊 成績データ管理（定期テスト用）
 // ============================================================
@@ -618,10 +628,33 @@ function renderExamTypeTabs() {
 // 成績データのキー
 const SCORE_STORAGE_KEY = 'exam_scores';
 
-// 成績データを取得
+// ============================================================
+// 📊 成績データ取得（学年平均対応）
+// ============================================================
+
 function getScoresForCurrentPeriod() {
   const allScores = JSON.parse(localStorage.getItem(SCORE_STORAGE_KEY) || '[]');
-  // 現在の学年・学期・テスト種別でフィルタリング
+  
+  // 「学年」モードの場合
+  if (currentSemester === 'all') {
+    // 現在の学年の全データを取得
+    const gradeKey = currentGrade;
+    return allScores.filter(s => {
+      const parts = s.key.split('_');
+      return parts[0] === gradeKey;
+    });
+  }
+  
+  // 「学年平均」テストタイプの場合（通常モードでも対応）
+  if (currentType === 'year_avg') {
+    const gradeKey = currentGrade;
+    return allScores.filter(s => {
+      const parts = s.key.split('_');
+      return parts[0] === gradeKey;
+    });
+  }
+  
+  // 通常時：学年_学期_テスト種別でフィルタリング
   const key = `${currentGrade}_${currentSemester}_${currentType}`;
   return allScores.filter(s => s.key === key);
 }
@@ -1022,22 +1055,44 @@ function renderContent() {
   const area = document.getElementById('contentArea');
 
   const gradeNames = { '1':'中1', '2':'中2', '3':'中3', '4':'高1', '5':'高2', '6':'高3' };
-  const typeNames = { 'middle':'中間テスト', 'regular':'定期テスト', 'final':'期末テスト' };
-  const semesterNames = { '1':'一学期', '2':'二学期', '3':'三学期' };
+  const typeNames = { 
+    'middle':'中間テスト', 
+    'regular':'定期テスト', 
+    'final':'期末テスト',
+    'year_avg':'📊 学年平均' 
+  };
+  const semesterNames = { '1':'一学期', '2':'二学期', '3':'三学期', 'all':'📊 学年' };
 
   // ★ テスト種別タブを再生成 ★
   renderExamTypeTabs();
 
   // ★ 成績データを取得 ★
   const scores = getScoresForCurrentPeriod();
+  const validScores = scores.filter(s => s.score !== null && s.score !== undefined && s.score !== '');
+  const avgScore = validScores.length > 0 ? Math.round(validScores.reduce((sum, s) => sum + s.score, 0) / validScores.length) : null;
+
+  // 表示用の学期名
+  const displaySemester = currentSemester === 'all' ? '📊 学年' : semesterNames[currentSemester];
+  const displayType = typeNames[currentType] || currentType;
 
   let html = `
-    <div style="font-size:0.85rem; color:#6b5d4e; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap;">
+    <div style="font-size:0.85rem; color:#6b5d4e; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
       <span><strong>${gradeNames[currentGrade]}</strong></span>
       <span>›</span>
-      <span><strong>${semesterNames[currentSemester]}</strong></span>
-      <span>›</span>
-      <span><strong>${typeNames[currentType]}</strong></span>
+      <span><strong>${displaySemester}</strong></span>
+      ${currentSemester !== 'all' ? `
+        <span>›</span>
+        <span><strong>${displayType}</strong></span>
+      ` : ''}
+      ${avgScore !== null ? `
+        <span style="background:#2c241c; color:#f0ebe3; padding:2px 14px; border-radius:40px; font-size:0.75rem; font-weight:600;">
+          📊 平均: ${avgScore} 点 (${validScores.length}件)
+        </span>
+      ` : `
+        <span style="background:#f0ebe4; color:#6b5d4e; padding:2px 14px; border-radius:40px; font-size:0.75rem;">
+          データなし
+        </span>
+      `}
       <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
     </div>
 
@@ -1329,7 +1384,9 @@ document.addEventListener('DOMContentLoaded', function() {
       renderExamTypeTabs();
       
       // デフォルトのテスト種別を設定
-      if (currentSemester === '3') {
+      if (currentSemester === 'all') {
+        currentType = 'year_avg';
+      } else if (currentSemester === '3') {
         currentType = 'final';
       } else {
         currentType = 'regular';
