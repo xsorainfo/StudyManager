@@ -736,52 +736,94 @@ function renderContent() {
       <span><strong>${typeNames[currentType]}</strong></span>
       <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
     </div>
-	<!-- ★★★ 成績一覧（時間割の前に独立表示） ★★★ -->
-    <div class="card" style="background: #f8f4ef; border-left: 6px solid #8f735b;">
-      <div class="card-header">
-        <h2><i class="fas fa-star" style="color:#8f735b;"></i> 成績一覧</h2>
-        <span class="badge">${scores.length} 件</span>
-      </div>
-      
-      ${scores.length === 0 ? `
-        <div style="text-align:center; padding:20px; color:#b7a086; font-size:0.9rem;">
-          <i class="fas fa-inbox" style="font-size:1.5rem; display:block; margin-bottom:6px;"></i>
-          成績データがありません
-        </div>
-      ` : `
-        <div style="overflow-x:auto;">
-          <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:600px;">
-            <thead>
-              <tr style="background:#2c241c; color:#f0ebe3;">
-                <th style="padding:8px 12px; text-align:left; border:1px solid #ddd;">科目</th>
-                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">得点</th>
-                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">总分</th>
-                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">平均点</th>
-                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">偏差</th>
-                <th style="padding:8px 12px; text-align:left; border:1px solid #ddd;">备注</th>
-                <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:50px;"></th>
-              </tr>
-            </thead>
-            <tbody>
-              ${scores.map((s, i) => `
-                <tr style="border-bottom:1px solid #ede6dd;">
-                  <td style="padding:8px 12px; border:1px solid #ddd; font-weight:500;">${s.subject}</td>
-                  <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; font-weight:600;">${s.score}</td>
-                  <td style="padding:8px 12px; text-align:center; border:1px solid #ddd;">${s.total || '-'}</td>
-                  <td style="padding:8px 12px; text-align:center; border:1px solid #ddd;">${s.avg || '-'}</td>
-                  <td style="padding:8px 12px; text-align:center; border:1px solid #ddd; ${s.deviation && s.deviation >= 60 ? 'color:#c62828; font-weight:700;' : ''}">${s.deviation || '-'}</td>
-                  <td style="padding:8px 12px; border:1px solid #ddd; font-size:0.8rem;">${s.note || ''}</td>
-                  <td style="padding:8px 12px; text-align:center; border:1px solid #ddd;">
-                    <button onclick="deleteScore(${i})" style="background:none; border:none; cursor:pointer; color:#8f4a4a; font-size:0.9rem; padding:4px 8px; border-radius:4px;">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      `}
+
+    <!-- ★★★ 成績一覧（編集機能付き） ★★★ -->
+	<div class="card" style="background: #f8f4ef; border-left: 6px solid #8f735b;">
+	  <div class="card-header">
+	    <h2><i class="fas fa-star" style="color:#8f735b;"></i> 成績一覧</h2>
+	    <span class="badge">${scores.length} 件</span>
+	  </div>
+	  
+	  ${scores.length === 0 ? `
+	    <div style="text-align:center; padding:20px; color:#b7a086; font-size:0.9rem;">
+	      <i class="fas fa-inbox" style="font-size:1.5rem; display:block; margin-bottom:6px;"></i>
+	      成績データがありません
+	    </div>
+	  ` : `
+	    <div style="overflow-x:auto;">
+	      <table style="width:100%; border-collapse:collapse; font-size:0.85rem; min-width:600px;">
+	        <thead>
+	          <tr style="background:#2c241c; color:#f0ebe3;">
+	            <th style="padding:8px 12px; text-align:left; border:1px solid #ddd;">科目</th>
+	            <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">得点</th>
+	            <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">总分</th>
+	            <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">平均点</th>
+	            <th style="padding:8px 12px; text-align:center; border:1px solid #ddd;">偏差</th>
+	            <th style="padding:8px 12px; text-align:left; border:1px solid #ddd;">备注</th>
+	            <th style="padding:8px 12px; text-align:center; border:1px solid #ddd; width:100px;">操作</th>
+	          </tr>
+	        </thead>
+	        <tbody>
+	          ${scores.map((s, i) => `
+	            <tr id="score_row_${i}" style="border-bottom:1px solid #ede6dd;">
+	              <!-- ★ 表示モード ★ -->
+	              <td id="score_view_${i}" style="padding:8px 12px; border:1px solid #ddd; font-weight:500; cursor:pointer;" onclick="editScore(${i})">${s.subject}</td>
+	              <td id="score_view_${i}" style="padding:8px 12px; text-align:center; border:1px solid #ddd; font-weight:600; cursor:pointer;" onclick="editScore(${i})">${s.score}</td>
+	              <td id="score_view_${i}" style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer;" onclick="editScore(${i})">${s.total || '-'}</td>
+	              <td id="score_view_${i}" style="padding:8px 12px; text-align:center; border:1px solid #ddd; cursor:pointer;" onclick="editScore(${i})">${s.avg || '-'}</td>
+	              <td id="score_view_${i}" style="padding:8px 12px; text-align:center; border:1px solid #ddd; ${s.deviation && s.deviation >= 60 ? 'color:#c62828; font-weight:700;' : ''} cursor:pointer;" onclick="editScore(${i})">${s.deviation || '-'}</td>
+	              <td id="score_view_${i}" style="padding:8px 12px; border:1px solid #ddd; font-size:0.8rem; cursor:pointer;" onclick="editScore(${i})">${s.note || ''}</td>
+	              <td id="score_actions_${i}" style="padding:8px 12px; text-align:center; border:1px solid #ddd;">
+	                <button onclick="editScore(${i})" style="background:none; border:none; cursor:pointer; color:#2c241c; font-size:0.85rem; padding:4px 8px; border-radius:4px;">
+	                  <i class="fas fa-edit"></i>
+	                </button>
+	                <button onclick="deleteScore(${i})" style="background:none; border:none; cursor:pointer; color:#8f4a4a; font-size:0.9rem; padding:4px 8px; border-radius:4px;">
+	                  <i class="fas fa-trash"></i>
+	                </button>
+	              </td>
+	            </tr>
+	            <!-- ★ 編集モード（初期非表示） ★ -->
+	            <tr id="score_edit_${i}" style="display:none; background:#f8f4ef;">
+	              <td colspan="7" style="padding:8px 12px; border:1px solid #ddd;">
+	                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+	                  <select id="edit_subject_${i}" style="padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white; min-width:100px;">
+	                    <option value="国語" ${s.subject === '国語' ? 'selected' : ''}>国語</option>
+	                    <option value="文法" ${s.subject === '文法' ? 'selected' : ''}>文法</option>
+	                    <option value="代数" ${s.subject === '代数' ? 'selected' : ''}>代数</option>
+	                    <option value="幾何" ${s.subject === '幾何' ? 'selected' : ''}>幾何</option>
+	                    <option value="英語" ${s.subject === '英語' ? 'selected' : ''}>英語</option>
+	                    <option value="地理" ${s.subject === '地理' ? 'selected' : ''}>地理</option>
+	                    <option value="歴史" ${s.subject === '歴史' ? 'selected' : ''}>歴史</option>
+	                    <option value="理科1" ${s.subject === '理科1' ? 'selected' : ''}>理科1</option>
+	                    <option value="理科2" ${s.subject === '理科2' ? 'selected' : ''}>理科2</option>
+	                    <option value="音楽" ${s.subject === '音楽' ? 'selected' : ''}>音楽</option>
+	                    <option value="美術" ${s.subject === '美術' ? 'selected' : ''}>美術</option>
+	                    <option value="技術・家庭" ${s.subject === '技術・家庭' ? 'selected' : ''}>技術・家庭</option>
+	                    <option value="保健体育" ${s.subject === '保健体育' ? 'selected' : ''}>保健体育</option>
+	                    <option value="礼法" ${s.subject === '礼法' ? 'selected' : ''}>礼法</option>
+	                    <option value="公民" ${s.subject === '公民' ? 'selected' : ''}>公民</option>
+	                  </select>
+	                  <input type="number" id="edit_score_${i}" value="${s.score}" placeholder="得点" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+	                  <input type="number" id="edit_total_${i}" value="${s.total || ''}" placeholder="总分" style="width:70px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+	                  <input type="number" id="edit_avg_${i}" value="${s.avg || ''}" placeholder="平均点" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+	                  <input type="number" id="edit_dev_${i}" value="${s.deviation || ''}" placeholder="偏差" step="0.1" style="width:80px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+	                  <input type="text" id="edit_note_${i}" value="${s.note || ''}" placeholder="备注" style="flex:1; min-width:100px; padding:6px 12px; border:2px solid #d8cdbf; border-radius:40px; font-size:0.8rem; outline:none; background:white;">
+	                  <button onclick="saveEdit(${i})" style="background:#2e7d32; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+	                    <i class="fas fa-check"></i> 保存
+	                  </button>
+	                  <button onclick="cancelEdit(${i})" style="background:#8f4a4a; border:none; color:white; padding:6px 16px; border-radius:40px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+	                    <i class="fas fa-times"></i> キャンセル
+	                  </button>
+	                </div>
+	              </td>
+	            </tr>
+	          `).join('')}
+	        </tbody>
+	      </table>
+	    </div>
+	  `}
+	  
+
       
       <!-- ★ 成績追加フォーム（常に表示） ★ -->
       <div style="margin-top:12px; padding:12px 16px; background:#f0ebe4; border-radius:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
@@ -977,6 +1019,60 @@ function toggleSchedule() {
       icon.innerHTML = '<i class="fas fa-plus"></i>';
     }
   }
+}
+// ============================================================
+// 📊 成績編集機能
+// ============================================================
+
+// 編集モードに切り替え
+function editScore(index) {
+  // 表示行を隠す
+  const viewRow = document.getElementById(`score_row_${index}`);
+  if (viewRow) viewRow.style.display = 'none';
+  
+  // 編集行を表示
+  const editRow = document.getElementById(`score_edit_${index}`);
+  if (editRow) editRow.style.display = 'table-row';
+}
+
+// 編集をキャンセル
+function cancelEdit(index) {
+  // 表示行を再表示
+  const viewRow = document.getElementById(`score_row_${index}`);
+  if (viewRow) viewRow.style.display = 'table-row';
+  
+  // 編集行を隠す
+  const editRow = document.getElementById(`score_edit_${index}`);
+  if (editRow) editRow.style.display = 'none';
+}
+
+// 編集を保存
+function saveEdit(index) {
+  const subject = document.getElementById(`edit_subject_${index}`)?.value;
+  const score = parseInt(document.getElementById(`edit_score_${index}`)?.value);
+  const total = parseInt(document.getElementById(`edit_total_${index}`)?.value) || null;
+  const avg = parseFloat(document.getElementById(`edit_avg_${index}`)?.value) || null;
+  const deviation = parseFloat(document.getElementById(`edit_dev_${index}`)?.value) || null;
+  const note = document.getElementById(`edit_note_${index}`)?.value.trim() || '';
+  
+  if (!subject || isNaN(score) || score < 0 || score > 100) {
+    showToast('❌ 科目と得点（0-100）を入力してください');
+    return;
+  }
+  
+  const scores = getScoresForCurrentPeriod();
+  if (index >= scores.length) {
+    showToast('❌ データが見つかりません');
+    return;
+  }
+  
+  // データを更新
+  scores[index] = { subject, score, total, avg, deviation, note };
+  saveScoresForCurrentPeriod(scores);
+  
+  // 編集モードを解除
+  cancelEdit(index);
+  showToast('✅ 成績を更新しました');
 }
 // ============================================================
 // 操作関数
