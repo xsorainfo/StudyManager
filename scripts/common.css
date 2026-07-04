@@ -29,6 +29,13 @@
   gap: 6px 16px;
   font-weight: 500;
 }
+.nav-links .nav-icon {
+    display: flex;
+    align-items: center;
+    color: #e3c9a6;
+    font-size: 1.2rem;
+    margin-right: 4px;
+}
 .nav-links a {
   color: #e8dfd5;
   text-decoration: none;
