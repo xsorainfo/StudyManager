@@ -9,12 +9,13 @@
   <link rel="icon" type="image/png" href="/StudyManager/favicon.png">
 
   <title>宿題 · 学び航路</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
     body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
     .app-wrapper { max-width: 1400px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
 
+    /* 导航（共通化） */
     .navbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #2c241c; padding: 10px 24px; border-radius: 60px; margin-bottom: 20px; color: #f0ebe3; }
     .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.25rem; }
     .nav-brand i { color: #e3c9a6; font-size: 1.6rem; }
@@ -34,6 +35,7 @@
     .status-dot.saving { background: #ff9800; animation: pulse 0.8s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
+    /* Token 栏 */
     .token-bar { background: #f0ebe4; border-radius: 20px; padding: 12px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
     .token-bar .label { font-weight: 600; color: #3d3229; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
     .token-bar input { flex: 1; min-width: 200px; padding: 8px 16px; border: 2px solid #d8cdbf; border-radius: 40px; font-size: 0.85rem; outline: none; background: white; font-family: monospace; }
@@ -290,39 +292,9 @@
 
 <div class="app-wrapper">
 
-  <!-- ===== 导航 ===== -->
-  <nav class="navbar">
-    <div class="nav-brand"><i class="fas fa-compass"></i><span>学び航路</span></div>
-    <div class="nav-links">
-      <a href="index.html"><i class="fas fa-home"></i> ダッシュボード</a>
-      <a href="tetsu.html"><i class="fas fa-flag"></i> 鉄律会</a>
-      <a href="sakura.html"><i class="fas fa-cherry-blossom"></i> 桜蔭</a>
-      <a href="schedule.html"><i class="fas fa-calendar-alt"></i> 年間予定</a>
-      <a href="exam.html"><i class="fas fa-pencil-alt"></i> 試験</a>
-      <a class="active" href="homework.html"><i class="fas fa-book"></i> 宿題</a>
-    </div>
-    <div class="nav-right">
-      <div class="data-actions">
-        <span id="statusInfo">
-          <span class="status-dot offline" id="statusDot"></span>
-          <span id="statusText">オフライン</span>
-        </span>
-        <button onclick="saveToGitHub()" id="saveBtn" disabled><i class="fab fa-github"></i> 保存</button>
-        <button onclick="loadFromGitHub()" id="loadBtn" disabled><i class="fas fa-download"></i> 読込</button>
-        <button onclick="exportData()"><i class="fas fa-file-export"></i></button>
-        <button onclick="document.getElementById('fileInput').click()"><i class="fas fa-file-import"></i></button>
-        <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
-      </div>
-    </div>
-  </nav>
-
-  <!-- ===== Token 栏 ===== -->
-  <div class="token-bar">
-    <span class="label"><i class="fab fa-github"></i> Token:</span>
-    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx を入力" autocomplete="off">
-    <button class="btn-set" onclick="setTokenFromInput()">設定</button>
-    <span class="token-status" id="tokenStatus">🔑 未設定</span>
-  </div>
+  <!-- ===== 导航コンテナ（共通JSで自動生成） ===== -->
+  <div id="navbarContainer"></div>
+  <div id="tokenBarContainer"></div>
 
   <!-- ===== 页面标题 ===== -->
   <div class="page-title">
@@ -354,12 +326,12 @@
 </div>
 
 <script>
-  // ============================================================
-  // 🔧 データボタン表示設定
-  // ============================================================
-  window.SHOW_EXPORT = true;
-  window.SHOW_IMPORT = true;
-  // ============================================================
+// ============================================================
+// 🔧 データボタン表示設定
+// ============================================================
+window.SHOW_EXPORT = true;
+window.SHOW_IMPORT = true;
+// ============================================================
 </script>
 <script src="../scripts/common.js"></script>
 <script>
@@ -414,49 +386,9 @@ function loadHomeworkData() {
 
 function saveHomeworkData() {
   localStorage.setItem('homework_data', JSON.stringify(homeworkData));
-  showToast('💾 ローカルに保存しました');
-}
-
-// ============================================================
-// Token 管理
-// ============================================================
-
-function getToken() {
-  return localStorage.getItem('github_token') || '';
-}
-
-function setTokenFromInput() {
-  const input = document.getElementById('tokenInput');
-  if (!input) return;
-  const token = input.value.trim();
-  if (!token) { showToast('❌ Token を入力してください'); return; }
-  if (!token.startsWith('ghp_')) { showToast('❌ Token は ghp_ で始まる必要があります'); return; }
-  localStorage.setItem('github_token', token);
-  input.value = '';
-  updateStatus();
-  showToast('✅ Token を設定しました');
-}
-
-function updateStatus() {
-  const token = getToken();
-  const dot = document.getElementById('statusDot');
-  const text = document.getElementById('statusText');
-  const status = document.getElementById('tokenStatus');
-  const saveBtn = document.getElementById('saveBtn');
-  const loadBtn = document.getElementById('loadBtn');
-
-  if (token) {
-    dot.className = 'status-dot online';
-    text.textContent = 'オンライン';
-    status.textContent = '✅ ' + token.substring(0, 8) + '...';
-    saveBtn.disabled = false;
-    loadBtn.disabled = false;
-  } else {
-    dot.className = 'status-dot offline';
-    text.textContent = 'オフライン';
-    status.textContent = '🔑 未設定';
-    saveBtn.disabled = true;
-    loadBtn.disabled = true;
+  // common.js の showToast を使用
+  if (typeof showToast === 'function') {
+    showToast('💾 ローカルに保存しました');
   }
 }
 
@@ -483,8 +415,8 @@ async function saveToGitHub() {
 
   const dot = document.getElementById('statusDot');
   const text = document.getElementById('statusText');
-  dot.className = 'status-dot saving';
-  text.textContent = '保存中...';
+  if (dot) dot.className = 'status-dot saving';
+  if (text) text.textContent = '保存中...';
 
   try {
     const content = JSON.stringify(homeworkData, null, 2);
@@ -513,16 +445,16 @@ async function saveToGitHub() {
     });
 
     if (response.ok) {
-      dot.className = 'status-dot online';
-      text.textContent = 'オンライン';
+      if (dot) dot.className = 'status-dot online';
+      if (text) text.textContent = 'オンライン';
       showToast('✅ GitHub に保存しました');
     } else {
       const err = await response.json();
       throw new Error(err.message || `HTTP ${response.status}`);
     }
   } catch(e) {
-    dot.className = 'status-dot offline';
-    text.textContent = 'エラー';
+    if (dot) dot.className = 'status-dot offline';
+    if (text) text.textContent = 'エラー';
     showToast('❌ 保存失敗: ' + e.message);
   }
 }
@@ -536,8 +468,8 @@ async function loadFromGitHub() {
 
   const dot = document.getElementById('statusDot');
   const text = document.getElementById('statusText');
-  dot.className = 'status-dot saving';
-  text.textContent = '読込中...';
+  if (dot) dot.className = 'status-dot saving';
+  if (text) text.textContent = '読込中...';
 
   try {
     const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
@@ -546,8 +478,8 @@ async function loadFromGitHub() {
 
     if (response.status === 404) {
       showToast('📭 GitHub にデータがありません');
-      dot.className = 'status-dot online';
-      text.textContent = 'オンライン';
+      if (dot) dot.className = 'status-dot online';
+      if (text) text.textContent = 'オンライン';
       return;
     }
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -563,13 +495,13 @@ async function loadFromGitHub() {
     homeworkData = loadedData;
     localStorage.setItem('homework_data', JSON.stringify(homeworkData));
 
-    dot.className = 'status-dot online';
-    text.textContent = 'オンライン';
+    if (dot) dot.className = 'status-dot online';
+    if (text) text.textContent = 'オンライン';
     renderContent();
     showToast('✅ GitHub から読み込みました');
   } catch(e) {
-    dot.className = 'status-dot offline';
-    text.textContent = 'エラー';
+    if (dot) dot.className = 'status-dot offline';
+    if (text) text.textContent = 'エラー';
     showToast('❌ 読込失敗: ' + e.message);
   }
 }
@@ -583,7 +515,9 @@ function exportData() {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `homework_data_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(a.href);
   showToast('📁 エクスポートしました');
 }
@@ -985,26 +919,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  updateStatus();
+  // common.js の updateStatus を使用
+  if (typeof updateStatus === 'function') {
+    updateStatus();
+  }
   renderContent();
 
-  document.getElementById('tokenInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') setTokenFromInput();
-  });
+  const tokenInput = document.getElementById('tokenInput');
+  if (tokenInput) {
+    tokenInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        setTokenFromInput();
+      }
+    });
+  }
 });
-
-// ============================================================
-// Toast
-// ============================================================
-
-function showToast(msg) {
-  const el = document.getElementById('toast');
-  if (!el) return;
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(el._timer);
-  el._timer = setTimeout(() => el.classList.remove('show'), 3000);
-}
 
 // グローバル公開
 window.addTask = addTask;
@@ -1016,7 +945,6 @@ window.saveToGitHub = saveToGitHub;
 window.loadFromGitHub = loadFromGitHub;
 window.exportData = exportData;
 window.importData = importData;
-window.setTokenFromInput = setTokenFromInput;
 window.toggleSubject = toggleSubject;
 </script>
 </body>
