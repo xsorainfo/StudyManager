@@ -55,46 +55,50 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      padding: 12px 0;
+      padding: 10px 0;
       border-bottom: 1px solid #ede6dd;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
     .hw-list li:last-child { border-bottom: 0; }
     .hw-list .hw-left {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
+      gap: 10px;
       flex: 1;
       min-width: 200px;
     }
     .hw-list .hw-check {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       cursor: pointer;
       accent-color: #3d6b4a;
       flex-shrink: 0;
       margin-top: 2px;
     }
     .hw-list .hw-text {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       word-break: break-word;
       flex: 1;
       white-space: pre-wrap;
+      line-height: 1.5;
     }
     .hw-list .hw-text.done {
       text-decoration: line-through;
       color: #b7a086;
     }
+    /* ★★★ ここが重要 ★★★ */
     .hw-list .hw-text .title {
       font-weight: 700;
       display: block;
+      line-height: 1.2;        /* ← 行間を詰める */
       margin-bottom: 0;        /* ← 下マージンを0に */
     }
     .hw-list .hw-text .desc {
       display: block;
-      margin-top: 0;
+      margin-top: 0;           /* ← 上マージンを0に */
       font-weight: 400;
+      line-height: 1.4;
     }
     .hw-list .hw-text.done .title,
     .hw-list .hw-text.done .desc {
