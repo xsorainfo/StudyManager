@@ -729,6 +729,37 @@ function saveEdit(subject, index) {
 }
 
 // ============================================================
+// 全展開 / 全閉じる
+// ============================================================
+
+function expandAll() {
+  const bodies = document.querySelectorAll('.subject-body');
+  const icons = document.querySelectorAll('.subject-title .toggle-icon');
+  
+  bodies.forEach(body => {
+    body.style.display = '';
+  });
+  icons.forEach(icon => {
+    icon.className = 'toggle-icon open';
+    icon.innerHTML = '<i class="fas fa-minus"></i>';
+  });
+  showToast('📂 すべて展開しました');
+}
+
+function collapseAll() {
+  const bodies = document.querySelectorAll('.subject-body');
+  const icons = document.querySelectorAll('.subject-title .toggle-icon');
+  
+  bodies.forEach(body => {
+    body.style.display = 'none';
+  });
+  icons.forEach(icon => {
+    icon.className = 'toggle-icon';
+    icon.innerHTML = '<i class="fas fa-plus"></i>';
+  });
+  showToast('📁 すべて閉じました');
+}
+// ============================================================
 // レンダリング
 // ============================================================
 
@@ -745,11 +776,21 @@ function renderContent() {
   }
 
   let html = `
-    <div style="font-size:0.85rem; color:#6b5d4e; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap;">
-      <span><strong>${gradeNames[currentGrade]}</strong></span>
-      <span>›</span>
-      <span><strong>${semesterNames[currentSemester]}</strong></span>
-      <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+      <div style="font-size:0.85rem; color:#6b5d4e; display:flex; gap:12px; flex-wrap:wrap;">
+        <span><strong>${gradeNames[currentGrade]}</strong></span>
+        <span>›</span>
+        <span><strong>${semesterNames[currentSemester]}</strong></span>
+        <span style="margin-left:auto; font-size:0.8rem;">全 ${ALL_SUBJECTS.length} 学科</span>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button onclick="expandAll()" style="background:#2c241c; border:none; color:white; padding:4px 16px; border-radius:40px; cursor:pointer; font-size:0.75rem; font-weight:600;">
+          <i class="fas fa-plus-circle"></i> 全展開
+        </button>
+        <button onclick="collapseAll()" style="background:#8f735b; border:none; color:white; padding:4px 16px; border-radius:40px; cursor:pointer; font-size:0.75rem; font-weight:600;">
+          <i class="fas fa-minus-circle"></i> 全閉じる
+        </button>
+      </div>
     </div>
   `;
 
@@ -1122,6 +1163,8 @@ window.toggleSubject = toggleSubject;
 window.startEdit = startEdit;
 window.cancelEdit = cancelEdit;
 window.saveEdit = saveEdit;
+window.expandAll = expandAll;      // ★ 追加
+window.collapseAll = collapseAll;  // ★ 追加
 </script>
 </body>
 </html>
