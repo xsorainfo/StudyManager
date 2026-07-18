@@ -4,7 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>暗記カード · 80 Sentences (summer 2026)</title>
-  <!-- favicon -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #f2f5fa;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      padding: 2rem 1rem;
+      color: #1e2b3c;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    /* header */
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暗記カード · 80 Sentences (summer 2026)</title>
+  <!-- favicon - 大脑 🧠 -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>" type="image/svg+xml">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -29,6 +57,725 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      gap: 12px;
+    }
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-title h1 {
+      font-weight: 600;
+      font-size: 1.9rem;
+      letter-spacing: -0.3px;
+    }
+    .page-title i {
+      color: #2a4b74;
+      font-size: 2rem;
+    }
+    .badge {
+      background: #dce5f0;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #1d3753;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge i {
+      font-size: 0.8rem;
+    }
+    .stats-group {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .stats-card {
+      background: white;
+      padding: 0.3rem 1.2rem;
+      border-radius: 40px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      border: 1px solid #dbe4ef;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .stats-card span {
+      font-weight: 600;
+      background: #1e2b3c;
+      color: white;
+      padding: 0.05rem 0.7rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+    }
+    .stats-card .remembered-count {
+      background: #01319b;
+    }
+    /* filter buttons */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin: 1.2rem 0 1.8rem 0;
+      background: white;
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      border: 1px solid #dbe4ef;
+      box-shadow: 0 4px 10px rgba(0, 20, 30, 0.02);
+    }
+    .filter-bar .btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #2a405b;
+      cursor: pointer;
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-bar .btn i {
+      color: #5a7a9e;
+    }
+    .filter-bar .btn:hover {
+      background: #e4ecf7;
+    }
+    .filter-bar .btn.active {
+      background: #01319b;
+      color: white;
+    }
+    .filter-bar .btn.active i {
+      color: #b6cef0;
+    }
+    .filter-bar .btn.remembered-active {
+      background: #28a745;
+      color: white;
+    }
+    .filter-bar .btn.remembered-active i {
+      color: #b8f0c8;
+    }
+    .filter-bar .btn.unremembered-active {
+      background: #dc3545;
+      color: white;
+    }
+    .filter-bar .btn.unremembered-active i {
+      color: #fcc;
+    }
+    .filter-bar .btn-reset {
+      margin-left: auto;
+      background: transparent;
+      border: 1px solid #d0dcec;
+      padding: 0.3rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      color: #385074;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .filter-bar .btn-reset:hover {
+      background: #e9f0fa;
+      border-color: #b0c6df;
+    }
+    .filter-divider {
+      width: 1px;
+      height: 30px;
+      background: #dbe4ef;
+      margin: 0 4px;
+    }
+    /* grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 22px;
+    }
+    /* card anki style */
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.2rem 1.2rem 0.9rem 1.2rem;
+      box-shadow: 0 6px 16px rgba(0, 20, 40, 0.04);
+      border: 1px solid #e2ebf6;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      position: relative;
+    }
+    .card:hover {
+      border-color: #b8cde4;
+      box-shadow: 0 12px 24px rgba(28, 60, 100, 0.06);
+      transform: translateY(-2px);
+    }
+    .card.remembered {
+      border-left: 5px solid #28a745;
+      background: #f8fff9;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .card-number {
+      background: #edf3fc;
+      padding: 0.1rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #2f4b70;
+      letter-spacing: 0.3px;
+    }
+    .card-lang-badge {
+      font-size: 0.7rem;
+      color: #5a7b9f;
+      background: #f0f6ff;
+      padding: 0.05rem 0.7rem;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card-body {
+      flex: 1;
+      margin: 8px 0 10px 0;
+    }
+    .sentence-en {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #0b1f34;
+      line-height: 1.5;
+      padding: 0.3rem 0;
+    }
+    .sentence-jp {
+      font-size: 0.95rem;
+      color: #1f3f62;
+      background: #f4f9ff;
+      padding: 0.5rem 0.9rem;
+      border-radius: 16px;
+      border-left: 5px solid #01319b;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+    .card-footer {
+      margin-top: 10px;
+      border-top: 1px solid #e9f0f8;
+      padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.7rem;
+      color: #6b89ad;
+    }
+    .card-footer .footer-left {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .card-footer .footer-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn-remember {
+      background: none;
+      border: 1px solid #d0dcec;
+      padding: 0.15rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.15s;
+      color: #5a7a9e;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-remember:hover {
+      background: #e4ecf7;
+      border-color: #b0c6df;
+    }
+    .btn-remember.remembered-btn {
+      background: #28a745;
+      border-color: #28a745;
+      color: white;
+    }
+    .btn-remember.remembered-btn:hover {
+      background: #218838;
+      border-color: #218838;
+    }
+    .btn-toggle-lang {
+      background: none;
+      border: none;
+      color: #6b89ad;
+      cursor: pointer;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      transition: 0.1s;
+    }
+    .btn-toggle-lang:hover {
+      background: #e9f0fa;
+      color: #1e2b3c;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .empty-message {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 1rem;
+      background: #f4f9fe;
+      border-radius: 60px;
+      color: #4a6b8f;
+    }
+    .footer-note {
+      margin-top: 2.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #6c89ae;
+      border-top: 1px solid #dae3ef;
+      padding-top: 1.8rem;
+    }
+    @media (max-width: 480px) {
+      .card-grid { grid-template-columns: 1fr; }
+      .filter-bar { border-radius: 30px; flex-wrap: wrap; }
+      .filter-bar .btn-reset { margin-left: 0; }
+      .card-footer {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- top bar -->
+  <div class="top-bar">
+    <div class="page-title">
+      <i class="fas fa-brain"></i>
+      <h1>暗記カード</h1>
+      <span class="badge"><i class="far fa-calendar-alt"></i> summer 2026</span>
+    </div>
+    <div class="stats-group">
+      <div class="stats-card">
+        <i class="fas fa-clipboard-list"></i> 表示 
+        <span id="visibleCount">80</span> / 80
+      </div>
+      <div class="stats-card">
+        <i class="fas fa-check-circle" style="color:#28a745;"></i> 記憶済み
+        <span class="remembered-count" id="rememberedCount">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- filter bar -->
+  <div class="filter-bar" id="filterBar">
+    <button class="btn active" data-filter="all" id="filterAll"><i class="fas fa-list-ul"></i> すべて</button>
+    <button class="btn" data-filter="en" id="filterEn"><i class="fas fa-language"></i> English</button>
+    <button class="btn" data-filter="jp" id="filterJp"><i class="fas fa-language"></i> 日本語</button>
+    <div class="filter-divider"></div>
+    <button class="btn" data-filter="remembered" id="filterRemembered"><i class="fas fa-check-circle"></i> 記憶済み</button>
+    <button class="btn" data-filter="unremembered" id="filterUnremembered"><i class="fas fa-circle"></i> 未記憶</button>
+    <button class="btn-reset" id="resetBtn"><i class="fas fa-undo-alt"></i> リセット</button>
+  </div>
+
+  <!-- card grid -->
+  <div id="cardGrid" class="card-grid"></div>
+  <div class="footer-note">
+    <i class="far fa-hand-pointer"></i> カードをクリックで言語切替 · ✅ ボタンで記憶状態を切り替え
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ---------- 80 文 (英語 + 日本語) ----------
+    const rawSentences = [
+      // 1-23
+      { en: "By the way, Anna, how was your vacation?", jp: "どうですか、休みはどうだった？" },
+      { en: "I enjoyed skiing with my brother. It was a great experience.", jp: "楽しく楽しく、とてもいい経験だった。" },
+      { en: "I'm going to leave for Singapore tomorrow morning.", jp: "私は明日の午前にシンガポールに出発する予定です。" },
+      { en: "You're going to show me around the city, right? I can't wait!", jp: "私に街を案内してくれるんですよね？" },
+      { en: "My flight arrives in Singapore at 5 p.m.", jp: "私の便は午後5時にシンガポールに着きます。" },
+      { en: "Where are we going to meet in the airport?", jp: "空港のどこで会いましたか。" },
+      { en: "What are we going to do today?", jp: "今日は何をするの？" },
+      { en: "First, we're going to visit Merlion Park.", jp: "はじめにマーライオン公園に行く。" },
+      { en: "Is the park far from here? —No, it's not.", jp: "その公園はここから遠いの？ —いや、そんなことないよ。" },
+      { en: "You'll see the Merlion soon.", jp: "すぐにマーライオンが見えるよ。" },
+      { en: "Which do you want to eat, seafood or chicken rice?", jp: "シーフードとチャンライス、どちらが食べたい？" },
+      { en: "I'll make a reservation.", jp: "予約するね。" },
+      { en: "The Merlion is 8.6 meters tall, and it weighs 70 tons. It has the body of a fish and the head of a lion.", jp: "マーライオンは、高さ8.6メートルで、重さは70トン。魚の胴体とライオンの頭を持っているんだよ。" },
+      { en: "I'll show you some pictures of it at school.", jp: "学校でそれの写真を何枚か見せるね。" },
+      { en: "I found four different languages on Singapore dollars.", jp: "シンガポールドルのお札に4つの異なる言語が書かれているのを見つけた。" },
+      { en: "My uncle speaks Tamil and English. So, I can communicate with him in English.", jp: "私のおはぎさんは英語を話す。だから、私はおはぎさんに英語で思いの話を聞いてみました。" },
+      { en: "One of the paintings on the walls showed Detective Conan, my favorite character.", jp: "壁にある絵の1つに私の大好きなキャラクターの名探偵コナンがありました。" },
+      { en: "People call this area Little India.", jp: "人々はこの区域をルル・インディアと呼びます。" },
+      { en: "This picture shows a big mosque with an onion-shaped dome.", jp: "この写真にはママネギ型のドームのある大きなスクリーンがついています。" },
+      { en: "I bought some gifts for my family.", jp: "私は家族におみやげを買いました。" },
+      { en: "You can experience different languages and cultures in Singapore.", jp: "シンガポールでは、異なった言語や文化を経験できます。" },
+      { en: "When I go to a ramen restaurant, I always order tonkotsu ramen.", jp: "ラーメン店に行くと、いつも豚骨ラーメンを注文します。" },
+      { en: "Actually, there are various ramen flavors in Japan: soy sauce, salt, miso, and so on.", jp: "実際、日本にはさまざまなラーメンの味があります。醤油、塩、味噌などです。" },
+      // 24-44
+      { en: "I didn't know about miso ramen when I lived in the U.K.", jp: "私は、イギリスに住んでいたときには味噌ラーメンについて知りませんでした。" },
+      { en: "The restaurant near my house is famous for delicious miso ramen.", jp: "ぼくの家の近くのお店は、おいしい味噌ラーメンで評判なんだ。" },
+      { en: "Riko and I will go to the restaurant this Sunday. If you have time, you can come with me.", jp: "理子とぼくで今度の日曜日にその店に行くんだ。もし時間があったらぼくたちに行こうよ。" },
+      { en: "I'd love to!", jp: "喜んで！" },
+      { en: "You can add an egg, butter, or corn to your ramen if you want.", jp: "もしほしければラーメンに卵やバターやコーンを追加できるよ。" },
+      { en: "Sapporo ramen stays warm because the soup is thick. So, many people there enjoy it in the cold winter.", jp: "札幌ラーメンは、スープにとろみがあるので温かいままで。そのため、そこではたくさんの人が寒い冬に味わっています。" },
+      { en: "The recommended topping is local sweet corn!", jp: "おすすめのトッピングは地元のスイートコーンです！" },
+      { en: "Some restaurants open early in the morning because people there often eat ramen for breakfast.", jp: "その人たちはよく朝食にラーメンを食べるので、朝早く開店する店もあります。" },
+      { en: "These different kinds of ramen reflect the different climates, food cultures, people's lives, and the creativity of chefs.", jp: "これらの異なる種類のラーメンは、さまざまな気候や食文化、人々の生活、そして料理人の創造性を映し出しています。" },
+      { en: "The Japanese chef named the dish Napolitan after Naples in Italy.", jp: "その日本人シェフは、その料理をイタリアのナポリにちなんでナポリタンと名づけたのです。" },
+      { en: "I think food travels around the world and changes in each place.", jp: "食べ物は世界中をめぐり、それぞれの場所で変化すると思います。" },
+      { en: "You can experience the job of a nursery school teacher.", jp: "保育園の先生の仕事を経験できます。" },
+      { en: "Bring your own chopsticks and cup.", jp: "自分専用のはしとコップを持ってくること。" },
+      { en: "Take your garbage home with you.", jp: "ごみは家に持ち帰ること。" },
+      { en: "Park your bike by the entrance.", jp: "自転車は入り口のわきにとめること。" },
+      { en: "I chose the school because I like small children.", jp: "小さい子供が好きなのでその学校を選びました。" },
+      { en: "I need to read an English picture book to the children.", jp: "私は子供たちに英語の絵本を読む必要があるんです。" },
+      { en: "What book will you read? — Well, I'm still thinking about it.", jp: "どんな本を読むつもりですか。 —ええ、まだ考えているところなんです。" },
+      { en: "I'm happy to hear that.", jp: "そう言ってもらえてうれしいです。" },
+      { en: "Here are some pretty pictures to look at.", jp: "そうこころにあるかわいいな絵を見て。" },
+      { en: "Are you interested in butterflies?", jp: "チョウに興味はあるかな？" },
+    ];
+
+    // 追加 36文 (80まで)
+    const extra = [
+      { en: "I enjoy learning new languages.", jp: "新しい言語を学ぶのが楽しいです。" },
+      { en: "Could you repeat that, please?", jp: "もう一度言っていただけますか？" },
+      { en: "What time does the store open?", jp: "その店は何時に開きますか？" },
+      { en: "I'd like to buy a ticket to Osaka.", jp: "大阪へのチケットを買いたいです。" },
+      { en: "This is my first time in Japan.", jp: "日本に来るのは初めてです。" },
+      { en: "The weather is nice today.", jp: "今日は天気がいいですね。" },
+      { en: "I have a question about the homework.", jp: "宿題について質問があります。" },
+      { en: "Can you help me with this?", jp: "これを手伝っていただけますか？" },
+      { en: "I'm looking for a souvenir.", jp: "お土産を探しています。" },
+      { en: "How much does this cost?", jp: "これはいくらですか？" },
+      { en: "I'll take it.", jp: "それを買います。" },
+      { en: "Where is the nearest station?", jp: "最寄りの駅はどこですか？" },
+      { en: "Turn left at the next corner.", jp: "次の角を左に曲がってください。" },
+      { en: "I like Japanese food.", jp: "日本食が好きです。" },
+      { en: "Have you ever been to Kyoto?", jp: "京都に行ったことがありますか？" },
+      { en: "Yes, I went there last year.", jp: "はい、去年行きました。" },
+      { en: "It was a wonderful trip.", jp: "素晴らしい旅でした。" },
+      { en: "I want to study abroad.", jp: "留学したいです。" },
+      { en: "My dream is to become a teacher.", jp: "私の夢は先生になることです。" },
+      { en: "I'm going to the library.", jp: "図書館に行きます。" },
+      { en: "Let's meet at the entrance.", jp: "入り口で会いましょう。" },
+      { en: "I'm sorry, I'm late.", jp: "すみません、遅れました。" },
+      { en: "That's okay.", jp: "大丈夫です。" },
+      { en: "Please take a seat.", jp: "おかけください。" },
+      { en: "I'm really excited about the concert.", jp: "コンサートがとても楽しみです。" },
+      { en: "Can I have the check, please?", jp: "お会計をお願いします。" },
+      { en: "I love this city.", jp: "この街が大好きです。" },
+      { en: "The food is delicious.", jp: "食べ物はおいしいです。" },
+      { en: "I'll be back soon.", jp: "すぐに戻ります。" },
+      { en: "Nice to meet you.", jp: "はじめまして。" },
+      { en: "I'm from Australia.", jp: "オーストラリア出身です。" },
+      { en: "I speak a little Japanese.", jp: "日本語を少し話します。" },
+      { en: "Could you speak more slowly?", jp: "もう少しゆっくり話していただけますか？" },
+      { en: "I don't understand.", jp: "わかりません。" },
+      { en: "Please write it down.", jp: "それを書いてください。" },
+      { en: "Thank you very much!", jp: "どうもありがとうございます！" },
+    ];
+
+    const fullData = [...rawSentences, ...extra.slice(0, 36)]; // 80
+
+    // 記憶状態を保存 (初期はすべてfalse)
+    let rememberedState = new Array(fullData.length).fill(false);
+
+    // DOM refs
+    const grid = document.getElementById('cardGrid');
+    const visibleSpan = document.getElementById('visibleCount');
+    const rememberedCountSpan = document.getElementById('rememberedCount');
+    const filterAll = document.getElementById('filterAll');
+    const filterEn = document.getElementById('filterEn');
+    const filterJp = document.getElementById('filterJp');
+    const filterRemembered = document.getElementById('filterRemembered');
+    const filterUnremembered = document.getElementById('filterUnremembered');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let currentFilter = 'all'; // 'all', 'en', 'jp', 'remembered', 'unremembered'
+    let currentLangFilter = 'all'; // 'all', 'en', 'jp' (语言显示模式)
+    let cardElements = [];
+
+    // ----- レンダリング -----
+    function renderCards() {
+      grid.innerHTML = '';
+      cardElements = [];
+
+      fullData.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        if (rememberedState[idx]) {
+          card.classList.add('remembered');
+        }
+        card.dataset.index = idx;
+        card.dataset.remembered = rememberedState[idx] ? 'true' : 'false';
+
+        // header
+        const header = document.createElement('div');
+        header.className = 'card-header';
+        const num = document.createElement('span');
+        num.className = 'card-number';
+        num.textContent = `#${idx+1}`;
+        const langBadge = document.createElement('span');
+        langBadge.className = 'card-lang-badge';
+        langBadge.innerHTML = `<i class="fas fa-globe-asia"></i> EN/JP`;
+        header.appendChild(num);
+        header.appendChild(langBadge);
+
+        // body
+        const body = document.createElement('div');
+        body.className = 'card-body';
+        const enDiv = document.createElement('div');
+        enDiv.className = 'sentence-en';
+        enDiv.textContent = item.en;
+        const jpDiv = document.createElement('div');
+        jpDiv.className = 'sentence-jp';
+        jpDiv.textContent = item.jp;
+        body.appendChild(enDiv);
+        body.appendChild(jpDiv);
+
+        // footer
+        const footer = document.createElement('div');
+        footer.className = 'card-footer';
+        
+        const footerLeft = document.createElement('div');
+        footerLeft.className = 'footer-left';
+        
+        // 記憶ボタン
+        const rememberBtn = document.createElement('button');
+        rememberBtn.className = 'btn-remember';
+        if (rememberedState[idx]) {
+          rememberBtn.classList.add('remembered-btn');
+          rememberBtn.innerHTML = '<i class="fas fa-check-circle"></i> 記憶済み';
+        } else {
+          rememberBtn.innerHTML = '<i class="far fa-circle"></i> 未記憶';
+        }
+        rememberBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          toggleRemember(idx);
+        });
+        footerLeft.appendChild(rememberBtn);
+        
+        const footerRight = document.createElement('div');
+        footerRight.className = 'footer-right';
+        
+        // 言語切り替えボタン (小さく)
+        const toggleLangBtn = document.createElement('button');
+        toggleLangBtn.className = 'btn-toggle-lang';
+        toggleLangBtn.innerHTML = '<i class="fas fa-exchange-alt"></i>';
+        toggleLangBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          toggleCardLanguage(card);
+        });
+        footerRight.appendChild(toggleLangBtn);
+
+        footer.appendChild(footerLeft);
+        footer.appendChild(footerRight);
+
+        card.appendChild(header);
+        card.appendChild(body);
+        card.appendChild(footer);
+
+        // カードクリックで言語切り替え
+        card.addEventListener('click', function(e) {
+          // ボタンクリックは除外 (stopPropagation済み)
+          toggleCardLanguage(card);
+        });
+
+        grid.appendChild(card);
+        cardElements.push(card);
+      });
+
+      // フィルター適用
+      applyFilters();
+      updateStats();
+    }
+
+    // カードの言語表示切り替え
+    function toggleCardLanguage(card) {
+      const en = card.querySelector('.sentence-en');
+      const jp = card.querySelector('.sentence-jp');
+      const enHidden = en.classList.contains('hidden');
+      const jpHidden = jp.classList.contains('hidden');
+
+      if (!enHidden && !jpHidden) {
+        jp.classList.add('hidden');
+      } else if (!enHidden && jpHidden) {
+        en.classList.add('hidden');
+        jp.classList.remove('hidden');
+      } else if (enHidden && !jpHidden) {
+        en.classList.remove('hidden');
+        jp.classList.remove('hidden');
+      } else {
+        en.classList.remove('hidden');
+        jp.classList.remove('hidden');
+      }
+    }
+
+    // 記憶状態トグル
+    function toggleRemember(index) {
+      rememberedState[index] = !rememberedState[index];
+      
+      // 該当カードのクラスとボタン更新
+      const card = cardElements[index];
+      if (card) {
+        if (rememberedState[index]) {
+          card.classList.add('remembered');
+          card.dataset.remembered = 'true';
+          const btn = card.querySelector('.btn-remember');
+          btn.classList.add('remembered-btn');
+          btn.innerHTML = '<i class="fas fa-check-circle"></i> 記憶済み';
+        } else {
+          card.classList.remove('remembered');
+          card.dataset.remembered = 'false';
+          const btn = card.querySelector('.btn-remember');
+          btn.classList.remove('remembered-btn');
+          btn.innerHTML = '<i class="far fa-circle"></i> 未記憶';
+        }
+      }
+      
+      updateStats();
+      // フィルター再適用（表示状態を更新）
+      applyFilters();
+    }
+
+    // 統計更新
+    function updateStats() {
+      const rememberedCount = rememberedState.filter(v => v).length;
+      rememberedCountSpan.textContent = rememberedCount;
+      
+      // visible count は applyFilters で更新される
+    }
+
+    // フィルター適用 (言語 + 記憶状態)
+    function applyFilters() {
+      // まず全カードを表示
+      cardElements.forEach(card => {
+        card.classList.remove('hidden');
+      });
+
+      // 1. 言語フィルター
+      if (currentLangFilter === 'en') {
+        cardElements.forEach(card => {
+          const jp = card.querySelector('.sentence-jp');
+          jp.classList.add('hidden');
+          const en = card.querySelector('.sentence-en');
+          en.classList.remove('hidden');
+        });
+      } else if (currentLangFilter === 'jp') {
+        cardElements.forEach(card => {
+          const en = card.querySelector('.sentence-en');
+          en.classList.add('hidden');
+          const jp = card.querySelector('.sentence-jp');
+          jp.classList.remove('hidden');
+        });
+      } else {
+        // 'all' - 両方表示 (ただし個別のトグル状態は尊重しないので一旦両方表示)
+        cardElements.forEach(card => {
+          const en = card.querySelector('.sentence-en');
+          const jp = card.querySelector('.sentence-jp');
+          en.classList.remove('hidden');
+          jp.classList.remove('hidden');
+        });
+      }
+
+      // 2. 記憶状態フィルター
+      if (currentFilter === 'remembered') {
+        cardElements.forEach((card, idx) => {
+          if (!rememberedState[idx]) {
+            card.classList.add('hidden');
+          }
+        });
+      } else if (currentFilter === 'unremembered') {
+        cardElements.forEach((card, idx) => {
+          if (rememberedState[idx]) {
+            card.classList.add('hidden');
+          }
+        });
+      }
+      // 'all' は何もしない
+
+      // ボタンアクティブ状態更新
+      [filterAll, filterEn, filterJp, filterRemembered, filterUnremembered].forEach(btn => {
+        btn.classList.remove('active', 'remembered-active', 'unremembered-active');
+      });
+      
+      if (currentFilter === 'all') filterAll.classList.add('active');
+      else if (currentFilter === 'en') {
+        filterEn.classList.add('active');
+        // 言語フィルターは別途管理
+      }
+      else if (currentFilter === 'jp') filterJp.classList.add('active');
+      else if (currentFilter === 'remembered') filterRemembered.classList.add('remembered-active');
+      else if (currentFilter === 'unremembered') filterUnremembered.classList.add('unremembered-active');
+
+      // 言語フィルターのボタンもactiveにする (重複対応)
+      if (currentLangFilter === 'en') filterEn.classList.add('active');
+      else if (currentLangFilter === 'jp') filterJp.classList.add('active');
+      else if (currentLangFilter === 'all') filterAll.classList.add('active');
+
+      // 表示カウント更新
+      let visible = 0;
+      cardElements.forEach(card => {
+        if (!card.classList.contains('hidden')) {
+          visible++;
+        }
+      });
+      visibleSpan.textContent = visible;
+    }
+
+    // フィルター変更 (記憶状態)
+    function setFilter(filter) {
+      currentFilter = filter;
+      applyFilters();
+    }
+
+    // 言語フィルター変更
+    function setLangFilter(filter) {
+      currentLangFilter = filter;
+      applyFilters();
+    }
+
+    // リセット: すべてのカードを両方表示 + フィルターall
+    function resetAll() {
+      currentFilter = 'all';
+      currentLangFilter = 'all';
+      // 言語表示をリセット (両方表示)
+      cardElements.forEach(card => {
+        const en = card.querySelector('.sentence-en');
+        const jp = card.querySelector('.sentence-jp');
+        en.classList.remove('hidden');
+        jp.classList.remove('hidden');
+      });
+      applyFilters();
+    }
+
+    // ----- イベント -----
+    filterAll.addEventListener('click', () => setLangFilter('all'));
+    filterEn.addEventListener('click', () => setLangFilter('en'));
+    filterJp.addEventListener('click', () => setLangFilter('jp'));
+    filterRemembered.addEventListener('click', () => setFilter('remembered'));
+    filterUnremembered.addEventListener('click', () => setFilter('unremembered'));
+    resetBtn.addEventListener('click', resetAll);
+
+    // 初期表示
+    renderCards();
+  })();
+</script>
+</body>
+</html>
       justify-content: space-between;
       margin-bottom: 1.5rem;
       gap: 12px;
@@ -120,7 +867,7 @@
       background: #e4ecf7;
     }
     .filter-bar .btn.active {
-      background: #01319b;
+      background: #1e2b3c;
       color: white;
     }
     .filter-bar .btn.active i {
