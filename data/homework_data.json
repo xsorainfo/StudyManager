@@ -18,7 +18,9 @@
             "desc": "- 間違えた問題を分析（記号だけではなく英文を書く）\n  - スペルミスは練習\n  - 動詞/単語は1語だけでなく、その語を含む英文を書く\n  - 最後に反省と目標を書く",
             "done": false,
             "doneDate": null,
-            "createdAt": "2026-07-18T06:46:30.819Z"
+            "createdAt": "2026-07-18T06:46:30.819Z",
+            "memo": "",
+            "progress": 0
           },
           {
             "id": "mrq090lxwzb5",
@@ -93,7 +95,13 @@
             "createdAt": "2026-07-18T08:21:08.222Z"
           }
         ],
-        "links": []
+        "links": [
+          {
+            "id": "mrq53czxy4w4",
+            "label": "🇪🇳 80 Sentences",
+            "url": "https://xsorainfo.github.io/StudyManager/pages/nki-English80G2-all.html"
+          }
+        ]
       }
     }
   },
