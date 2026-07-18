@@ -3,7 +3,48 @@
   "2": {
     "1": {
       "国語": {
-        "tasks": [],
+        "tasks": [
+          {
+            "id": "mrqbqx8dxckc",
+            "title": "① **『あのころはフリードリヒがいた』学習プリント**",
+            "desc": "- ハンス・ペーター・リヒター作『あのころはフリードリヒがいた』（岩波少年文庫）を1冊購入し、学習プリント（ワークシート）に取り組む。  \n- 2学期始業式に提出。  \n- 2学期の授業でこの作品を扱う。",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:09:45.661Z",
+            "progress": 0,
+            "memo": ""
+          },
+          {
+            "id": "mrqbr7i882c6",
+            "title": "② **読書リスト**",
+            "desc": "- 『あのころはフリードリヒがいた』、数学の宿題の本、を含めて合計5冊（リストからは3冊以上）を読む。  \n- 2学期始業式に提出。",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:09:58.976Z",
+            "progress": 0,
+            "memo": ""
+          },
+          {
+            "id": "mrqbrgm89r5m",
+            "title": "③ **『1・2トライ 準拠ノート』**",
+            "desc": "- 1学期の復習として取り組む。  \n- 提出は不要。",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:10:10.784Z",
+            "progress": 0,
+            "memo": ""
+          },
+          {
+            "id": "mrqbrqajed3r",
+            "title": "短歌",
+            "desc": "※ 3学期のはじめに短歌の提出あり。  \n夏休みの間に考えておくとよい。",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:10:23.323Z",
+            "progress": 0,
+            "memo": ""
+          }
+        ],
         "links": []
       },
       "保健体育": {
@@ -102,6 +143,41 @@
             "url": "https://xsorainfo.github.io/StudyManager/pages/anki-English80G2-all.html"
           }
         ]
+      },
+      "数学": {
+        "tasks": [
+          {
+            "id": "mrqcandm8k71",
+            "title": "①夏の課題テスト　　（①②始業式　提出）",
+            "desc": "※p.4 問題 2(3)は未習の内容（2次方程式）を含むのでやらない",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:25:06.010Z",
+            "progress": 0,
+            "memo": ""
+          },
+          {
+            "id": "mrqcbbl47ne7",
+            "title": "②数学にまつわる本の読書感想文　　（①②始業式　提出）",
+            "desc": "",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:25:37.384Z",
+            "progress": 0,
+            "memo": ""
+          },
+          {
+            "id": "mrqcbsgmd0mg",
+            "title": "③作図プリント　　（③幾何の初回授業　提出）",
+            "desc": "",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:25:59.254Z",
+            "progress": 100,
+            "memo": ""
+          }
+        ],
+        "links": []
       }
     }
   },
