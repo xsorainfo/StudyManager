@@ -3,16 +3,7 @@
   "2": {
     "1": {
       "国語": {
-        "tasks": [
-          {
-            "id": "mr65gdrucql9",
-            "title": "ddd",
-            "desc": "ddddddddddd",
-            "done": false,
-            "doneDate": null,
-            "createdAt": "2026-07-04T09:18:12.666Z"
-          }
-        ],
+        "tasks": [],
         "links": []
       },
       "保健体育": {
@@ -36,6 +27,70 @@
             "done": false,
             "doneDate": null,
             "createdAt": "2026-07-18T06:47:54.454Z"
+          },
+          {
+            "id": "mrq3fqqj9ey8",
+            "title": "③ Diary（絵日記） (9/1提出)",
+            "desc": "- 夏休みの1日を英語で絵日記\n  - 適切な大きさの字で最後の行まで\n  - 上部に絵や写真\n  - 文法・スペルを見直す\n  - クラスで回し読みあり",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T08:17:07.099Z"
+          },
+          {
+            "id": "mrq3gn4drpld",
+            "title": "④ The Blue Diamond      (9/1提出)",
+            "desc": "- Chapter読む → WORKBOOK問題 → Activities → Grammar(pp.45-51) → 復習テスト\n  - 答え合わせ必須\n  - 音声・解答はTeams\n  - Project B-4(p.44)は自由課題",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T08:17:49.069Z"
+          },
+          {
+            "id": "mrq3hd8lm4sa",
+            "title": "⑤ Watching News      (9/1提出 問題ノート)",
+            "desc": "- 写真や図をヒントに挑戦\n  - 基礎英語やFrog and Toadの文法も登場\n  - 赤ペンで答え合わせ\n  - p.31「本を読み終えて…」欄の半分以上を日本語または英語で記入",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T08:18:22.917Z"
+          },
+          {
+            "id": "mrq3hztl6adr",
+            "title": "⑥ 基礎英語8月号＋復習ドリル",
+            "desc": "- 1学期の復習号\n  - 会話力と瞬発力アップ",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T08:18:52.185Z"
+          },
+          {
+            "id": "mrq3i9ytw0aq",
+            "title": "⑦ Anne of Green Gablesの予習",
+            "desc": "- **内容**: \n  - 中間テストまで: pp.15～36\n  - 期末テストまで: pp.37～49\n  - 多読の感覚で一読、音声を聴きながらの\"聴き読み\"も推奨\n  - わからない単語を単語帳/ノートに記録\n  - ノート作成推奨（左：コピー/書き写し、右：予習・授業内容・和訳）",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T08:19:05.333Z"
+          },
+          {
+            "id": "mrq3il1xznw9",
+            "title": "⑧ 80 Sentences",
+            "desc": "- 正しく書けるよう練習\n  - 休み明けテスト範囲",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T08:19:19.701Z"
+          },
+          {
+            "id": "mrq3kap5xztn",
+            "title": "⑨ 英語にふれる（Reading Log）     ( 11/30(月)20時まで〆切)",
+            "desc": "- 映画、音楽、読書、会話、日記、英語アナウンスなど\n  - ELST「多読多聴 STEP2」からも1冊\n  - 氏名・タイトル・語数・感想を漏れなく記入",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T08:20:39.593Z"
+          },
+          {
+            "id": "mrq3kwselpdn",
+            "title": "⑩ 第2回 ELST カップ",
+            "desc": "- ELSTバナーで詳細確認\n  - 発話力アップに挑戦\n  - 2学期から宿題配信再開、提出率100%目指す",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T08:21:08.222Z"
           }
         ],
         "links": []
