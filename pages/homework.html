@@ -111,7 +111,7 @@
       text-decoration: line-through;
     }
 
-    /* ★ 進捗バー ★ */
+    /* ★ 進捗バー（緑色） ★ */
     .hw-progress-wrap {
       display: flex;
       align-items: center;
@@ -131,7 +131,7 @@
     }
     .hw-progress-bar .fill {
       height: 100%;
-      background: #8f735b;
+      background: #4CAF50;  /* ★ 緑色に変更 ★ */
       border-radius: 20px;
       transition: width 0.3s;
       width: 0%;
@@ -141,6 +141,7 @@
       color: #6b5d4e;
       min-width: 40px;
       text-align: right;
+      font-weight: 600;
     }
     .hw-memo {
       font-size: 0.8rem;
@@ -182,7 +183,16 @@
       min-width: 150px;
     }
     .hw-edit-area .edit-progress {
-      width: 80px;
+      padding: 6px 12px;
+      border: 2px solid #d8cdbf;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      outline: none;
+      background: white;
+      min-width: 80px;
+    }
+    .hw-edit-area .edit-progress:focus {
+      border-color: #8f735b;
     }
     .hw-edit-area .btn-edit-save {
       background: #2e7d32;
@@ -702,13 +712,13 @@ function saveEdit(subject, index) {
 
   const task = data.tasks[index];
   const memoInput = document.getElementById(`edit_memo_${index}`);
-  const progressInput = document.getElementById(`edit_progress_${index}`);
+  const progressSelect = document.getElementById(`edit_progress_${index}`);
 
   if (memoInput) task.memo = memoInput.value.trim() || '';
-  if (progressInput) {
-    const val = parseInt(progressInput.value);
+  if (progressSelect) {
+    const val = parseInt(progressSelect.value);
     if (!isNaN(val) && val >= 0 && val <= 100) {
-      task.progress = Math.round(val / 10) * 10; // 10%単位に丸める
+      task.progress = val;
     }
   }
 
@@ -727,6 +737,12 @@ function renderContent() {
 
   const gradeNames = { '1':'中1', '2':'中2', '3':'中3', '4':'高1', '5':'高2', '6':'高3' };
   const semesterNames = { '1':'一学期', '2':'二学期', '3':'三学期' };
+
+  // ★ 進捗選択肢（0〜100、10%単位） ★
+  const progressOptions = [];
+  for (let i = 0; i <= 100; i += 10) {
+    progressOptions.push(i);
+  }
 
   let html = `
     <div style="font-size:0.85rem; color:#6b5d4e; margin-bottom:16px; display:flex; gap:12px; flex-wrap:wrap;">
@@ -812,7 +828,7 @@ function renderContent() {
                       </div>
                     </div>
 
-                    <!-- ★ 進捗バー ★ -->
+                    <!-- ★ 進捗バー（緑色） ★ -->
                     <div class="hw-progress-wrap">
                       <div class="hw-progress-bar">
                         <div class="fill" style="width:${progress}%;"></div>
@@ -827,8 +843,11 @@ function renderContent() {
                     ${isEditing ? `
                       <div class="hw-edit-area">
                         <input type="text" class="edit-memo" id="edit_memo_${i}" value="${t.memo || ''}" placeholder="メモを入力">
-                        <input type="number" class="edit-progress" id="edit_progress_${i}" value="${t.progress || 0}" min="0" max="100" step="10" placeholder="進捗%">
-                        <span style="font-size:0.7rem; color:#6b5d4e;">0~100 (10%単位)</span>
+                        <select class="edit-progress" id="edit_progress_${i}">
+                          ${progressOptions.map(p => `
+                            <option value="${p}" ${p === progress ? 'selected' : ''}>${p}%</option>
+                          `).join('')}
+                        </select>
                         <button class="btn-edit-save" onclick="saveEdit('${subject}', ${i})"><i class="fas fa-check"></i> 保存</button>
                         <button class="btn-edit-cancel" onclick="cancelEdit()"><i class="fas fa-times"></i> 取消</button>
                       </div>
