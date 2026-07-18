@@ -178,6 +178,91 @@
           }
         ],
         "links": []
+      },
+      "歴史": {
+        "tasks": [
+          {
+            "id": "mrqcdqmv0vjv",
+            "title": "仮名手本忠臣蔵・歌舞伎に関する課題　　（初回授業　提出）",
+            "desc": "（B4プリント1枚）\n※PDFデータは中2歴史のTeamsにあり。なくしたと申告しないこと。",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:27:30.199Z",
+            "progress": 0,
+            "memo": ""
+          }
+        ],
+        "links": []
+      },
+      "地理": {
+        "tasks": [
+          {
+            "id": "mrqceqpbhez0",
+            "title": "①地名ドリル　　（初回授業　提出）",
+            "desc": "中国・四国地方～北海道まで",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:28:16.943Z",
+            "progress": 0,
+            "memo": ""
+          },
+          {
+            "id": "mrqcf6cl37id",
+            "title": "②「地理院地図で城ヶ島を見る」プリント",
+            "desc": "8月31日までにTeams上で提出",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:28:37.221Z",
+            "progress": 0,
+            "memo": ""
+          }
+        ],
+        "links": []
+      },
+      "理科1": {
+        "tasks": [
+          {
+            "id": "mrqcfrvzb216",
+            "title": "夏休み宿題（冊子）　　（始業式　提出）",
+            "desc": "",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:29:05.135Z",
+            "progress": 0,
+            "memo": ""
+          }
+        ],
+        "links": []
+      },
+      "理科2": {
+        "tasks": [
+          {
+            "id": "mrqcg41gl9ra",
+            "title": "気象現象の観察（プリント1枚）　　（始業式　提出）",
+            "desc": "",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:29:20.884Z",
+            "progress": 0,
+            "memo": ""
+          }
+        ],
+        "links": []
+      },
+      "技術・家庭": {
+        "tasks": [
+          {
+            "id": "mrqcgnzdmiji",
+            "title": "家の仕事をする・記録や感想の入力",
+            "desc": "提出：PowerPointの指示通り",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-18T12:29:46.729Z",
+            "progress": 0,
+            "memo": ""
+          }
+        ],
+        "links": []
       }
     }
   },
