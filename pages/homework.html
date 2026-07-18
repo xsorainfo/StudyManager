@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -52,14 +51,19 @@
     .hw-list { list-style: none; padding: 0; }
     .hw-list li {
       display: flex;
+      flex-direction: column;
+      padding: 12px 0;
+      border-bottom: 1px solid #ede6dd;
+      gap: 8px;
+    }
+    .hw-list li:last-child { border-bottom: 0; }
+    .hw-list .hw-row {
+      display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #ede6dd;
       gap: 10px;
       flex-wrap: wrap;
     }
-    .hw-list li:last-child { border-bottom: 0; }
     .hw-list .hw-left {
       display: flex;
       align-items: flex-start;
@@ -105,6 +109,101 @@
     .hw-list .hw-text.done .desc {
       text-decoration: line-through;
     }
+
+    /* ★ 進捗バー ★ */
+    .hw-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-left: 34px;
+      width: 100%;
+    }
+    .hw-progress-bar {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      background: #ede8e0;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hw-progress-bar .fill {
+      height: 100%;
+      background: #8f735b;
+      border-radius: 20px;
+      transition: width 0.3s;
+      width: 0%;
+    }
+    .hw-progress-label {
+      font-size: 0.75rem;
+      color: #6b5d4e;
+      min-width: 40px;
+      text-align: right;
+    }
+    .hw-memo {
+      font-size: 0.8rem;
+      color: #5f4f3d;
+      background: #f8f4ef;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-left: 34px;
+      width: 100%;
+      word-break: break-word;
+      border-left: 3px solid #8f735b;
+    }
+
+    /* ★ 編集モード ★ */
+    .hw-edit-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-left: 34px;
+      width: 100%;
+      align-items: center;
+    }
+    .hw-edit-area input[type="text"],
+    .hw-edit-area textarea {
+      padding: 6px 12px;
+      border: 2px solid #d8cdbf;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      outline: none;
+      background: white;
+      font-family: inherit;
+    }
+    .hw-edit-area input[type="text"]:focus,
+    .hw-edit-area textarea:focus {
+      border-color: #8f735b;
+    }
+    .hw-edit-area .edit-memo {
+      flex: 2;
+      min-width: 150px;
+    }
+    .hw-edit-area .edit-progress {
+      width: 80px;
+    }
+    .hw-edit-area .btn-edit-save {
+      background: #2e7d32;
+      border: none;
+      color: white;
+      padding: 4px 14px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .hw-edit-area .btn-edit-cancel {
+      background: #8f4a4a;
+      border: none;
+      color: white;
+      padding: 4px 14px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
     .hw-list .hw-meta {
       font-size: 0.75rem;
       color: #6b5d4e;
@@ -132,6 +231,10 @@
       font-size: 0.9rem;
     }
     .hw-list .hw-actions button:hover { background: #f5e0e0; }
+    .hw-list .hw-actions .btn-edit {
+      color: #2c241c;
+    }
+    .hw-list .hw-actions .btn-edit:hover { background: #f0ebe4; }
 
     .hw-links {
       display: flex;
@@ -263,8 +366,10 @@
       .semester-tabs .tab { padding: 4px 12px; font-size: 0.8rem; }
       .add-area textarea { min-width: 100px; min-height: 60px; }
       .add-area select { min-width: 100px; }
-      .hw-list li { flex-wrap: wrap; }
       .hw-list .hw-meta { width: 100%; margin-left: 34px; }
+      .hw-progress-wrap { margin-left: 0; }
+      .hw-memo { margin-left: 0; }
+      .hw-edit-area { margin-left: 0; }
     }
   </style>
 </head>
@@ -335,8 +440,7 @@ const ALL_SUBJECTS = ['国語', '文法', '代数', '幾何', '英語', '地理'
 // ============================================================
 // データ構造
 // ============================================================
-// homeworkData[grade][semester][subject] = { tasks: [], links: [] }
-// task: { id, title, desc, done, doneDate, createdAt }
+// task: { id, title, desc, done, doneDate, createdAt, progress, memo }
 
 const DEFAULT_HOMEWORK_DATA = {
   '1': {}, '2': {}, '3': {}, '4': {}, '5': {}, '6': {}
@@ -349,6 +453,7 @@ const DEFAULT_HOMEWORK_DATA = {
 let currentGrade = DEFAULT_GRADE;
 let currentSemester = DEFAULT_SEMESTER;
 let homeworkData = {};
+let editingTask = null; // { subject, index }
 
 function loadHomeworkData() {
   const saved = localStorage.getItem('homework_data');
@@ -577,6 +682,42 @@ function toggleSubject(id) {
 }
 
 // ============================================================
+// 編集モード
+// ============================================================
+
+function startEdit(subject, index) {
+  editingTask = { subject, index };
+  renderContent();
+}
+
+function cancelEdit() {
+  editingTask = null;
+  renderContent();
+}
+
+function saveEdit(subject, index) {
+  const data = getSubjectData(subject);
+  if (!data.tasks || !data.tasks[index]) return;
+
+  const task = data.tasks[index];
+  const memoInput = document.getElementById(`edit_memo_${index}`);
+  const progressInput = document.getElementById(`edit_progress_${index}`);
+
+  if (memoInput) task.memo = memoInput.value.trim() || '';
+  if (progressInput) {
+    const val = parseInt(progressInput.value);
+    if (!isNaN(val) && val >= 0 && val <= 100) {
+      task.progress = Math.round(val / 10) * 10; // 10%単位に丸める
+    }
+  }
+
+  setSubjectData(subject, data);
+  editingTask = null;
+  renderContent();
+  showToast('✅ 更新しました');
+}
+
+// ============================================================
 // レンダリング
 // ============================================================
 
@@ -642,24 +783,58 @@ function renderContent() {
         <div class="subject-body" id="${sid}_body" style="${isOpen ? '' : 'display:none;'}">
           ${tasks.length > 0 ? `
             <ul class="hw-list">
-              ${tasks.map((t, i) => `
-                <li>
-                  <div class="hw-left">
-                    <input type="checkbox" class="hw-check" ${t.done ? 'checked' : ''} onchange="toggleTask('${subject}', ${i})">
-                    <span class="hw-text ${t.done ? 'done' : ''}">
-                      ${t.title ? `<span class="title">${t.title}</span>` : ''}
-                      ${t.desc ? `<span class="desc">${t.desc}</span>` : ''}
-                    </span>
-                  </div>
-                  <div class="hw-meta">
-                    ${t.done ? `<span class="date-done">✅ ${formatDate(t.doneDate)}</span>` : ''}
-                    <span style="font-size:0.65rem; color:#b7a086;">${formatDate(t.createdAt)}</span>
-                  </div>
-                  <div class="hw-actions">
-                    <button onclick="deleteTask('${subject}', ${i})"><i class="fas fa-trash"></i></button>
-                  </div>
-                </li>
-              `).join('')}
+              ${tasks.map((t, i) => {
+                const isEditing = (editingTask && editingTask.subject === subject && editingTask.index === i);
+                const progress = t.progress || 0;
+
+                return `
+                  <li>
+                    <div class="hw-row">
+                      <div class="hw-left">
+                        <input type="checkbox" class="hw-check" ${t.done ? 'checked' : ''} onchange="toggleTask('${subject}', ${i})">
+                        <span class="hw-text ${t.done ? 'done' : ''}">
+                          ${t.title ? `<span class="title">${t.title}</span>` : ''}
+                          ${t.desc ? `<span class="desc">${t.desc}</span>` : ''}
+                        </span>
+                      </div>
+                      <div class="hw-meta">
+                        ${t.done ? `<span class="date-done">✅ ${formatDate(t.doneDate)}</span>` : ''}
+                        <span style="font-size:0.65rem; color:#b7a086;">${formatDate(t.createdAt)}</span>
+                      </div>
+                      <div class="hw-actions">
+                        <button class="btn-edit" onclick="startEdit('${subject}', ${i})" title="編集">
+                          <i class="fas fa-pen"></i>
+                        </button>
+                        <button onclick="deleteTask('${subject}', ${i})" title="削除">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- ★ 進捗バー ★ -->
+                    <div class="hw-progress-wrap">
+                      <div class="hw-progress-bar">
+                        <div class="fill" style="width:${progress}%;"></div>
+                      </div>
+                      <span class="hw-progress-label">${progress}%</span>
+                    </div>
+
+                    <!-- ★ メモ ★ -->
+                    ${t.memo ? `<div class="hw-memo">📝 ${t.memo}</div>` : ''}
+
+                    <!-- ★ 編集モード ★ -->
+                    ${isEditing ? `
+                      <div class="hw-edit-area">
+                        <input type="text" class="edit-memo" id="edit_memo_${i}" value="${t.memo || ''}" placeholder="メモを入力">
+                        <input type="number" class="edit-progress" id="edit_progress_${i}" value="${t.progress || 0}" min="0" max="100" step="10" placeholder="進捗%">
+                        <span style="font-size:0.7rem; color:#6b5d4e;">0~100 (10%単位)</span>
+                        <button class="btn-edit-save" onclick="saveEdit('${subject}', ${i})"><i class="fas fa-check"></i> 保存</button>
+                        <button class="btn-edit-cancel" onclick="cancelEdit()"><i class="fas fa-times"></i> 取消</button>
+                      </div>
+                    ` : ''}
+                  </li>
+                `;
+              }).join('')}
             </ul>
           ` : ''}
         </div>
@@ -791,7 +966,9 @@ function addTask() {
     desc: desc,
     done: false,
     doneDate: null,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    progress: 0,
+    memo: ''
   });
 
   setSubjectData(subject, data);
@@ -922,7 +1099,10 @@ window.loadFromGitHub = loadFromGitHub;
 window.exportData = exportData;
 window.importData = importData;
 window.toggleSubject = toggleSubject;
+window.startEdit = startEdit;
+window.cancelEdit = cancelEdit;
+window.saveEdit = saveEdit;
 </script>
 </body>
 </html>
-```
+
