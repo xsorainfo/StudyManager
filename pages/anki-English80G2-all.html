@@ -87,14 +87,14 @@
       font-size: 0.8rem;
     }
     .stats-card .remembered-count {
-      background: #01319b;
+      background: #28a745;
     }
     /* filter buttons */
     .filter-bar {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       margin: 1.2rem 0 1.8rem 0;
       background: white;
       padding: 0.5rem 1.2rem;
@@ -115,6 +115,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      white-space: nowrap;
     }
     .filter-bar .btn i {
       color: #5a7a9e;
@@ -142,6 +143,13 @@
     }
     .filter-bar .btn.unremembered-active i {
       color: #fcc;
+    }
+    .filter-bar .btn.memory-all-active {
+      background: #6c757d;
+      color: white;
+    }
+    .filter-bar .btn.memory-all-active i {
+      color: #d0d8e0;
     }
     .filter-bar .btn-reset {
       margin-left: auto;
@@ -352,12 +360,18 @@
 
   <!-- filter bar -->
   <div class="filter-bar" id="filterBar">
-    <button class="btn active" data-filter="all" id="filterAll"><i class="fas fa-list-ul"></i> すべて</button>
-    <button class="btn" data-filter="en" id="filterEn"><i class="fas fa-language"></i> English</button>
-    <button class="btn" data-filter="jp" id="filterJp"><i class="fas fa-language"></i> 日本語</button>
+    <!-- 言語フィルター -->
+    <button class="btn active" data-filter="lang-all" id="filterLangAll"><i class="fas fa-list-ul"></i> すべて</button>
+    <button class="btn" data-filter="lang-en" id="filterLangEn"><i class="fas fa-language"></i> English</button>
+    <button class="btn" data-filter="lang-jp" id="filterLangJp"><i class="fas fa-language"></i> 日本語</button>
+    
     <div class="filter-divider"></div>
-    <button class="btn" data-filter="remembered" id="filterRemembered"><i class="fas fa-check-circle"></i> 記憶済み</button>
-    <button class="btn" data-filter="unremembered" id="filterUnremembered"><i class="fas fa-circle"></i> 未記憶</button>
+    
+    <!-- 記憶状態フィルター -->
+    <button class="btn memory-all-active" data-filter="memory-all" id="filterMemoryAll"><i class="fas fa-layer-group"></i> 全部</button>
+    <button class="btn" data-filter="memory-remembered" id="filterMemoryRemembered"><i class="fas fa-check-circle"></i> 記憶済み</button>
+    <button class="btn" data-filter="memory-unremembered" id="filterMemoryUnremembered"><i class="fas fa-circle"></i> 未記憶</button>
+    
     <button class="btn-reset" id="resetBtn"><i class="fas fa-undo-alt"></i> リセット</button>
   </div>
 
@@ -469,15 +483,21 @@
     const grid = document.getElementById('cardGrid');
     const visibleSpan = document.getElementById('visibleCount');
     const rememberedCountSpan = document.getElementById('rememberedCount');
-    const filterAll = document.getElementById('filterAll');
-    const filterEn = document.getElementById('filterEn');
-    const filterJp = document.getElementById('filterJp');
-    const filterRemembered = document.getElementById('filterRemembered');
-    const filterUnremembered = document.getElementById('filterUnremembered');
+    
+    // 言語フィルターボタン
+    const filterLangAll = document.getElementById('filterLangAll');
+    const filterLangEn = document.getElementById('filterLangEn');
+    const filterLangJp = document.getElementById('filterLangJp');
+    
+    // 記憶状態フィルターボタン
+    const filterMemoryAll = document.getElementById('filterMemoryAll');
+    const filterMemoryRemembered = document.getElementById('filterMemoryRemembered');
+    const filterMemoryUnremembered = document.getElementById('filterMemoryUnremembered');
+    
     const resetBtn = document.getElementById('resetBtn');
 
-    let currentFilter = 'all'; // 'all', 'en', 'jp', 'remembered', 'unremembered'
-    let currentLangFilter = 'all'; // 'all', 'en', 'jp' (语言显示模式)
+    let currentLangFilter = 'all'; // 'all', 'en', 'jp'
+    let currentMemoryFilter = 'all'; // 'all', 'remembered', 'unremembered'
     let cardElements = [];
 
     // ----- レンダリング -----
@@ -562,7 +582,6 @@
 
         // カードクリックで言語切り替え
         card.addEventListener('click', function(e) {
-          // ボタンクリックは除外 (stopPropagation済み)
           toggleCardLanguage(card);
         });
 
@@ -600,7 +619,6 @@
     function toggleRemember(index) {
       rememberedState[index] = !rememberedState[index];
       
-      // 該当カードのクラスとボタン更新
       const card = cardElements[index];
       if (card) {
         if (rememberedState[index]) {
@@ -619,7 +637,6 @@
       }
       
       updateStats();
-      // フィルター再適用（表示状態を更新）
       applyFilters();
     }
 
@@ -627,8 +644,6 @@
     function updateStats() {
       const rememberedCount = rememberedState.filter(v => v).length;
       rememberedCountSpan.textContent = rememberedCount;
-      
-      // visible count は applyFilters で更新される
     }
 
     // フィルター適用 (言語 + 記憶状態)
@@ -654,7 +669,7 @@
           jp.classList.remove('hidden');
         });
       } else {
-        // 'all' - 両方表示 (ただし個別のトグル状態は尊重しないので一旦両方表示)
+        // 'all' - 両方表示
         cardElements.forEach(card => {
           const en = card.querySelector('.sentence-en');
           const jp = card.querySelector('.sentence-jp');
@@ -664,13 +679,13 @@
       }
 
       // 2. 記憶状態フィルター
-      if (currentFilter === 'remembered') {
+      if (currentMemoryFilter === 'remembered') {
         cardElements.forEach((card, idx) => {
           if (!rememberedState[idx]) {
             card.classList.add('hidden');
           }
         });
-      } else if (currentFilter === 'unremembered') {
+      } else if (currentMemoryFilter === 'unremembered') {
         cardElements.forEach((card, idx) => {
           if (rememberedState[idx]) {
             card.classList.add('hidden');
@@ -679,24 +694,19 @@
       }
       // 'all' は何もしない
 
-      // ボタンアクティブ状態更新
-      [filterAll, filterEn, filterJp, filterRemembered, filterUnremembered].forEach(btn => {
-        btn.classList.remove('active', 'remembered-active', 'unremembered-active');
-      });
-      
-      if (currentFilter === 'all') filterAll.classList.add('active');
-      else if (currentFilter === 'en') {
-        filterEn.classList.add('active');
-        // 言語フィルターは別途管理
-      }
-      else if (currentFilter === 'jp') filterJp.classList.add('active');
-      else if (currentFilter === 'remembered') filterRemembered.classList.add('remembered-active');
-      else if (currentFilter === 'unremembered') filterUnremembered.classList.add('unremembered-active');
+      // ボタンアクティブ状態更新 (言語)
+      [filterLangAll, filterLangEn, filterLangJp].forEach(btn => btn.classList.remove('active'));
+      if (currentLangFilter === 'all') filterLangAll.classList.add('active');
+      else if (currentLangFilter === 'en') filterLangEn.classList.add('active');
+      else if (currentLangFilter === 'jp') filterLangJp.classList.add('active');
 
-      // 言語フィルターのボタンもactiveにする (重複対応)
-      if (currentLangFilter === 'en') filterEn.classList.add('active');
-      else if (currentLangFilter === 'jp') filterJp.classList.add('active');
-      else if (currentLangFilter === 'all') filterAll.classList.add('active');
+      // ボタンアクティブ状態更新 (記憶)
+      [filterMemoryAll, filterMemoryRemembered, filterMemoryUnremembered].forEach(btn => {
+        btn.classList.remove('memory-all-active', 'remembered-active', 'unremembered-active');
+      });
+      if (currentMemoryFilter === 'all') filterMemoryAll.classList.add('memory-all-active');
+      else if (currentMemoryFilter === 'remembered') filterMemoryRemembered.classList.add('remembered-active');
+      else if (currentMemoryFilter === 'unremembered') filterMemoryUnremembered.classList.add('unremembered-active');
 
       // 表示カウント更新
       let visible = 0;
@@ -708,23 +718,22 @@
       visibleSpan.textContent = visible;
     }
 
-    // フィルター変更 (記憶状態)
-    function setFilter(filter) {
-      currentFilter = filter;
-      applyFilters();
-    }
-
     // 言語フィルター変更
     function setLangFilter(filter) {
       currentLangFilter = filter;
       applyFilters();
     }
 
-    // リセット: すべてのカードを両方表示 + フィルターall
+    // 記憶フィルター変更
+    function setMemoryFilter(filter) {
+      currentMemoryFilter = filter;
+      applyFilters();
+    }
+
+    // リセット
     function resetAll() {
-      currentFilter = 'all';
       currentLangFilter = 'all';
-      // 言語表示をリセット (両方表示)
+      currentMemoryFilter = 'all';
       cardElements.forEach(card => {
         const en = card.querySelector('.sentence-en');
         const jp = card.querySelector('.sentence-jp');
@@ -735,11 +744,14 @@
     }
 
     // ----- イベント -----
-    filterAll.addEventListener('click', () => setLangFilter('all'));
-    filterEn.addEventListener('click', () => setLangFilter('en'));
-    filterJp.addEventListener('click', () => setLangFilter('jp'));
-    filterRemembered.addEventListener('click', () => setFilter('remembered'));
-    filterUnremembered.addEventListener('click', () => setFilter('unremembered'));
+    filterLangAll.addEventListener('click', () => setLangFilter('all'));
+    filterLangEn.addEventListener('click', () => setLangFilter('en'));
+    filterLangJp.addEventListener('click', () => setLangFilter('jp'));
+    
+    filterMemoryAll.addEventListener('click', () => setMemoryFilter('all'));
+    filterMemoryRemembered.addEventListener('click', () => setMemoryFilter('remembered'));
+    filterMemoryUnremembered.addEventListener('click', () => setMemoryFilter('unremembered'));
+    
     resetBtn.addEventListener('click', resetAll);
 
     // 初期表示
