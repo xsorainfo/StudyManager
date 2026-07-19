@@ -473,6 +473,50 @@
             background: #f0ebe4;
         }
 
+        /* プロジェクト選択 */
+        .event-project-select {
+            padding: 2px 8px;
+            border: 2px solid #d8cdbf;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            background: white;
+            color: #2a221b;
+            cursor: pointer;
+            outline: none;
+            font-weight: 600;
+            transition: 0.15s;
+            min-width: 70px;
+        }
+        .event-project-select:focus {
+            border-color: #8f735b;
+        }
+        .event-project-select.option-sakura {
+            color: #c62828;
+            border-color: #e7b0b0;
+        }
+        .event-project-select.option-tetsu {
+            color: #1a3a5c;
+            border-color: #8aa9c9;
+        }
+
+        .event-item .event-project-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 1px 10px;
+            border-radius: 30px;
+            background: #f0ebe4;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .event-item .event-project-badge.sakura {
+            background: #fce4e4;
+            color: #c62828;
+        }
+        .event-item .event-project-badge.tetsu {
+            background: #e3edf5;
+            color: #1a3a5c;
+        }
+
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -518,81 +562,28 @@
 
         /* ===== レスポンシブ ===== */
         @media (max-width: 768px) {
-            body {
-                padding: 12px;
-            }
-            .app-wrapper {
-                padding: 16px 16px 30px;
-                border-radius: 24px;
-            }
-            .page-title {
-                font-size: 1.4rem;
-            }
-            .page-title .sub {
-                font-size: 0.75rem;
-                margin-left: 4px;
-            }
-            .filter-bar {
-                padding: 12px 16px;
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .filter-group {
-                flex-wrap: wrap;
-            }
-            .filter-group select {
-                flex: 1;
-                min-width: 80px;
-            }
-            .filter-hint {
-                margin-left: 0;
-            }
-            .filter-hint .today-label {
-                margin-left: 0;
-                display: inline-block;
-                margin-top: 4px;
-            }
-            .semester-card {
-                padding: 16px 16px;
-            }
-            .event-item {
-                flex-wrap: wrap;
-                padding: 8px 6px;
-                gap: 6px;
-            }
+            body { padding: 12px; }
+            .app-wrapper { padding: 16px 16px 30px; border-radius: 24px; }
+            .page-title { font-size: 1.4rem; }
+            .page-title .sub { font-size: 0.75rem; margin-left: 4px; }
+            .filter-bar { padding: 12px 16px; flex-direction: column; align-items: stretch; }
+            .filter-group { flex-wrap: wrap; }
+            .filter-group select { flex: 1; min-width: 80px; }
+            .filter-hint { margin-left: 0; }
+            .filter-hint .today-label { margin-left: 0; display: inline-block; margin-top: 4px; }
+            .semester-card { padding: 16px 16px; }
+            .event-item { flex-wrap: wrap; padding: 8px 6px; gap: 6px; }
             .event-item .event-date,
-            .event-item .event-date-input {
-                min-width: 44px;
-                width: 44px;
-                font-size: 0.75rem;
-            }
-            .event-item .event-content {
-                flex: 1 1 100%;
-            }
+            .event-item .event-date-input { min-width: 60px; width: auto; font-size: 0.75rem; }
+            .event-item .event-content { flex: 1 1 100%; }
             .event-item .event-title,
-            .event-item .event-title-input {
-                font-size: 0.85rem;
-            }
+            .event-item .event-title-input { font-size: 0.85rem; }
             .event-item .event-memo,
-            .event-item .event-memo-input {
-                font-size: 0.7rem;
-                min-height: 30px;
-                max-height: 80px;
-            }
-            .event-item .event-actions button {
-                padding: 2px 6px;
-                font-size: 0.7rem;
-            }
-            .semester-card .card-header .card-actions button {
-                font-size: 0.65rem;
-                padding: 2px 10px;
-            }
-            .toast-msg {
-                bottom: 80px;
-                right: 16px;
-                left: 16px;
-                text-align: center;
-            }
+            .event-item .event-memo-input { font-size: 0.7rem; min-height: 30px; max-height: 80px; }
+            .event-item .event-actions button { padding: 2px 6px; font-size: 0.7rem; }
+            .semester-card .card-header .card-actions button { font-size: 0.65rem; padding: 2px 10px; }
+            .toast-msg { bottom: 80px; right: 16px; left: 16px; text-align: center; }
+            .event-project-select { font-size: 0.65rem; min-width: 60px; }
         }
     </style>
 </head>
@@ -650,6 +641,12 @@
     // 曜日変換用
     const WEEKDAY_NAMES = ['日', '月', '火', '水', '木', '金', '土'];
 
+    // プロジェクトオプション
+    const PROJECT_OPTIONS = [
+        { value: 'sakura', label: '🌸 桜蔭', class: 'sakura' },
+        { value: 'tetsu', label: '⚔️ 鉄緑会', class: 'tetsu' }
+    ];
+
     // 学年に対応する年度開始年 (中2 → 2026, 中3 → 2027, ...)
     // 中1: 2025, 中2: 2026, 中3: 2027, 高1: 2028, 高2: 2029, 高3: 2030
     function getBaseYearForGrade(grade) {
@@ -680,24 +677,12 @@
         return getWeekdayFromDate(grade, parsed.month, parsed.day);
     }
 
-    // 今日の日付を取得（現在の実際の日付）
-    function getToday() {
-        const now = new Date();
-        return {
-            month: now.getMonth() + 1,
-            day: now.getDate(),
-            str: `${now.getMonth() + 1}/${now.getDate()}`
-        };
-    }
-
-    // 今日が指定学年の年度内かどうかを判定し、その学年における今日の日付（月/日）を返す
-    // 実際の今日が 2026/8/15 なら、中2では 8/15 として扱う
-    // ただし、2026/3/15 は中1の年度（2025/4〜2026/3）に属するため、中2では扱わない
+    // 今日の日付（この学年における今日）
     function getTodayForGrade(grade) {
         const now = new Date();
         const year = getBaseYearForGrade(grade);
-        const startDate = new Date(year, 3, 1); // 4月1日
-        const endDate = new Date(year + 1, 3, 1); // 翌年4月1日
+        const startDate = new Date(year, 3, 1);
+        const endDate = new Date(year + 1, 3, 1);
 
         // 現在日付がこの学年の範囲内かチェック
         if (now >= startDate && now < endDate) {
@@ -750,7 +735,15 @@
         return 'marker-other';
     }
 
-    // ===== データ読み込み =====
+    function getProjectLabel(project) {
+        if (project === 'tetsu') return '⚔️ 鉄緑会';
+        return '🌸 桜蔭';
+    }
+
+    function getProjectClass(project) {
+        return project === 'tetsu' ? 'tetsu' : 'sakura';
+    }
+
     async function loadData() {
         try {
             const cached = localStorage.getItem(DATA_KEY);
@@ -888,6 +881,9 @@
 
                     const marker = getMarkerClass(ev.title);
                     const memo = ev.memo || '';
+                    const project = ev.project || 'sakura'; // デフォルトは桜蔭
+                    const projectLabel = getProjectLabel(project);
+                    const projectClass = getProjectClass(project);
 
                     // 今日かどうか（この学年の今日と比較）
                     const isToday = parsed && parsed.month === today.month && parsed.day === today.day;
@@ -903,12 +899,22 @@
                                       editingEvent.semester === key && editingEvent.index === idx);
 
                     if (isEditing) {
+                        // 編集モード: プロジェクト選択ドロップダウン
+                        const projOptions = PROJECT_OPTIONS.map(p => 
+                            `<option value="${p.value}" ${p.value === project ? 'selected' : ''}>${p.label}</option>`
+                        ).join('');
+
                         html += `
                             <div class="event-item editing${todayClass}">
                                 <input class="event-date-input" id="edit_date_${grade}_${key}_${idx}" value="${ev.date}" placeholder="月/日" />
                                 <div class="event-content">
                                     <input class="event-title-input" id="edit_title_${grade}_${key}_${idx}" value="${ev.title}" placeholder="行事名" />
-                                    <textarea class="event-memo-input" id="edit_memo_${grade}_${key}_${idx}" placeholder="メモ（複数行可）" rows="2">${memo}</textarea>
+                                    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:2px;">
+                                        <select class="event-project-select" id="edit_project_${grade}_${key}_${idx}">
+                                            ${projOptions}
+                                        </select>
+                                        <textarea class="event-memo-input" id="edit_memo_${grade}_${key}_${idx}" placeholder="メモ（複数行可）" rows="2" style="flex:1; min-width:80px;">${memo}</textarea>
+                                    </div>
                                 </div>
                                 <div class="event-actions">
                                     <button class="save-btn" onclick="saveEvent('${grade}', '${key}', ${idx})">
@@ -932,6 +938,7 @@
                                     <div class="event-title">
                                         <span class="event-marker ${marker}"></span>
                                         ${ev.title}
+                                        <span class="event-project-badge ${projectClass}">${projectLabel}</span>
                                     </div>
                                     <div class="event-memo">${memo}</div>
                                 </div>
@@ -978,6 +985,7 @@
         const dateInput = document.getElementById(`edit_date_${grade}_${semester}_${index}`);
         const titleInput = document.getElementById(`edit_title_${grade}_${semester}_${index}`);
         const memoInput = document.getElementById(`edit_memo_${grade}_${semester}_${index}`);
+        const projectSelect = document.getElementById(`edit_project_${grade}_${semester}_${index}`);
 
         if (!dateInput || !titleInput) {
             showToast('❌ 入力項目が見つかりません', 'error');
@@ -987,6 +995,7 @@
         const date = dateInput.value.trim();
         const title = titleInput.value.trim();
         const memo = memoInput ? memoInput.value : '';
+        const project = projectSelect ? projectSelect.value : 'sakura';
 
         if (!date) { showToast('❌ 日付を入力してください', 'error'); return; }
         if (!title) { showToast('❌ 行事名を入力してください', 'error'); return; }
@@ -1000,7 +1009,7 @@
             return;
         }
 
-        sem.events[index] = { date, title, memo: memo || '' };
+        sem.events[index] = { date, title, memo: memo || '', project: project };
         saveScheduleData();
         editingEvent = null;
         renderSchedule();
@@ -1034,7 +1043,8 @@
             gradeData.semesters[semester].events = [];
         }
 
-        gradeData.semesters[semester].events.push({ date: '月/日', title: '新規行事', memo: '' });
+        // デフォルトは桜蔭
+        gradeData.semesters[semester].events.push({ date: '月/日', title: '新規行事', memo: '', project: 'sakura' });
         saveScheduleData();
 
         const newIndex = gradeData.semesters[semester].events.length - 1;
