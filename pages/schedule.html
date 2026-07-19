@@ -121,7 +121,7 @@
             margin-right: 4px;
         }
 
-        /* ===== カード ===== */
+        /* ===== 学期カード ===== */
         .semester-card {
             background: #fffffffa;
             border-radius: 28px;
@@ -209,22 +209,48 @@
             background: #4d3b2c;
         }
 
+        /* ===== 月見出し ===== */
+        .month-header {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #2a221b;
+            padding: 10px 12px 6px 12px;
+            margin-top: 8px;
+            border-bottom: 2px solid #e7dfd5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .month-header i {
+            color: #8f735b;
+        }
+        .month-header .month-count {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #6b5d4e;
+            background: #f0ebe4;
+            padding: 0 12px;
+            border-radius: 40px;
+        }
+
         /* ===== イベントリスト ===== */
         .event-list {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 4px 0;
+            gap: 2px 0;
         }
 
+        /* ===== イベントアイテム（通常） ===== */
         .event-item {
             display: flex;
-            align-items: center;
+            align-items: stretch;
             gap: 10px;
-            padding: 8px 10px;
+            padding: 8px 12px;
             border-radius: 12px;
             transition: 0.15s;
             font-size: 0.9rem;
-            border-bottom: 1px solid #f0ebe4;
+            border-bottom: 1px solid #f5f0e8;
+            background: transparent;
         }
 
         .event-item:last-child {
@@ -235,18 +261,53 @@
             background: #f5f0e8;
         }
 
+        /* ===== 今日のイベント（ハイライト） ===== */
+        .event-item.today {
+            background: #fff3e0;
+            border-left: 4px solid #e65100;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(230, 81, 0, 0.12);
+        }
+
+        .event-item.today .event-date {
+            background: #e65100;
+            color: white;
+        }
+
+        .event-item.today .today-badge {
+            display: inline-block;
+            background: #e65100;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 1px 10px;
+            border-radius: 40px;
+            margin-left: 6px;
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
         .event-item .event-date {
             font-weight: 700;
             color: #8f735b;
             min-width: 52px;
             font-size: 0.85rem;
             background: #f0ebe4;
-            padding: 2px 10px;
+            padding: 4px 10px;
             border-radius: 6px;
             text-align: center;
             font-feature-settings: "tnum";
             flex-shrink: 0;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: fit-content;
+            align-self: center;
         }
 
         .event-item .event-date-input {
@@ -261,20 +322,29 @@
             outline: none;
             text-align: center;
             flex-shrink: 0;
+            align-self: center;
+        }
+
+        .event-item .event-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
         }
 
         .event-item .event-title {
             color: #2a221b;
-            flex: 2;
             display: flex;
             align-items: center;
             gap: 6px;
-            min-width: 80px;
             cursor: pointer;
+            font-weight: 500;
+            flex-wrap: wrap;
         }
 
         .event-item .event-title-input {
-            flex: 2;
+            flex: 1;
             padding: 4px 10px;
             border: 2px solid #8f735b;
             border-radius: 8px;
@@ -283,6 +353,7 @@
             background: white;
             min-width: 80px;
             font-family: inherit;
+            font-weight: 500;
         }
 
         .event-item .event-title .event-marker {
@@ -306,30 +377,38 @@
             background: #b7a086;
         }
 
-        /* ===== メモ ===== */
+        /* ===== メモ（表示時） ===== */
         .event-item .event-memo {
-            flex: 1;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             color: #6b5d4e;
-            min-width: 60px;
             cursor: pointer;
-            padding: 2px 8px;
+            padding: 2px 10px;
             border-radius: 6px;
             background: #f8f4ef;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 150px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
+            max-height: 80px;
+            overflow-y: auto;
             transition: 0.15s;
+            border: 1px solid transparent;
         }
 
         .event-item .event-memo:hover {
             background: #ede6dd;
+            border-color: #d8cdbf;
         }
 
+        .event-item .event-memo:empty::before {
+            content: 'メモを追加';
+            color: #b7a086;
+            font-style: italic;
+        }
+
+        /* ===== メモ（編集時） ===== */
         .event-item .event-memo-input {
             flex: 1;
-            padding: 4px 10px;
+            padding: 6px 10px;
             border: 2px solid #b7a086;
             border-radius: 8px;
             font-size: 0.8rem;
@@ -338,6 +417,10 @@
             min-width: 60px;
             font-family: inherit;
             color: #3d3229;
+            resize: vertical;
+            line-height: 1.6;
+            min-height: 50px;
+            max-height: 150px;
         }
 
         .event-item .event-memo-input:focus {
@@ -348,6 +431,7 @@
             display: flex;
             gap: 4px;
             flex-shrink: 0;
+            align-items: center;
         }
 
         .event-item .event-actions button {
@@ -427,11 +511,6 @@
             display: none;
         }
 
-        /* ===== 編集モードフラグ ===== */
-        .editing-mode .event-item {
-            border-bottom: 1px solid #e7dfd5;
-        }
-
         /* ===== レスポンシブ ===== */
         @media (max-width: 768px) {
             body {
@@ -473,22 +552,22 @@
             }
             .event-item .event-date,
             .event-item .event-date-input {
-                min-width: 48px;
-                width: 48px;
+                min-width: 44px;
+                width: 44px;
                 font-size: 0.75rem;
+            }
+            .event-item .event-content {
+                flex: 1 1 100%;
             }
             .event-item .event-title,
             .event-item .event-title-input {
-                flex: 1;
-                min-width: 60px;
                 font-size: 0.85rem;
             }
             .event-item .event-memo,
             .event-item .event-memo-input {
-                flex: 1;
-                min-width: 50px;
-                max-width: 100px;
                 font-size: 0.7rem;
+                min-height: 30px;
+                max-height: 80px;
             }
             .event-item .event-actions button {
                 padding: 2px 6px;
@@ -504,11 +583,15 @@
                 left: 16px;
                 text-align: center;
             }
+            .month-header {
+                font-size: 0.95rem;
+                padding: 6px 8px;
+            }
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
             .event-item .event-memo {
-                max-width: 120px;
+                max-height: 60px;
             }
         }
     </style>
@@ -545,7 +628,10 @@
             <span class="badge-count" id="totalCount">0</span>
         </div>
         <span class="filter-hint">
-            <i class="fas fa-edit"></i> クリックで編集・メモ追加
+            <i class="fas fa-edit"></i> クリックで編集・メモは複数行対応
+            <span style="margin-left:12px; background:#fff3e0; padding:2px 12px; border-radius:40px; font-size:0.75rem; color:#e65100;">
+                <i class="fas fa-circle" style="font-size:0.5rem;"></i> 今日
+            </span>
         </span>
     </div>
 
@@ -558,17 +644,12 @@
 <!-- ===== トースト ===== -->
 <div class="toast-msg" id="toast"></div>
 
-<!-- ============================================================ -->
-<!-- スクリプト -->
-<!-- ============================================================ -->
-
 <script>
     // ============================================================
     // 🔧 データボタン表示設定（common.js 用）
     // ============================================================
     window.SHOW_EXPORT = true;
     window.SHOW_IMPORT = true;
-    // ============================================================
 
     // ============================================================
     //  定数
@@ -598,23 +679,39 @@
         '3': '三学期'
     };
 
-    // ============================================================
-    //  マーカータイプ判定
-    // ============================================================
+    const MONTH_NAMES = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+
+    let scheduleData = null;
+    let editingEvent = null;
+
+    // ===== 今日の日付を取得 =====
+    function getToday() {
+        const now = new Date();
+        return {
+            month: now.getMonth() + 1,
+            day: now.getDate(),
+            str: `${now.getMonth() + 1}/${now.getDate()}`
+        };
+    }
+
+    // ===== 日付をパース =====
+    function parseDate(dateStr) {
+        // "4/8" や "4/8（水）" などに対応
+        const match = dateStr.match(/(\d{1,2})\/(\d{1,2})/);
+        if (!match) return null;
+        return { month: parseInt(match[1]), day: parseInt(match[2]) };
+    }
+
+    // ===== マーカータイプ判定 =====
     function getMarkerClass(title) {
         const t = title.toLowerCase();
-        if (t.includes('考査') || t.includes('テスト') || t.includes('試験') || t.includes('入試')) return 'marker-test';
-        if (t.includes('祭') || t.includes('式') || t.includes('会') || t.includes('研修') || t.includes('学習')) return 'marker-event';
-        if (t.includes('日') && (t.includes('記念') || t.includes('の日'))) return 'marker-holiday';
+        if (t.includes('考査') || t.includes('テスト') || t.includes('試験') || t.includes('入試') || t.includes('検定')) return 'marker-test';
+        if (t.includes('祭') || t.includes('式') || t.includes('会') || t.includes('総会') || t.includes('行事') || t.includes('講演')) return 'marker-event';
+        if (t.includes('日') && (t.includes('記念') || t.includes('の日') || t.includes('祝日') || t.includes('休日'))) return 'marker-holiday';
         return 'marker-other';
     }
 
-    // ============================================================
-    //  データ読み込み
-    // ============================================================
-    let scheduleData = null;
-    let editingEvent = null; // { grade, semester, index }
-
+    // ===== データ読み込み =====
     async function loadData() {
         try {
             // 1. localStorage から読み込み
@@ -628,7 +725,7 @@
                         showToast('💾 キャッシュから読み込みました', 'info');
                         return;
                     }
-                } catch (e) { /* 無視 */ }
+                } catch (e) {}
             }
 
             // 2. デフォルトJSONを読み込み
@@ -654,12 +751,11 @@
         localStorage.setItem(DATA_KEY, JSON.stringify(scheduleData));
     }
 
-    // ============================================================
-    //  レンダリング
-    // ============================================================
+    // ===== レンダリング =====
     function renderSchedule() {
         const container = document.getElementById('scheduleContainer');
         const grade = document.getElementById('gradeSelect').value;
+        const today = getToday();
 
         if (!scheduleData || !scheduleData[grade]) {
             container.innerHTML = `
@@ -714,52 +810,91 @@
             if (events.length === 0) {
                 html += `<div class="empty-events">予定はありません。右上の「追加」から追加してください</div>`;
             } else {
+                // 月ごとにグルーピング
+                const grouped = {};
                 for (let i = 0; i < events.length; i++) {
                     const ev = events[i];
-                    const marker = getMarkerClass(ev.title);
-                    const memo = ev.memo || '';
-                    const isEditing = (editingEvent && editingEvent.grade === grade && 
-                                      editingEvent.semester === key && editingEvent.index === i);
+                    const parsed = parseDate(ev.date);
+                    const monthKey = parsed ? parsed.month : 0;
+                    if (!grouped[monthKey]) grouped[monthKey] = [];
+                    grouped[monthKey].push({ index: i, event: ev, parsed });
+                }
 
-                    if (isEditing) {
-                        // 編集モード
-                        html += `
-                            <div class="event-item editing">
-                                <input class="event-date-input" id="edit_date_${grade}_${key}_${i}" value="${ev.date}" placeholder="月/日" />
-                                <input class="event-title-input" id="edit_title_${grade}_${key}_${i}" value="${ev.title}" placeholder="行事名" />
-                                <input class="event-memo-input" id="edit_memo_${grade}_${key}_${i}" value="${memo}" placeholder="メモ" />
-                                <div class="event-actions">
-                                    <button class="save-btn" onclick="saveEvent('${grade}', '${key}', ${i})">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="cancel-btn" onclick="cancelEdit('${grade}', '${key}', ${i})">
-                                        <i class="fas fa-times"></i>
-                                    </button>
+                // 月の順序で表示（4月から始まるが、数値順でOK）
+                const sortedMonths = Object.keys(grouped).sort((a, b) => parseInt(a) - parseInt(b));
+
+                for (const monthKey of sortedMonths) {
+                    const monthNum = parseInt(monthKey);
+                    const monthName = MONTH_NAMES[monthNum - 1] || monthNum + '月';
+                    const items = grouped[monthKey];
+
+                    html += `
+                        <div class="month-header">
+                            <i class="fas fa-calendar-alt"></i> ${monthName}
+                            <span class="month-count">${items.length}件</span>
+                        </div>
+                    `;
+
+                    for (const item of items) {
+                        const ev = item.event;
+                        const i = item.index;
+                        const parsed = item.parsed;
+                        const marker = getMarkerClass(ev.title);
+                        const memo = ev.memo || '';
+
+                        // 今日の日付かチェック
+                        const isToday = parsed && parsed.month === today.month && parsed.day === today.day;
+                        const todayClass = isToday ? ' today' : '';
+
+                        const isEditing = (editingEvent && editingEvent.grade === grade &&
+                                          editingEvent.semester === key && editingEvent.index === i);
+
+                        if (isEditing) {
+                            // 編集モード
+                            html += `
+                                <div class="event-item editing${todayClass}">
+                                    <input class="event-date-input" id="edit_date_${grade}_${key}_${i}" value="${ev.date}" placeholder="月/日" />
+                                    <div class="event-content">
+                                        <input class="event-title-input" id="edit_title_${grade}_${key}_${i}" value="${ev.title}" placeholder="行事名" />
+                                        <textarea class="event-memo-input" id="edit_memo_${grade}_${key}_${i}" placeholder="メモ（複数行可）" rows="2">${memo}</textarea>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="save-btn" onclick="saveEvent('${grade}', '${key}', ${i})">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="cancel-btn" onclick="cancelEdit('${grade}', '${key}', ${i})">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        `;
-                    } else {
-                        // 表示モード
-                        html += `
-                            <div class="event-item" onclick="startEdit('${grade}', '${key}', ${i})">
-                                <span class="event-date">${ev.date}</span>
-                                <span class="event-title">
-                                    <span class="event-marker ${marker}"></span>
-                                    ${ev.title}
-                                </span>
-                                <span class="event-memo" title="${memo}">
-                                    ${memo ? '📝 ' + memo : ''}
-                                </span>
-                                <div class="event-actions" onclick="event.stopPropagation();">
-                                    <button onclick="startEdit('${grade}', '${key}', ${i})" title="編集">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="delete-btn" onclick="deleteEvent('${grade}', '${key}', ${i})" title="削除">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                            `;
+                        } else {
+                            // 表示モード
+                            const memoDisplay = memo ? memo.replace(/\n/g, '') : '';
+                            html += `
+                                <div class="event-item${todayClass}" onclick="startEdit('${grade}', '${key}', ${i})">
+                                    <span class="event-date">
+                                        ${ev.date}
+                                        ${isToday ? '<span class="today-badge">今日</span>' : ''}
+                                    </span>
+                                    <div class="event-content">
+                                        <div class="event-title">
+                                            <span class="event-marker ${marker}"></span>
+                                            ${ev.title}
+                                        </div>
+                                        <div class="event-memo">${memo}</div>
+                                    </div>
+                                    <div class="event-actions" onclick="event.stopPropagation();">
+                                        <button onclick="startEdit('${grade}', '${key}', ${i})" title="編集">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="delete-btn" onclick="deleteEvent('${grade}', '${key}', ${i})" title="削除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
+                        }
                     }
                 }
             }
@@ -774,13 +909,15 @@
         document.getElementById('totalCount').textContent = totalEvents;
     }
 
-    // ============================================================
-    //  イベント操作関数
-    // ============================================================
-
+    // ===== イベント操作 =====
     function startEdit(grade, semester, index) {
         editingEvent = { grade, semester, index };
         renderSchedule();
+        // メモ入力にフォーカス
+        setTimeout(() => {
+            const memoInput = document.getElementById(`edit_memo_${grade}_${semester}_${index}`);
+            if (memoInput) memoInput.focus();
+        }, 100);
     }
 
     function cancelEdit(grade, semester, index) {
@@ -800,7 +937,7 @@
 
         const date = dateInput.value.trim();
         const title = titleInput.value.trim();
-        const memo = memoInput ? memoInput.value.trim() : '';
+        const memo = memoInput ? memoInput.value : '';
 
         if (!date) {
             showToast('❌ 日付を入力してください', 'error');
@@ -813,21 +950,15 @@
 
         // データ更新
         const gradeData = scheduleData[grade];
-        if (!gradeData) {
-            showToast('❌ データが見つかりません', 'error');
-            return;
-        }
+        if (!gradeData) { showToast('❌ データが見つかりません', 'error'); return; }
         const sem = gradeData.semesters[semester];
-        if (!sem) {
-            showToast('❌ 学期データが見つかりません', 'error');
-            return;
-        }
+        if (!sem) { showToast('❌ 学期データが見つかりません', 'error'); return; }
         if (!sem.events || index >= sem.events.length) {
             showToast('❌ イベントが見つかりません', 'error');
             return;
         }
 
-        sem.events[index] = { date, title, memo: memo || undefined };
+        sem.events[index] = { date, title, memo: memo || '' };
         saveScheduleData();
         editingEvent = null;
         renderSchedule();
@@ -873,16 +1004,13 @@
         // フォーカスを日付入力に設定
         setTimeout(() => {
             const input = document.getElementById(`edit_date_${grade}_${semester}_${newIndex}`);
-            if (input) {
-                input.focus();
-                input.select();
-            }
+            if (input) { input.focus(); input.select(); }
         }, 100);
 
         showToast('📝 新規行事を追加しました', 'success');
     }
 
-    // ============================================================
+    // ===== 以下、GitHub連携・エクスポート・インポート・デフォルト復元 =======================================================
     //  GitHub連携
     // ============================================================
 
