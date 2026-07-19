@@ -122,47 +122,6 @@
         }
 
         /* ===== カード ===== */
-        .card {
-            background: #fffffffa;
-            border-radius: 28px;
-            padding: 22px 24px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.03);
-            border: 1px solid #ede8e0;
-            margin-bottom: 24px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #e7dfd5;
-            padding-bottom: 12px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-        }
-
-        .card-header h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #2a221b;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .card-header h2 i {
-            color: #8f735b;
-        }
-
-        .card-header .badge {
-            background: #e7ddd2;
-            border-radius: 40px;
-            padding: 2px 14px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #3d3229;
-        }
-
-        /* ===== 学期カード ===== */
         .semester-card {
             background: #fffffffa;
             border-radius: 28px;
@@ -215,21 +174,61 @@
             border-radius: 40px;
         }
 
+        .semester-card .card-header .card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .semester-card .card-header .card-actions button {
+            padding: 4px 14px;
+            border: 2px solid #d8cdbf;
+            border-radius: 40px;
+            background: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #3d3229;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .semester-card .card-header .card-actions button:hover {
+            background: #f0ebe4;
+        }
+
+        .semester-card .card-header .card-actions button.add-btn {
+            background: #2c241c;
+            color: white;
+            border-color: #2c241c;
+        }
+
+        .semester-card .card-header .card-actions button.add-btn:hover {
+            background: #4d3b2c;
+        }
+
         /* ===== イベントリスト ===== */
         .event-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 6px 16px;
+            grid-template-columns: 1fr;
+            gap: 4px 0;
         }
 
         .event-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 6px 10px;
+            padding: 8px 10px;
             border-radius: 12px;
             transition: 0.15s;
             font-size: 0.9rem;
+            border-bottom: 1px solid #f0ebe4;
+        }
+
+        .event-item:last-child {
+            border-bottom: none;
         }
 
         .event-item:hover {
@@ -239,21 +238,51 @@
         .event-item .event-date {
             font-weight: 700;
             color: #8f735b;
-            min-width: 48px;
+            min-width: 52px;
             font-size: 0.85rem;
             background: #f0ebe4;
             padding: 2px 10px;
             border-radius: 6px;
             text-align: center;
             font-feature-settings: "tnum";
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .event-item .event-date-input {
+            width: 60px;
+            padding: 4px 8px;
+            border: 2px solid #8f735b;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #8f735b;
+            background: #fff;
+            outline: none;
+            text-align: center;
+            flex-shrink: 0;
         }
 
         .event-item .event-title {
             color: #2a221b;
-            flex: 1;
+            flex: 2;
             display: flex;
             align-items: center;
             gap: 6px;
+            min-width: 80px;
+            cursor: pointer;
+        }
+
+        .event-item .event-title-input {
+            flex: 2;
+            padding: 4px 10px;
+            border: 2px solid #8f735b;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            background: white;
+            min-width: 80px;
+            font-family: inherit;
         }
 
         .event-item .event-title .event-marker {
@@ -277,6 +306,82 @@
             background: #b7a086;
         }
 
+        /* ===== メモ ===== */
+        .event-item .event-memo {
+            flex: 1;
+            font-size: 0.75rem;
+            color: #6b5d4e;
+            min-width: 60px;
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: #f8f4ef;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+            transition: 0.15s;
+        }
+
+        .event-item .event-memo:hover {
+            background: #ede6dd;
+        }
+
+        .event-item .event-memo-input {
+            flex: 1;
+            padding: 4px 10px;
+            border: 2px solid #b7a086;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            outline: none;
+            background: white;
+            min-width: 60px;
+            font-family: inherit;
+            color: #3d3229;
+        }
+
+        .event-item .event-memo-input:focus {
+            border-color: #8f735b;
+        }
+
+        .event-item .event-actions {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .event-item .event-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #6b5d4e;
+            transition: 0.15s;
+        }
+
+        .event-item .event-actions button:hover {
+            background: #ede6dd;
+        }
+
+        .event-item .event-actions button.delete-btn:hover {
+            color: #c62828;
+            background: #f5e0e0;
+        }
+
+        .event-item .event-actions button.save-btn {
+            color: #2e7d32;
+        }
+
+        .event-item .event-actions button.save-btn:hover {
+            background: #e0f0e0;
+        }
+
+        .event-item .event-actions button.cancel-btn:hover {
+            background: #f0ebe4;
+        }
+
         /* ===== 空の状態 ===== */
         .empty-state {
             text-align: center;
@@ -290,6 +395,13 @@
         }
         .empty-state p {
             font-size: 0.95rem;
+        }
+
+        .empty-events {
+            text-align: center;
+            padding: 20px;
+            color: #b7a086;
+            font-size: 0.85rem;
         }
 
         /* ===== トースト ===== */
@@ -313,6 +425,11 @@
 
         #fileInput {
             display: none;
+        }
+
+        /* ===== 編集モードフラグ ===== */
+        .editing-mode .event-item {
+            border-bottom: 1px solid #e7dfd5;
         }
 
         /* ===== レスポンシブ ===== */
@@ -349,11 +466,37 @@
             .semester-card {
                 padding: 16px 16px;
             }
-            .event-list {
-                grid-template-columns: 1fr;
-            }
             .event-item {
-                padding: 4px 6px;
+                flex-wrap: wrap;
+                padding: 8px 6px;
+                gap: 6px;
+            }
+            .event-item .event-date,
+            .event-item .event-date-input {
+                min-width: 48px;
+                width: 48px;
+                font-size: 0.75rem;
+            }
+            .event-item .event-title,
+            .event-item .event-title-input {
+                flex: 1;
+                min-width: 60px;
+                font-size: 0.85rem;
+            }
+            .event-item .event-memo,
+            .event-item .event-memo-input {
+                flex: 1;
+                min-width: 50px;
+                max-width: 100px;
+                font-size: 0.7rem;
+            }
+            .event-item .event-actions button {
+                padding: 2px 6px;
+                font-size: 0.7rem;
+            }
+            .semester-card .card-header .card-actions button {
+                font-size: 0.65rem;
+                padding: 2px 10px;
             }
             .toast-msg {
                 bottom: 80px;
@@ -364,8 +507,8 @@
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
-            .event-list {
-                grid-template-columns: repeat(2, 1fr);
+            .event-item .event-memo {
+                max-width: 120px;
             }
         }
     </style>
@@ -402,7 +545,7 @@
             <span class="badge-count" id="totalCount">0</span>
         </div>
         <span class="filter-hint">
-            <i class="fas fa-edit"></i> 編集はデータファイルを直接修正
+            <i class="fas fa-edit"></i> クリックで編集・メモ追加
         </span>
     </div>
 
@@ -470,6 +613,7 @@
     //  データ読み込み
     // ============================================================
     let scheduleData = null;
+    let editingEvent = null; // { grade, semester, index }
 
     async function loadData() {
         try {
@@ -501,6 +645,13 @@
             scheduleData = {};
             renderSchedule();
         }
+    }
+
+    // ============================================================
+    //  データ保存
+    // ============================================================
+    function saveScheduleData() {
+        localStorage.setItem(DATA_KEY, JSON.stringify(scheduleData));
     }
 
     // ============================================================
@@ -541,32 +692,75 @@
             const semName = SEMESTER_NAMES[key] || sem.name || key + '学期';
 
             html += `
-                <div class="semester-card" style="border-left-color: ${color};">
+                <div class="semester-card" style="border-left-color: ${color};" data-grade="${grade}" data-semester="${key}">
                     <div class="card-header">
                         <h2>
                             <i class="fas ${icon}" style="color:${color};"></i>
                             ${gradeName} ${semName}
                             <span class="semester-badge">${events.length}件</span>
                         </h2>
-                        <span class="event-count"><i class="far fa-calendar-alt"></i> ${events.length}行事</span>
+                        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                            <span class="event-count"><i class="far fa-calendar-alt"></i> ${events.length}行事</span>
+                            <div class="card-actions">
+                                <button class="add-btn" onclick="addEvent('${grade}', '${key}')">
+                                    <i class="fas fa-plus"></i> 追加
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div class="event-list">
             `;
 
             if (events.length === 0) {
-                html += `<div style="grid-column:1/-1; color:#b7a086; font-size:0.85rem; padding:8px 0;">予定はありません</div>`;
+                html += `<div class="empty-events">予定はありません。右上の「追加」から追加してください</div>`;
             } else {
-                for (const ev of events) {
+                for (let i = 0; i < events.length; i++) {
+                    const ev = events[i];
                     const marker = getMarkerClass(ev.title);
-                    html += `
-                        <div class="event-item">
-                            <span class="event-date">${ev.date}</span>
-                            <span class="event-title">
-                                <span class="event-marker ${marker}"></span>
-                                ${ev.title}
-                            </span>
-                        </div>
-                    `;
+                    const memo = ev.memo || '';
+                    const isEditing = (editingEvent && editingEvent.grade === grade && 
+                                      editingEvent.semester === key && editingEvent.index === i);
+
+                    if (isEditing) {
+                        // 編集モード
+                        html += `
+                            <div class="event-item editing">
+                                <input class="event-date-input" id="edit_date_${grade}_${key}_${i}" value="${ev.date}" placeholder="月/日" />
+                                <input class="event-title-input" id="edit_title_${grade}_${key}_${i}" value="${ev.title}" placeholder="行事名" />
+                                <input class="event-memo-input" id="edit_memo_${grade}_${key}_${i}" value="${memo}" placeholder="メモ" />
+                                <div class="event-actions">
+                                    <button class="save-btn" onclick="saveEvent('${grade}', '${key}', ${i})">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="cancel-btn" onclick="cancelEdit('${grade}', '${key}', ${i})">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // 表示モード
+                        html += `
+                            <div class="event-item" onclick="startEdit('${grade}', '${key}', ${i})">
+                                <span class="event-date">${ev.date}</span>
+                                <span class="event-title">
+                                    <span class="event-marker ${marker}"></span>
+                                    ${ev.title}
+                                </span>
+                                <span class="event-memo" title="${memo}">
+                                    ${memo ? '📝 ' + memo : ''}
+                                </span>
+                                <div class="event-actions" onclick="event.stopPropagation();">
+                                    <button onclick="startEdit('${grade}', '${key}', ${i})" title="編集">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="delete-btn" onclick="deleteEvent('${grade}', '${key}', ${i})" title="削除">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
                 }
             }
 
@@ -578,6 +772,114 @@
 
         container.innerHTML = html;
         document.getElementById('totalCount').textContent = totalEvents;
+    }
+
+    // ============================================================
+    //  イベント操作関数
+    // ============================================================
+
+    function startEdit(grade, semester, index) {
+        editingEvent = { grade, semester, index };
+        renderSchedule();
+    }
+
+    function cancelEdit(grade, semester, index) {
+        editingEvent = null;
+        renderSchedule();
+    }
+
+    function saveEvent(grade, semester, index) {
+        const dateInput = document.getElementById(`edit_date_${grade}_${semester}_${index}`);
+        const titleInput = document.getElementById(`edit_title_${grade}_${semester}_${index}`);
+        const memoInput = document.getElementById(`edit_memo_${grade}_${semester}_${index}`);
+
+        if (!dateInput || !titleInput) {
+            showToast('❌ 入力項目が見つかりません', 'error');
+            return;
+        }
+
+        const date = dateInput.value.trim();
+        const title = titleInput.value.trim();
+        const memo = memoInput ? memoInput.value.trim() : '';
+
+        if (!date) {
+            showToast('❌ 日付を入力してください', 'error');
+            return;
+        }
+        if (!title) {
+            showToast('❌ 行事名を入力してください', 'error');
+            return;
+        }
+
+        // データ更新
+        const gradeData = scheduleData[grade];
+        if (!gradeData) {
+            showToast('❌ データが見つかりません', 'error');
+            return;
+        }
+        const sem = gradeData.semesters[semester];
+        if (!sem) {
+            showToast('❌ 学期データが見つかりません', 'error');
+            return;
+        }
+        if (!sem.events || index >= sem.events.length) {
+            showToast('❌ イベントが見つかりません', 'error');
+            return;
+        }
+
+        sem.events[index] = { date, title, memo: memo || undefined };
+        saveScheduleData();
+        editingEvent = null;
+        renderSchedule();
+        showToast('✅ 更新しました', 'success');
+    }
+
+    function deleteEvent(grade, semester, index) {
+        if (!confirm('この行事を削除しますか？')) return;
+
+        const gradeData = scheduleData[grade];
+        if (!gradeData) return;
+        const sem = gradeData.semesters[semester];
+        if (!sem || !sem.events) return;
+
+        sem.events.splice(index, 1);
+        saveScheduleData();
+        renderSchedule();
+        showToast('🗑️ 削除しました', 'info');
+    }
+
+    function addEvent(grade, semester) {
+        const gradeData = scheduleData[grade];
+        if (!gradeData) {
+            showToast('❌ 学年データが見つかりません', 'error');
+            return;
+        }
+        if (!gradeData.semesters[semester]) {
+            gradeData.semesters[semester] = { name: SEMESTER_NAMES[semester] || semester + '学期', events: [] };
+        }
+        if (!gradeData.semesters[semester].events) {
+            gradeData.semesters[semester].events = [];
+        }
+
+        // 新しい空のイベントを追加
+        gradeData.semesters[semester].events.push({ date: '月/日', title: '新規行事', memo: '' });
+        saveScheduleData();
+
+        // 新しく追加したイベントを編集モードで開く
+        const newIndex = gradeData.semesters[semester].events.length - 1;
+        editingEvent = { grade, semester, index: newIndex };
+        renderSchedule();
+
+        // フォーカスを日付入力に設定
+        setTimeout(() => {
+            const input = document.getElementById(`edit_date_${grade}_${semester}_${newIndex}`);
+            if (input) {
+                input.focus();
+                input.select();
+            }
+        }, 100);
+
+        showToast('📝 新規行事を追加しました', 'success');
     }
 
     // ============================================================
@@ -618,8 +920,7 @@
             return;
         }
 
-        // まずローカル保存
-        localStorage.setItem(DATA_KEY, JSON.stringify(scheduleData));
+        saveScheduleData();
 
         const dot = document.getElementById('statusDot');
         const text = document.getElementById('statusText');
@@ -697,7 +998,6 @@
             const content = decodeURIComponent(escape(atob(fileData.content)));
             const loadedData = JSON.parse(content);
 
-            // バリデーション
             if (typeof loadedData !== 'object' || loadedData === null) {
                 throw new Error('データ形式が不正です');
             }
@@ -788,15 +1088,7 @@
         if (!el) return;
         el.textContent = msg;
         el.className = 'toast-msg';
-        if (type === 'error') {
-            el.style.background = '#8f4a4a';
-        } else if (type === 'success') {
-            el.style.background = '#2e7d32';
-        } else if (type === 'info') {
-            el.style.background = '#2c241c';
-        } else {
-            el.style.background = '#2c241c';
-        }
+        el.style.background = type === 'error' ? '#8f4a4a' : type === 'success' ? '#2e7d32' : '#2c241c';
         el.style.color = '#f0e8de';
         setTimeout(() => el.classList.add('show'), 10);
         clearTimeout(el._timer);
@@ -822,6 +1114,11 @@
         window.resetToDefault = resetToDefault;
         window.renderSchedule = renderSchedule;
         window.showToast = showToast;
+        window.startEdit = startEdit;
+        window.cancelEdit = cancelEdit;
+        window.saveEvent = saveEvent;
+        window.deleteEvent = deleteEvent;
+        window.addEvent = addEvent;
     });
 </script>
 
