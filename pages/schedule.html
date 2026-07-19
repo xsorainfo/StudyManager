@@ -297,7 +297,7 @@
         .event-item .event-date {
             font-weight: 700;
             color: #8f735b;
-            min-width: 52px;
+            min-width: 80px;
             font-size: 0.85rem;
             background: #f0ebe4;
             padding: 4px 10px;
@@ -326,7 +326,7 @@
         }
 
         .event-item .event-date-input {
-            width: 60px;
+            width: 80px;
             padding: 4px 8px;
             border: 2px solid #8f735b;
             border-radius: 6px;
@@ -604,13 +604,13 @@
 
     <div class="page-title">
         <i class="fas fa-calendar-alt"></i> 年間予定
-        <span class="sub">年間行事予定管理</span>
+        <span class="sub" id="yearRangeLabel">年間行事予定管理</span>
     </div>
 
     <div class="filter-bar">
         <div class="filter-group">
             <label for="gradeSelect"><i class="fas fa-graduation-cap"></i> 学年</label>
-            <select id="gradeSelect" onchange="renderSchedule()">
+            <select id="gradeSelect" onchange="onGradeChange()">
                 <option value="1">中1</option>
                 <option value="2" selected>中2</option>
                 <option value="3">中3</option>
@@ -647,28 +647,64 @@
     const GITHUB_PATH = 'data/schedule_data.json';
     const GITHUB_BRANCH = 'main';
 
-    // 曜日変換用（2026年4月1日を基準に計算）
-    // 2026年4月1日は水曜日 (星期三)
+    // 曜日変換用
     const WEEKDAY_NAMES = ['日', '月', '火', '水', '木', '金', '土'];
-    // 基準日: 2026年4月1日 (水曜日)  =>  index = 3
-    const BASE_DATE = new Date(2026, 3, 1); // month: 3 = 4月
-    const BASE_WEEKDAY = 3; // 水曜日
 
-    // 日付 (mm/dd) から曜日を計算 (2026/4 ~ 2027/3 の範囲)
-    function getWeekdayFromDate(month, day) {
-        // 2026年4月1日からの差分日数
-        const target = new Date(2026, month - 1, day);
-        const diff = Math.floor((target - BASE_DATE) / (1000 * 60 * 60 * 24));
-        // 曜日インデックス (0:日曜, 1:月曜 ...)
-        let wd = (BASE_WEEKDAY + diff) % 7;
-        if (wd < 0) wd += 7;
+    // 学年に対応する年度開始年 (中2 → 2026, 中3 → 2027, ...)
+    // 中1: 2025, 中2: 2026, 中3: 2027, 高1: 2028, 高2: 2029, 高3: 2030
+    function getBaseYearForGrade(grade) {
+        // grade: 1(中1) ~ 6(高3)
+        // 中1 → 2025, 中2 → 2026, 中3 → 2027, 高1 → 2028, 高2 → 2029, 高3 → 2030
+        return 2024 + parseInt(grade);
+    }
+
+    // 指定された学年の基準日 (その年の4月1日) の曜日インデックスを返す
+    function getBaseWeekdayForGrade(grade) {
+        const year = getBaseYearForGrade(grade);
+        // その年の4月1日のDateオブジェクト
+        const baseDate = new Date(year, 3, 1); // month: 3 = 4月
+        return baseDate.getDay(); // 0:日曜, 1:月曜, ...
+    }
+
+    // 日付 (mm/dd) から曜日を計算 (指定学年の年度に基づく)
+    function getWeekdayFromDate(grade, month, day) {
+        const year = getBaseYearForGrade(grade);
+        const target = new Date(year, month - 1, day);
+        const wd = target.getDay();
         return WEEKDAY_NAMES[wd];
     }
 
-    function getWeekdayFromDateStr(dateStr) {
+    function getWeekdayFromDateStr(grade, dateStr) {
         const parsed = parseDate(dateStr);
         if (!parsed) return '';
-        return getWeekdayFromDate(parsed.month, parsed.day);
+        return getWeekdayFromDate(grade, parsed.month, parsed.day);
+    }
+
+    // 今日の日付を取得（現在の実際の日付）
+    function getToday() {
+        const now = new Date();
+        return {
+            month: now.getMonth() + 1,
+            day: now.getDate(),
+            str: `${now.getMonth() + 1}/${now.getDate()}`
+        };
+    }
+
+    // 今日が指定学年の年度内かどうかを判定し、その学年における今日の日付（月/日）を返す
+    // 実際の今日が 2026/8/15 なら、中2では 8/15 として扱う
+    // ただし、2026/3/15 は中1の年度（2025/4〜2026/3）に属するため、中2では扱わない
+    function getTodayForGrade(grade) {
+        const now = new Date();
+        const year = getBaseYearForGrade(grade);
+        const startDate = new Date(year, 3, 1); // 4月1日
+        const endDate = new Date(year + 1, 3, 1); // 翌年4月1日
+
+        // 現在日付がこの学年の範囲内かチェック
+        if (now >= startDate && now < endDate) {
+            return { month: now.getMonth() + 1, day: now.getDate() };
+        }
+        // 範囲外の場合は null を返す（今日表示なし）
+        return null;
     }
 
     const SEMESTER_COLORS = {
@@ -692,17 +728,6 @@
     let scheduleData = null;
     let editingEvent = null;
 
-    // ===== 今日の日付を取得 =====
-    function getToday() {
-        const now = new Date();
-        return {
-            month: now.getMonth() + 1,
-            day: now.getDate(),
-            str: `${now.getMonth() + 1}/${now.getDate()}`
-        };
-    }
-
-    // ===== 日付をパース（数値比較用） =====
     function parseDate(dateStr) {
         const match = dateStr.match(/(\d{1,2})\/(\d{1,2})/);
         if (!match) return null;
@@ -760,11 +785,22 @@
         localStorage.setItem(DATA_KEY, JSON.stringify(scheduleData));
     }
 
-    // ===== レンダリング（日付順） =====
+    function onGradeChange() {
+        const grade = document.getElementById('gradeSelect').value;
+        const year = getBaseYearForGrade(grade);
+        const label = document.getElementById('yearRangeLabel');
+        label.textContent = `年間行事予定管理 (${year}/4〜${year+1}/3)`;
+        renderSchedule();
+    }
+
     function renderSchedule() {
         const container = document.getElementById('scheduleContainer');
         const grade = document.getElementById('gradeSelect').value;
-        const today = getToday();
+        const year = getBaseYearForGrade(grade);
+        
+        // 今日の日付（この学年における今日）
+        const todayInfo = getTodayForGrade(grade);
+        const today = todayInfo || { month: -1, day: -1 };
 
         if (!scheduleData || !scheduleData[grade]) {
             container.innerHTML = `
@@ -853,14 +889,14 @@
                     const marker = getMarkerClass(ev.title);
                     const memo = ev.memo || '';
 
-                    // 今日の日付かチェック
+                    // 今日かどうか（この学年の今日と比較）
                     const isToday = parsed && parsed.month === today.month && parsed.day === today.day;
                     const todayClass = isToday ? ' today' : '';
 
-                    // ★ 曜日を取得
+                    // 曜日を取得（この学年の基準年を使用）
                     let weekdayStr = '';
                     if (parsed) {
-                        weekdayStr = getWeekdayFromDate(parsed.month, parsed.day);
+                        weekdayStr = getWeekdayFromDate(grade, parsed.month, parsed.day);
                     }
 
                     const isEditing = (editingEvent && editingEvent.grade === grade &&
@@ -885,7 +921,6 @@
                             </div>
                         `;
                     } else {
-                        const memoDisplay = memo ? memo.replace(/\n/g, '') : '';
                         html += `
                             <div class="event-item${todayClass}" onclick="startEdit('${grade}', '${key}', ${idx})">
                                 <span class="event-date">
@@ -1163,6 +1198,11 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        // 初期表示時に年度ラベルを設定
+        const grade = document.getElementById('gradeSelect').value;
+        const year = getBaseYearForGrade(grade);
+        document.getElementById('yearRangeLabel').textContent = `年間行事予定管理 (${year}/4〜${year+1}/3)`;
+        
         loadData();
 
         window.saveToGitHub = saveToGitHub;
@@ -1177,6 +1217,7 @@
         window.saveEvent = saveEvent;
         window.deleteEvent = deleteEvent;
         window.addEvent = addEvent;
+        window.onGradeChange = onGradeChange;
     });
 </script>
 
