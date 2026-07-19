@@ -122,47 +122,6 @@
         }
 
         /* ===== カード ===== */
-        .card {
-            background: #fffffffa;
-            border-radius: 28px;
-            padding: 22px 24px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.03);
-            border: 1px solid #ede8e0;
-            margin-bottom: 24px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #e7dfd5;
-            padding-bottom: 12px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-        }
-
-        .card-header h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #2a221b;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .card-header h2 i {
-            color: #8f735b;
-        }
-
-        .card-header .badge {
-            background: #e7ddd2;
-            border-radius: 40px;
-            padding: 2px 14px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #3d3229;
-        }
-
-        /* ===== 学期カード ===== */
         .semester-card {
             background: #fffffffa;
             border-radius: 28px;
@@ -292,92 +251,6 @@
             font-size: 0.95rem;
         }
 
-        /* ===== データ管理 ===== */
-        .data-management {
-            background: #f8f4ef;
-            border-radius: 28px;
-            padding: 20px 24px;
-            border: 1px solid #ede8e0;
-            margin-top: 24px;
-        }
-
-        .data-management .section-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #3d3229;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .data-management .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .data-management .btn-group button {
-            padding: 8px 18px;
-            border: 2px solid #d8cdbf;
-            border-radius: 40px;
-            background: white;
-            color: #2a221b;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.15s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .data-management .btn-group button:hover {
-            background: #f0ebe4;
-            transform: scale(0.97);
-        }
-
-        .data-management .btn-group button.primary {
-            background: #2c241c;
-            border-color: #2c241c;
-            color: white;
-        }
-        .data-management .btn-group button.primary:hover {
-            background: #4d3b2c;
-            border-color: #4d3b2c;
-        }
-
-        .data-management .btn-group button.success {
-            background: #2e7d32;
-            border-color: #2e7d32;
-            color: white;
-        }
-        .data-management .btn-group button.success:hover {
-            background: #1b5e20;
-            border-color: #1b5e20;
-        }
-
-        .data-management .btn-group button.danger {
-            background: #8f4a4a;
-            border-color: #8f4a4a;
-            color: white;
-        }
-        .data-management .btn-group button.danger:hover {
-            background: #6d3838;
-            border-color: #6d3838;
-        }
-
-        .data-management .btn-group button.github-btn {
-            background: #24292e;
-            border-color: #24292e;
-            color: white;
-        }
-        .data-management .btn-group button.github-btn:hover {
-            background: #1a1e23;
-            border-color: #1a1e23;
-        }
-
-        /* ===== トースト ===== */
         .toast-msg {
             background: #2c241c;
             color: #f0e8de;
@@ -440,16 +313,6 @@
             .event-item {
                 padding: 4px 6px;
             }
-            .data-management .btn-group button {
-                flex: 1;
-                justify-content: center;
-                min-width: 60px;
-                font-size: 0.75rem;
-                padding: 6px 12px;
-            }
-            .data-management {
-                padding: 16px 16px;
-            }
             .toast-msg {
                 bottom: 80px;
                 right: 16px;
@@ -504,31 +367,6 @@
     <!-- ===== スケジュール表示エリア ===== -->
     <div id="scheduleContainer">
         <!-- JSで動的にレンダリング -->
-    </div>
-
-    <!-- ===== データ管理 ===== -->
-    <div class="data-management">
-        <div class="section-title">
-            <i class="fas fa-database"></i> データ管理
-        </div>
-        <div class="btn-group">
-            <button class="github-btn" onclick="saveToGitHub()">
-                <i class="fab fa-github"></i> GitHubに保存
-            </button>
-            <button class="github-btn" onclick="loadFromGitHub()">
-                <i class="fab fa-github"></i> GitHubから読込
-            </button>
-            <button onclick="exportData()">
-                <i class="fas fa-file-export"></i> エクスポート
-            </button>
-            <button onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-file-import"></i> インポート
-            </button>
-            <input type="file" id="fileInput" accept=".json" style="display:none" onchange="importData(event)" />
-            <button class="danger" onclick="resetToDefault()">
-                <i class="fas fa-undo"></i> デフォルトに戻す
-            </button>
-        </div>
     </div>
 </div>
 
@@ -741,11 +579,6 @@
         // まずローカル保存
         localStorage.setItem(DATA_KEY, JSON.stringify(scheduleData));
 
-        const dot = document.getElementById('statusDot');
-        const text = document.getElementById('statusText');
-        if (dot) { dot.className = 'status-dot saving'; }
-        if (text) { text.textContent = '保存中...'; }
-
         try {
             const content = JSON.stringify(scheduleData, null, 2);
             const encoded = btoa(unescape(encodeURIComponent(content)));
@@ -773,8 +606,6 @@
             });
 
             if (response.ok) {
-                if (dot) { dot.className = 'status-dot online'; }
-                if (text) { text.textContent = 'オンライン'; }
                 showToast('✅ GitHubに保存しました', 'success');
             } else {
                 const err = await response.json();
@@ -782,8 +613,6 @@
             }
         } catch (err) {
             console.error(err);
-            if (dot) { dot.className = 'status-dot offline'; }
-            if (text) { text.textContent = 'エラー'; }
             showToast('❌ 保存エラー: ' + err.message, 'error');
         }
     }
@@ -795,11 +624,6 @@
             return;
         }
 
-        const dot = document.getElementById('statusDot');
-        const text = document.getElementById('statusText');
-        if (dot) { dot.className = 'status-dot saving'; }
-        if (text) { text.textContent = '読込中...'; }
-
         try {
             const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
             const headers = getHeaders();
@@ -807,8 +631,6 @@
 
             if (response.status === 404) {
                 showToast('📭 GitHubにデータがありません', 'info');
-                if (dot) { dot.className = 'status-dot online'; }
-                if (text) { text.textContent = 'オンライン'; }
                 return;
             }
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -824,15 +646,10 @@
 
             scheduleData = loadedData;
             localStorage.setItem(DATA_KEY, JSON.stringify(loadedData));
-
-            if (dot) { dot.className = 'status-dot online'; }
-            if (text) { text.textContent = 'オンライン'; }
             renderSchedule();
             showToast('✅ GitHubから読み込みました', 'success');
         } catch (err) {
             console.error(err);
-            if (dot) { dot.className = 'status-dot offline'; }
-            if (text) { text.textContent = 'エラー'; }
             showToast('❌ 読込エラー: ' + err.message, 'error');
         }
     }
@@ -908,15 +725,7 @@
         if (!el) return;
         el.textContent = msg;
         el.className = 'toast-msg';
-        if (type === 'error') {
-            el.style.background = '#8f4a4a';
-        } else if (type === 'success') {
-            el.style.background = '#2e7d32';
-        } else if (type === 'info') {
-            el.style.background = '#2c241c';
-        } else {
-            el.style.background = '#2c241c';
-        }
+        el.style.background = type === 'error' ? '#8f4a4a' : type === 'success' ? '#2e7d32' : '#2c241c';
         el.style.color = '#f0e8de';
         setTimeout(() => el.classList.add('show'), 10);
         clearTimeout(el._timer);
