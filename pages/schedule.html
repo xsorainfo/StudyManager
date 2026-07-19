@@ -270,6 +270,30 @@
             50% { opacity: 0.6; }
         }
 
+        /* 月見出し */
+        .month-header {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #2a221b;
+            padding: 10px 12px 6px 12px;
+            margin-top: 8px;
+            border-bottom: 2px solid #e7dfd5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .month-header i {
+            color: #8f735b;
+        }
+        .month-header .month-count {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #6b5d4e;
+            background: #f0ebe4;
+            padding: 0 12px;
+            border-radius: 40px;
+        }
+
         .event-item .event-date {
             font-weight: 700;
             color: #8f735b;
@@ -289,6 +313,16 @@
             align-self: center;
             gap: 4px;
             flex-wrap: wrap;
+        }
+
+        .event-item .event-date .weekday {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #5a4a3a;
+            margin-left: 4px;
+            background: rgba(255,255,255,0.4);
+            padding: 0 4px;
+            border-radius: 4px;
         }
 
         .event-item .event-date-input {
@@ -345,18 +379,10 @@
             flex-shrink: 0;
         }
 
-        .event-item .event-title .marker-test {
-            background: #c62828;
-        }
-        .event-item .event-title .marker-event {
-            background: #2e7d32;
-        }
-        .event-item .event-title .marker-holiday {
-            background: #e65100;
-        }
-        .event-item .event-title .marker-other {
-            background: #b7a086;
-        }
+        .event-item .event-title .marker-test { background: #c62828; }
+        .event-item .event-title .marker-event { background: #2e7d32; }
+        .event-item .event-title .marker-holiday { background: #e65100; }
+        .event-item .event-title .marker-other { background: #b7a086; }
 
         /* ===== メモ（表示時） ===== */
         .event-item .event-memo {
@@ -621,6 +647,30 @@
     const GITHUB_PATH = 'data/schedule_data.json';
     const GITHUB_BRANCH = 'main';
 
+    // 曜日変換用（2026年4月1日を基準に計算）
+    // 2026年4月1日は水曜日 (星期三)
+    const WEEKDAY_NAMES = ['日', '月', '火', '水', '木', '金', '土'];
+    // 基準日: 2026年4月1日 (水曜日)  =>  index = 3
+    const BASE_DATE = new Date(2026, 3, 1); // month: 3 = 4月
+    const BASE_WEEKDAY = 3; // 水曜日
+
+    // 日付 (mm/dd) から曜日を計算 (2026/4 ~ 2027/3 の範囲)
+    function getWeekdayFromDate(month, day) {
+        // 2026年4月1日からの差分日数
+        const target = new Date(2026, month - 1, day);
+        const diff = Math.floor((target - BASE_DATE) / (1000 * 60 * 60 * 24));
+        // 曜日インデックス (0:日曜, 1:月曜 ...)
+        let wd = (BASE_WEEKDAY + diff) % 7;
+        if (wd < 0) wd += 7;
+        return WEEKDAY_NAMES[wd];
+    }
+
+    function getWeekdayFromDateStr(dateStr) {
+        const parsed = parseDate(dateStr);
+        if (!parsed) return '';
+        return getWeekdayFromDate(parsed.month, parsed.day);
+    }
+
     const SEMESTER_COLORS = {
         '1': '#8f735b',
         '2': '#2e7d32',
@@ -793,9 +843,9 @@
                             return p && p.month === month;
                         }).length;
                         html += `
-                            <div class="month-header" style="font-size:1.05rem;font-weight:700;color:#2a221b;padding:10px 12px 6px 12px;margin-top:8px;border-bottom:2px solid #e7dfd5;display:flex;align-items:center;gap:10px;">
-                                <i class="fas fa-calendar-alt" style="color:#8f735b;"></i> ${month}月
-                                <span style="font-size:0.7rem;font-weight:400;color:#6b5d4e;background:#f0ebe4;padding:0 12px;border-radius:40px;">${monthCount}件</span>
+                            <div class="month-header">
+                                <i class="fas fa-calendar-alt"></i> ${month}月
+                                <span class="month-count">${monthCount}件</span>
                             </div>
                         `;
                     }
@@ -806,6 +856,12 @@
                     // 今日の日付かチェック
                     const isToday = parsed && parsed.month === today.month && parsed.day === today.day;
                     const todayClass = isToday ? ' today' : '';
+
+                    // ★ 曜日を取得
+                    let weekdayStr = '';
+                    if (parsed) {
+                        weekdayStr = getWeekdayFromDate(parsed.month, parsed.day);
+                    }
 
                     const isEditing = (editingEvent && editingEvent.grade === grade &&
                                       editingEvent.semester === key && editingEvent.index === idx);
@@ -834,6 +890,7 @@
                             <div class="event-item${todayClass}" onclick="startEdit('${grade}', '${key}', ${idx})">
                                 <span class="event-date">
                                     ${ev.date}
+                                    <span class="weekday">${weekdayStr}</span>
                                     ${isToday ? '<span class="today-badge">今日</span>' : ''}
                                 </span>
                                 <div class="event-content">
