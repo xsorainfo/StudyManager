@@ -4,163 +4,187 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>年間予定 - 学び航路</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="apple-touch-icon" href="../scripts/apple-touch-icon.png" />
-    <link rel="icon" href="../scripts/favicon.png" />
+    
+    <!-- ★ iPad/iPhone ホーム画面アイコン ★ -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/StudyManager/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="/StudyManager/favicon.png" />
+    
+    <!-- ★ 共通スタイル ★ -->
+    <link rel="stylesheet" href="/StudyManager/scripts/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    
     <style>
+        /* ===== ベース ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif;
         }
-
+        
         body {
-            font-family: 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
-            background: #f5f7fa;
-            color: #2d3748;
+            background: #f5f2ec;
+            color: #1e1a16;
             padding: 20px;
-            min-height: 100vh;
-        }
-
-        .app-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        /* ===== ヘッダー ===== */
-        .app-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            border-radius: 16px;
-            padding: 20px 28px;
-            margin-bottom: 28px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35);
+        }
+        
+        .app-wrapper {
+            max-width: 1400px;
+            width: 100%;
+            background: #fcf9f5;
+            border-radius: 40px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+            padding: 24px 30px 40px;
         }
 
-        .app-header h1 {
-            font-size: 1.5rem;
+        /* ===== ページタイトル ===== */
+        .page-title {
+            font-size: 1.8rem;
             font-weight: 700;
+            color: #2a221b;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .app-header h1 i {
-            font-size: 1.6rem;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
-
-        .header-actions button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.2s;
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .page-title i {
+            color: #8f735b;
         }
-
-        .header-actions button:hover {
-            background: rgba(255, 255, 255, 0.35);
-            transform: translateY(-1px);
-        }
-
-        .header-actions button i {
+        .page-title .sub {
             font-size: 0.9rem;
+            font-weight: 400;
+            color: #6b5d4e;
+            margin-left: 12px;
         }
 
         /* ===== フィルター ===== */
         .filter-bar {
-            background: #fff;
-            border-radius: 14px;
-            padding: 16px 20px;
+            background: #f8f4ef;
+            border-radius: 20px;
+            padding: 16px 24px;
             margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             display: flex;
             flex-wrap: wrap;
-            gap: 14px 24px;
+            gap: 16px 24px;
             align-items: center;
+            border: 1px solid #ede8e0;
         }
 
         .filter-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .filter-group label {
             font-weight: 600;
             font-size: 0.9rem;
-            color: #4a5568;
+            color: #3d3229;
         }
 
         .filter-group select {
-            padding: 6px 12px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            background: #f7fafc;
-            color: #2d3748;
-            cursor: pointer;
+            padding: 8px 16px;
+            border: 2px solid #d8cdbf;
+            border-radius: 40px;
+            font-size: 0.85rem;
             outline: none;
-            transition: 0.2s;
+            background: white;
+            color: #2a221b;
+            cursor: pointer;
             min-width: 100px;
+            transition: 0.15s;
         }
 
         .filter-group select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            border-color: #8f735b;
         }
 
         .filter-group .badge-count {
-            background: #edf2f7;
-            padding: 2px 12px;
-            border-radius: 20px;
+            background: #e7ddd2;
+            padding: 4px 16px;
+            border-radius: 40px;
             font-size: 0.8rem;
-            color: #4a5568;
+            color: #3d3229;
             font-weight: 600;
         }
 
+        .filter-hint {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: #b7a086;
+        }
+        .filter-hint i {
+            margin-right: 4px;
+        }
+
         /* ===== カード ===== */
-        .schedule-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .card {
+            background: #fffffffa;
+            border-radius: 28px;
+            padding: 22px 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+            border: 1px solid #ede8e0;
+            margin-bottom: 24px;
         }
 
-        .semester-card {
-            background: #fff;
-            border-radius: 14px;
-            padding: 20px 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            transition: 0.2s;
-            border-left: 5px solid #667eea;
-        }
-
-        .semester-card:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        }
-
-        .semester-card .card-header {
+        .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 2px solid #e7dfd5;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .card-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2a221b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-header h2 i {
+            color: #8f735b;
+        }
+
+        .card-header .badge {
+            background: #e7ddd2;
+            border-radius: 40px;
+            padding: 2px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #3d3229;
+        }
+
+        /* ===== 学期カード ===== */
+        .semester-card {
+            background: #fffffffa;
+            border-radius: 28px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+            border: 1px solid #ede8e0;
+            margin-bottom: 20px;
+            border-left: 6px solid #8f735b;
+            transition: 0.15s;
+        }
+
+        .semester-card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        }
+
+        .semester-card .card-header {
+            border-bottom: 2px solid #e7dfd5;
+            padding-bottom: 12px;
             margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
             gap: 8px;
         }
@@ -168,7 +192,7 @@
         .semester-card .card-header h2 {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #2d3748;
+            color: #2a221b;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -176,26 +200,26 @@
 
         .semester-card .card-header h2 .semester-badge {
             font-size: 0.7rem;
-            background: #edf2f7;
-            color: #4a5568;
+            background: #f0ebe4;
+            color: #4a3a2a;
             padding: 2px 12px;
-            border-radius: 20px;
+            border-radius: 40px;
             font-weight: 600;
         }
 
         .semester-card .card-header .event-count {
             font-size: 0.8rem;
-            color: #718096;
-            background: #f7fafc;
+            color: #6b5d4e;
+            background: #f5f0e8;
             padding: 2px 14px;
-            border-radius: 20px;
+            border-radius: 40px;
         }
 
         /* ===== イベントリスト ===== */
         .event-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 8px 16px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 6px 16px;
         }
 
         .event-item {
@@ -203,21 +227,21 @@
             align-items: center;
             gap: 10px;
             padding: 6px 10px;
-            border-radius: 8px;
+            border-radius: 12px;
             transition: 0.15s;
             font-size: 0.9rem;
         }
 
         .event-item:hover {
-            background: #f7fafc;
+            background: #f5f0e8;
         }
 
         .event-item .event-date {
             font-weight: 700;
-            color: #667eea;
+            color: #8f735b;
             min-width: 48px;
             font-size: 0.85rem;
-            background: #ebf4ff;
+            background: #f0ebe4;
             padding: 2px 10px;
             border-radius: 6px;
             text-align: center;
@@ -225,56 +249,62 @@
         }
 
         .event-item .event-title {
-            color: #2d3748;
+            color: #2a221b;
             flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .event-item .event-title .event-marker {
             display: inline-block;
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            margin-right: 8px;
+            flex-shrink: 0;
         }
 
         .event-item .event-title .marker-test {
-            background: #fc8181;
+            background: #c62828;
         }
         .event-item .event-title .marker-event {
-            background: #68d391;
+            background: #2e7d32;
         }
         .event-item .event-title .marker-holiday {
-            background: #f6ad55;
+            background: #e65100;
         }
         .event-item .event-title .marker-other {
-            background: #a0aec0;
+            background: #b7a086;
         }
 
         /* ===== 空の状態 ===== */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: #a0aec0;
+            padding: 60px 20px;
+            color: #b7a086;
         }
-
         .empty-state i {
             font-size: 3rem;
             margin-bottom: 12px;
             opacity: 0.5;
         }
-
-        /* ===== データ管理セクション ===== */
-        .data-management {
-            margin-top: 32px;
-            background: #fff;
-            border-radius: 14px;
-            padding: 20px 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        .empty-state p {
+            font-size: 0.95rem;
         }
 
-        .data-management h3 {
+        /* ===== データ管理 ===== */
+        .data-management {
+            background: #f8f4ef;
+            border-radius: 28px;
+            padding: 20px 24px;
+            border: 1px solid #ede8e0;
+            margin-top: 24px;
+        }
+
+        .data-management .section-title {
             font-size: 0.95rem;
-            color: #4a5568;
+            font-weight: 600;
+            color: #3d3229;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
@@ -288,119 +318,109 @@
         }
 
         .data-management .btn-group button {
-            padding: 6px 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            background: #f7fafc;
-            color: #4a5568;
+            padding: 8px 18px;
+            border: 2px solid #d8cdbf;
+            border-radius: 40px;
+            background: white;
+            color: #2a221b;
             font-size: 0.8rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.15s;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
         .data-management .btn-group button:hover {
-            background: #edf2f7;
-            border-color: #cbd5e0;
+            background: #f0ebe4;
+            transform: scale(0.97);
         }
 
         .data-management .btn-group button.primary {
-            background: #667eea;
-            border-color: #667eea;
-            color: #fff;
+            background: #2c241c;
+            border-color: #2c241c;
+            color: white;
         }
-
         .data-management .btn-group button.primary:hover {
-            background: #5a67d8;
-            border-color: #5a67d8;
+            background: #4d3b2c;
+            border-color: #4d3b2c;
         }
 
         .data-management .btn-group button.success {
-            background: #48bb78;
-            border-color: #48bb78;
-            color: #fff;
+            background: #2e7d32;
+            border-color: #2e7d32;
+            color: white;
         }
-
         .data-management .btn-group button.success:hover {
-            background: #38a169;
-            border-color: #38a169;
+            background: #1b5e20;
+            border-color: #1b5e20;
         }
 
         .data-management .btn-group button.danger {
-            background: #fc8181;
-            border-color: #fc8181;
-            color: #fff;
+            background: #8f4a4a;
+            border-color: #8f4a4a;
+            color: white;
         }
-
         .data-management .btn-group button.danger:hover {
-            background: #f56565;
-            border-color: #f56565;
+            background: #6d3838;
+            border-color: #6d3838;
         }
 
-        /* ===== ナビゲーション ===== */
-        .bottom-nav {
+        .data-management .btn-group button.github-btn {
+            background: #24292e;
+            border-color: #24292e;
+            color: white;
+        }
+        .data-management .btn-group button.github-btn:hover {
+            background: #1a1e23;
+            border-color: #1a1e23;
+        }
+
+        /* ===== トースト ===== */
+        .toast-msg {
+            background: #2c241c;
+            color: #f0e8de;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-size: 0.8rem;
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #fff;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0 env(safe-area-inset-bottom);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-            z-index: 1000;
-        }
-
-        .bottom-nav a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.65rem;
-            color: #a0aec0;
-            text-decoration: none;
-            padding: 4px 12px;
-            border-radius: 8px;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+            opacity: 0;
             transition: 0.2s;
-            min-width: 56px;
+            pointer-events: none;
+        }
+        .toast-msg.show {
+            opacity: 1;
         }
 
-        .bottom-nav a i {
-            font-size: 1.3rem;
-            margin-bottom: 2px;
-        }
-
-        .bottom-nav a.active {
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .bottom-nav a:hover {
-            color: #4a5568;
+        #fileInput {
+            display: none;
         }
 
         /* ===== レスポンシブ ===== */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             body {
                 padding: 12px;
-                padding-bottom: 80px;
             }
-
-            .app-header {
-                padding: 16px 18px;
+            .app-wrapper {
+                padding: 16px 16px 30px;
+                border-radius: 24px;
             }
-            .app-header h1 {
-                font-size: 1.2rem;
+            .page-title {
+                font-size: 1.4rem;
             }
-
+            .page-title .sub {
+                font-size: 0.75rem;
+                margin-left: 4px;
+            }
             .filter-bar {
                 padding: 12px 16px;
                 flex-direction: column;
                 align-items: stretch;
             }
-
             .filter-group {
                 flex-wrap: wrap;
             }
@@ -408,19 +428,18 @@
                 flex: 1;
                 min-width: 80px;
             }
-
+            .filter-hint {
+                margin-left: 0;
+            }
             .semester-card {
                 padding: 16px 16px;
             }
-
             .event-list {
                 grid-template-columns: 1fr;
             }
-
             .event-item {
                 padding: 4px 6px;
             }
-
             .data-management .btn-group button {
                 flex: 1;
                 justify-content: center;
@@ -428,481 +447,508 @@
                 font-size: 0.75rem;
                 padding: 6px 12px;
             }
-
-            .bottom-nav a {
-                font-size: 0.55rem;
-                min-width: 44px;
-                padding: 4px 6px;
+            .data-management {
+                padding: 16px 16px;
             }
-            .bottom-nav a i {
-                font-size: 1.1rem;
+            .toast-msg {
+                bottom: 80px;
+                right: 16px;
+                left: 16px;
+                text-align: center;
             }
         }
 
-        @media (min-width: 641px) and (max-width: 900px) {
+        @media (min-width: 769px) and (max-width: 1024px) {
             .event-list {
                 grid-template-columns: repeat(2, 1fr);
             }
-        }
-
-        /* ===== スケルトン ===== */
-        .loading-skeleton .semester-card {
-            opacity: 0.6;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-
-        /* ===== トースト ===== */
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2d3748;
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            z-index: 2000;
-            opacity: 0;
-            transition: 0.3s;
-            pointer-events: none;
-            max-width: 90%;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .toast.success {
-            background: #48bb78;
-        }
-        .toast.error {
-            background: #fc8181;
-        }
-        .toast.info {
-            background: #667eea;
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- ヘッダー -->
-        <header class="app-header">
-            <h1><i class="fas fa-calendar-alt"></i> 年間予定</h1>
-            <div class="header-actions">
-                <button onclick="loadData()" title="データを再読み込み">
-                    <i class="fas fa-sync-alt"></i> 再読込
-                </button>
-                <button onclick="exportData()" title="JSONエクスポート">
-                    <i class="fas fa-file-export"></i> エクスポート
-                </button>
-                <button onclick="document.getElementById('importFile').click()" title="JSONインポート">
-                    <i class="fas fa-file-import"></i> インポート
-                </button>
-                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)" />
-            </div>
-        </header>
+<div class="app-wrapper">
+    <!-- ★ ナビゲーションコンテナ（common.js が自動生成） ★ -->
+    <div id="navbarContainer"></div>
+    <!-- ★ Tokenバーコンテナ（common.js が自動生成） ★ -->
+    <div id="tokenBarContainer"></div>
 
-        <!-- フィルター -->
-        <div class="filter-bar">
-            <div class="filter-group">
-                <label for="gradeSelect"><i class="fas fa-graduation-cap"></i> 学年</label>
-                <select id="gradeSelect" onchange="renderSchedule()">
-                    <option value="1">中1</option>
-                    <option value="2" selected>中2</option>
-                    <option value="3">中3</option>
-                    <option value="4">高1</option>
-                    <option value="5">高2</option>
-                    <option value="6">高3</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label><i class="fas fa-list"></i> 総行事数</label>
-                <span class="badge-count" id="totalCount">0</span>
-            </div>
-            <div style="margin-left:auto; font-size:0.8rem; color:#a0aec0;">
-                <i class="fas fa-edit"></i> 編集はデータファイルを直接修正
-            </div>
-        </div>
-
-        <!-- スケジュール表示エリア -->
-        <div id="scheduleContainer" class="schedule-grid">
-            <!-- JSで動的にレンダリング -->
-        </div>
-
-        <!-- データ管理 -->
-        <div class="data-management">
-            <h3><i class="fas fa-database"></i> データ管理</h3>
-            <div class="btn-group">
-                <button class="primary" onclick="saveToGitHub()"><i class="fab fa-github"></i> GitHubに保存</button>
-                <button class="success" onclick="loadFromGitHub()"><i class="fab fa-github"></i> GitHubから読込</button>
-                <button onclick="resetToDefault()" class="danger"><i class="fas fa-undo"></i> デフォルトに戻す</button>
-            </div>
-        </div>
+    <!-- ===== ページタイトル ===== -->
+    <div class="page-title">
+        <i class="fas fa-calendar-alt"></i> 年間予定
+        <span class="sub">年間行事予定管理</span>
     </div>
 
-    <!-- トースト -->
-    <div id="toast" class="toast"></div>
+    <!-- ===== フィルターバー ===== -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <label for="gradeSelect"><i class="fas fa-graduation-cap"></i> 学年</label>
+            <select id="gradeSelect" onchange="renderSchedule()">
+                <option value="1">中1</option>
+                <option value="2" selected>中2</option>
+                <option value="3">中3</option>
+                <option value="4">高1</option>
+                <option value="5">高2</option>
+                <option value="6">高3</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label><i class="fas fa-list"></i> 総行事数</label>
+            <span class="badge-count" id="totalCount">0</span>
+        </div>
+        <span class="filter-hint">
+            <i class="fas fa-edit"></i> 編集はデータファイルを直接修正
+        </span>
+    </div>
 
-    <!-- ボトムナビゲーション -->
-    <nav class="bottom-nav" id="bottomNav">
-        <!-- common.js から読み込み -->
-    </nav>
+    <!-- ===== スケジュール表示エリア ===== -->
+    <div id="scheduleContainer">
+        <!-- JSで動的にレンダリング -->
+    </div>
 
-    <script src="../scripts/common.js?v=20260719"></script>
-    <script>
-        // ============================================================
-        //  定数
-        // ============================================================
-        const DATA_KEY = 'scheduleData';
-        const DEFAULT_DATA_URL = '../data/schedule_data.json';
-        const GITHUB_REPO = 'xsorainfo/StudyManager';
-        const GITHUB_PATH = 'data/schedule_data.json';
+    <!-- ===== データ管理 ===== -->
+    <div class="data-management">
+        <div class="section-title">
+            <i class="fas fa-database"></i> データ管理
+        </div>
+        <div class="btn-group">
+            <button class="github-btn" onclick="saveToGitHub()">
+                <i class="fab fa-github"></i> GitHubに保存
+            </button>
+            <button class="github-btn" onclick="loadFromGitHub()">
+                <i class="fab fa-github"></i> GitHubから読込
+            </button>
+            <button onclick="exportData()">
+                <i class="fas fa-file-export"></i> エクスポート
+            </button>
+            <button onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-file-import"></i> インポート
+            </button>
+            <input type="file" id="fileInput" accept=".json" style="display:none" onchange="importData(event)" />
+            <button class="danger" onclick="resetToDefault()">
+                <i class="fas fa-undo"></i> デフォルトに戻す
+            </button>
+        </div>
+    </div>
+</div>
 
-        // 学期の色
-        const SEMESTER_COLORS = {
-            '1': '#667eea',
-            '2': '#48bb78',
-            '3': '#ed8936'
-        };
+<!-- ===== トースト ===== -->
+<div class="toast-msg" id="toast"></div>
 
-        const SEMESTER_ICONS = {
-            '1': 'fa-leaf',
-            '2': 'fa-sun',
-            '3': 'fa-snowflake'
-        };
+<!-- ============================================================ -->
+<!-- スクリプト -->
+<!-- ============================================================ -->
 
-        // マーカータイプ判定
-        function getMarkerClass(title) {
-            const t = title.toLowerCase();
-            if (t.includes('考査') || t.includes('テスト') || t.includes('試験') || t.includes('入試')) return 'marker-test';
-            if (t.includes('祭') || t.includes('式') || t.includes('会') || t.includes('研修') || t.includes('学習')) return 'marker-event';
-            if (t.includes('日') && (t.includes('記念') || t.includes('の日'))) return 'marker-holiday';
-            return 'marker-other';
-        }
+<script>
+    // ============================================================
+    // 🔧 データボタン表示設定（common.js 用）
+    // ============================================================
+    window.SHOW_EXPORT = true;
+    window.SHOW_IMPORT = true;
+    // ============================================================
 
-        // ============================================================
-        //  データ読み込み
-        // ============================================================
-        let scheduleData = null;
+    // ============================================================
+    //  定数
+    // ============================================================
+    const DATA_KEY = 'scheduleData';
+    const DEFAULT_DATA_URL = '../data/schedule_data.json';
+    const GITHUB_OWNER = 'xsorainfo';
+    const GITHUB_REPO = 'StudyManager';
+    const GITHUB_PATH = 'data/schedule_data.json';
+    const GITHUB_BRANCH = 'main';
 
-        async function loadData() {
-            try {
-                // 1. localStorage から読み込み
-                const cached = localStorage.getItem(DATA_KEY);
-                if (cached) {
-                    try {
-                        const parsed = JSON.parse(cached);
-                        if (parsed && typeof parsed === 'object') {
-                            scheduleData = parsed;
-                            renderSchedule();
-                            showToast('キャッシュから読み込みました', 'info');
-                            return;
-                        }
-                    } catch (e) { /* 無視 */ }
-                }
+    const SEMESTER_COLORS = {
+        '1': '#8f735b',
+        '2': '#2e7d32',
+        '3': '#e65100'
+    };
 
-                // 2. デフォルトJSONを読み込み
-                const resp = await fetch(DEFAULT_DATA_URL);
-                if (!resp.ok) throw new Error('データの読み込みに失敗しました');
-                const data = await resp.json();
-                scheduleData = data;
-                localStorage.setItem(DATA_KEY, JSON.stringify(data));
-                renderSchedule();
-                showToast('データを読み込みました', 'success');
-            } catch (err) {
-                console.error(err);
-                showToast('データ読み込みエラー: ' + err.message, 'error');
-                // フォールバック: 空のデータ構造
-                scheduleData = {};
-                renderSchedule();
-            }
-        }
+    const SEMESTER_ICONS = {
+        '1': 'fa-leaf',
+        '2': 'fa-sun',
+        '3': 'fa-snowflake'
+    };
 
-        // ============================================================
-        //  レンダリング
-        // ============================================================
-        function renderSchedule() {
-            const container = document.getElementById('scheduleContainer');
-            const grade = document.getElementById('gradeSelect').value;
+    const SEMESTER_NAMES = {
+        '1': '一学期',
+        '2': '二学期',
+        '3': '三学期'
+    };
 
-            if (!scheduleData || !scheduleData[grade]) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-calendar-times"></i>
-                        <p>データがありません</p>
-                    </div>
-                `;
-                document.getElementById('totalCount').textContent = '0';
-                return;
-            }
+    // ============================================================
+    //  マーカータイプ判定
+    // ============================================================
+    function getMarkerClass(title) {
+        const t = title.toLowerCase();
+        if (t.includes('考査') || t.includes('テスト') || t.includes('試験') || t.includes('入試')) return 'marker-test';
+        if (t.includes('祭') || t.includes('式') || t.includes('会') || t.includes('研修') || t.includes('学習')) return 'marker-event';
+        if (t.includes('日') && (t.includes('記念') || t.includes('の日'))) return 'marker-holiday';
+        return 'marker-other';
+    }
 
-            const gradeData = scheduleData[grade];
-            const semesters = gradeData.semesters || {};
-            const gradeName = gradeData.name || '未設定';
+    // ============================================================
+    //  データ読み込み
+    // ============================================================
+    let scheduleData = null;
 
-            let totalEvents = 0;
-            let html = '';
-
-            // 学期順に表示（1,2,3）
-            const semesterKeys = ['1', '2', '3'];
-            for (const key of semesterKeys) {
-                const sem = semesters[key];
-                if (!sem) continue;
-                const events = sem.events || [];
-                totalEvents += events.length;
-
-                const color = SEMESTER_COLORS[key] || '#667eea';
-                const icon = SEMESTER_ICONS[key] || 'fa-calendar';
-
-                html += `
-                    <div class="semester-card" style="border-left-color: ${color};">
-                        <div class="card-header">
-                            <h2>
-                                <i class="fas ${icon}" style="color:${color};"></i>
-                                ${gradeName} ${sem.name}
-                                <span class="semester-badge">${events.length}件</span>
-                            </h2>
-                            <span class="event-count"><i class="far fa-calendar-alt"></i> ${events.length}行事</span>
-                        </div>
-                        <div class="event-list">
-                `;
-
-                if (events.length === 0) {
-                    html += `<div style="grid-column:1/-1; color:#a0aec0; font-size:0.85rem; padding:8px 0;">予定はありません</div>`;
-                } else {
-                    for (const ev of events) {
-                        const marker = getMarkerClass(ev.title);
-                        html += `
-                            <div class="event-item">
-                                <span class="event-date">${ev.date}</span>
-                                <span class="event-title">
-                                    <span class="event-marker ${marker}"></span>
-                                    ${ev.title}
-                                </span>
-                            </div>
-                        `;
-                    }
-                }
-
-                html += `
-                        </div>
-                    </div>
-                `;
-            }
-
-            container.innerHTML = html;
-            document.getElementById('totalCount').textContent = totalEvents;
-        }
-
-        // ============================================================
-        //  GitHub連携 (common.jsの関数を利用)
-        // ============================================================
-        async function saveToGitHub() {
-            if (!scheduleData) {
-                showToast('データがありません', 'error');
-                return;
-            }
-            try {
-                const content = JSON.stringify(scheduleData, null, 2);
-                const token = getGitHubToken();
-                if (!token) {
-                    showToast('GitHub Tokenが設定されていません', 'error');
-                    return;
-                }
-
-                const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
-                let sha = null;
-
-                // 既存ファイルのSHAを取得
+    async function loadData() {
+        try {
+            // 1. localStorage から読み込み
+            const cached = localStorage.getItem(DATA_KEY);
+            if (cached) {
                 try {
-                    const resp = await fetch(url, {
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    if (resp.ok) {
-                        const data = await resp.json();
-                        sha = data.sha;
+                    const parsed = JSON.parse(cached);
+                    if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+                        scheduleData = parsed;
+                        renderSchedule();
+                        showToast('💾 キャッシュから読み込みました', 'info');
+                        return;
                     }
-                } catch (e) { /* 新規作成とみなす */ }
-
-                const body = {
-                    message: `update schedule_data.json ${new Date().toISOString()}`,
-                    content: btoa(unescape(encodeURIComponent(content))),
-                    branch: 'main'
-                };
-                if (sha) body.sha = sha;
-
-                const resp = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                });
-
-                if (!resp.ok) {
-                    const err = await resp.json();
-                    throw new Error(err.message || '保存に失敗しました');
-                }
-
-                showToast('GitHubに保存しました！', 'success');
-            } catch (err) {
-                console.error(err);
-                showToast('保存エラー: ' + err.message, 'error');
+                } catch (e) { /* 無視 */ }
             }
+
+            // 2. デフォルトJSONを読み込み
+            const resp = await fetch(DEFAULT_DATA_URL);
+            if (!resp.ok) throw new Error('データの読み込みに失敗しました');
+            const data = await resp.json();
+            scheduleData = data;
+            localStorage.setItem(DATA_KEY, JSON.stringify(data));
+            renderSchedule();
+            showToast('📥 データを読み込みました', 'success');
+        } catch (err) {
+            console.error(err);
+            showToast('❌ データ読み込みエラー: ' + err.message, 'error');
+            scheduleData = {};
+            renderSchedule();
+        }
+    }
+
+    // ============================================================
+    //  レンダリング
+    // ============================================================
+    function renderSchedule() {
+        const container = document.getElementById('scheduleContainer');
+        const grade = document.getElementById('gradeSelect').value;
+
+        if (!scheduleData || !scheduleData[grade]) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <p>データがありません</p>
+                    <p style="font-size:0.85rem; color:#b7a086;">デフォルトデータを読み込むか、インポートしてください</p>
+                </div>
+            `;
+            document.getElementById('totalCount').textContent = '0';
+            return;
         }
 
-        async function loadFromGitHub() {
-            try {
-                const token = getGitHubToken();
-                if (!token) {
-                    showToast('GitHub Tokenが設定されていません', 'error');
-                    return;
-                }
+        const gradeData = scheduleData[grade];
+        const semesters = gradeData.semesters || {};
+        const gradeName = gradeData.name || '未設定';
 
-                const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
-                const resp = await fetch(url, {
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
+        let totalEvents = 0;
+        let html = '';
 
-                if (!resp.ok) {
-                    throw new Error('GitHubからの読み込みに失敗しました');
-                }
+        const semesterKeys = ['1', '2', '3'];
+        for (const key of semesterKeys) {
+            const sem = semesters[key];
+            if (!sem) continue;
+            const events = sem.events || [];
+            totalEvents += events.length;
 
-                const data = await resp.json();
-                const content = decodeURIComponent(escape(atob(data.content)));
-                const parsed = JSON.parse(content);
+            const color = SEMESTER_COLORS[key] || '#8f735b';
+            const icon = SEMESTER_ICONS[key] || 'fa-calendar';
+            const semName = SEMESTER_NAMES[key] || sem.name || key + '学期';
 
-                scheduleData = parsed;
-                localStorage.setItem(DATA_KEY, JSON.stringify(parsed));
-                renderSchedule();
-                showToast('GitHubから読み込みました！', 'success');
-            } catch (err) {
-                console.error(err);
-                showToast('読込エラー: ' + err.message, 'error');
-            }
-        }
+            html += `
+                <div class="semester-card" style="border-left-color: ${color};">
+                    <div class="card-header">
+                        <h2>
+                            <i class="fas ${icon}" style="color:${color};"></i>
+                            ${gradeName} ${semName}
+                            <span class="semester-badge">${events.length}件</span>
+                        </h2>
+                        <span class="event-count"><i class="far fa-calendar-alt"></i> ${events.length}行事</span>
+                    </div>
+                    <div class="event-list">
+            `;
 
-        // ============================================================
-        //  エクスポート / インポート
-        // ============================================================
-        function exportData() {
-            if (!scheduleData) {
-                showToast('データがありません', 'error');
-                return;
-            }
-            const blob = new Blob([JSON.stringify(scheduleData, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'schedule_data.json';
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('エクスポートしました', 'success');
-        }
-
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const parsed = JSON.parse(e.target.result);
-                    scheduleData = parsed;
-                    localStorage.setItem(DATA_KEY, JSON.stringify(parsed));
-                    renderSchedule();
-                    showToast('インポートしました！', 'success');
-                } catch (err) {
-                    showToast('インポートエラー: ' + err.message, 'error');
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        }
-
-        // ============================================================
-        //  デフォルトに戻す
-        // ============================================================
-        async function resetToDefault() {
-            if (!confirm('デフォルトデータに戻しますか？（現在のデータは失われます）')) return;
-            try {
-                const resp = await fetch(DEFAULT_DATA_URL);
-                if (!resp.ok) throw new Error('デフォルトデータの読み込みに失敗');
-                const data = await resp.json();
-                scheduleData = data;
-                localStorage.setItem(DATA_KEY, JSON.stringify(data));
-                renderSchedule();
-                showToast('デフォルトデータに戻しました', 'info');
-            } catch (err) {
-                showToast('エラー: ' + err.message, 'error');
-            }
-        }
-
-        // ============================================================
-        //  ユーティリティ
-        // ============================================================
-        function getGitHubToken() {
-            const tokenInput = document.getElementById('githubTokenInput');
-            if (tokenInput) return tokenInput.value.trim();
-            // common.js の getToken 関数があればそれを使う
-            if (typeof getToken === 'function') return getToken();
-            return localStorage.getItem('githubToken') || '';
-        }
-
-        function showToast(msg, type = 'info') {
-            const el = document.getElementById('toast');
-            el.textContent = msg;
-            el.className = 'toast ' + type;
-            setTimeout(() => el.classList.add('show'), 10);
-            clearTimeout(el._timer);
-            el._timer = setTimeout(() => el.classList.remove('show'), 3000);
-        }
-
-        // ============================================================
-        //  初期化
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', () => {
-            // ナビゲーションを生成 (common.js)
-            if (typeof renderNavigation === 'function') {
-                renderNavigation('schedule');
+            if (events.length === 0) {
+                html += `<div style="grid-column:1/-1; color:#b7a086; font-size:0.85rem; padding:8px 0;">予定はありません</div>`;
             } else {
-                // フォールバック: 簡易ナビ
-                const nav = document.getElementById('bottomNav');
-                if (nav) {
-                    nav.innerHTML = `
-                        <a href="index.html"><i class="fas fa-home"></i>ダッシュボード</a>
-                        <a href="tetsu.html"><i class="fas fa-fire"></i>鉄律会</a>
-                        <a href="exam.html"><i class="fas fa-pencil-alt"></i>試験</a>
-                        <a href="homework.html"><i class="fas fa-book"></i>宿題</a>
-                        <a href="schedule.html" class="active"><i class="fas fa-calendar-alt"></i>年間予定</a>
+                for (const ev of events) {
+                    const marker = getMarkerClass(ev.title);
+                    html += `
+                        <div class="event-item">
+                            <span class="event-date">${ev.date}</span>
+                            <span class="event-title">
+                                <span class="event-marker ${marker}"></span>
+                                ${ev.title}
+                            </span>
+                        </div>
                     `;
                 }
             }
 
-            loadData();
-        });
-    </script>
+            html += `
+                    </div>
+                </div>
+            `;
+        }
+
+        container.innerHTML = html;
+        document.getElementById('totalCount').textContent = totalEvents;
+    }
+
+    // ============================================================
+    //  GitHub連携
+    // ============================================================
+
+    function getHeaders() {
+        const token = getToken();
+        if (!token) return null;
+        return {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+        };
+    }
+
+    function getToken() {
+        // common.js の getToken 関数を優先
+        if (typeof window.getToken === 'function') {
+            return window.getToken();
+        }
+        // フォールバック
+        const tokenInput = document.getElementById('githubTokenInput');
+        if (tokenInput) {
+            return tokenInput.value.trim();
+        }
+        return localStorage.getItem('githubToken') || '';
+    }
+
+    async function saveToGitHub() {
+        if (!scheduleData) {
+            showToast('❌ データがありません', 'error');
+            return;
+        }
+
+        const token = getToken();
+        if (!token) {
+            showToast('❌ GitHub Tokenが設定されていません', 'error');
+            return;
+        }
+
+        // まずローカル保存
+        localStorage.setItem(DATA_KEY, JSON.stringify(scheduleData));
+
+        const dot = document.getElementById('statusDot');
+        const text = document.getElementById('statusText');
+        if (dot) { dot.className = 'status-dot saving'; }
+        if (text) { text.textContent = '保存中...'; }
+
+        try {
+            const content = JSON.stringify(scheduleData, null, 2);
+            const encoded = btoa(unescape(encodeURIComponent(content)));
+            const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+            const headers = getHeaders();
+
+            let sha = null;
+            const checkRes = await fetch(url, { headers });
+            if (checkRes.ok) {
+                const fileData = await checkRes.json();
+                sha = fileData.sha;
+            }
+
+            const body = {
+                message: `📅 年間予定更新: ${new Date().toISOString()}`,
+                content: encoded,
+                branch: GITHUB_BRANCH
+            };
+            if (sha) body.sha = sha;
+
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(body)
+            });
+
+            if (response.ok) {
+                if (dot) { dot.className = 'status-dot online'; }
+                if (text) { text.textContent = 'オンライン'; }
+                showToast('✅ GitHubに保存しました', 'success');
+            } else {
+                const err = await response.json();
+                throw new Error(err.message || `HTTP ${response.status}`);
+            }
+        } catch (err) {
+            console.error(err);
+            if (dot) { dot.className = 'status-dot offline'; }
+            if (text) { text.textContent = 'エラー'; }
+            showToast('❌ 保存エラー: ' + err.message, 'error');
+        }
+    }
+
+    async function loadFromGitHub() {
+        const token = getToken();
+        if (!token) {
+            showToast('❌ GitHub Tokenが設定されていません', 'error');
+            return;
+        }
+
+        const dot = document.getElementById('statusDot');
+        const text = document.getElementById('statusText');
+        if (dot) { dot.className = 'status-dot saving'; }
+        if (text) { text.textContent = '読込中...'; }
+
+        try {
+            const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+            const headers = getHeaders();
+            const response = await fetch(url, { headers });
+
+            if (response.status === 404) {
+                showToast('📭 GitHubにデータがありません', 'info');
+                if (dot) { dot.className = 'status-dot online'; }
+                if (text) { text.textContent = 'オンライン'; }
+                return;
+            }
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            const fileData = await response.json();
+            const content = decodeURIComponent(escape(atob(fileData.content)));
+            const loadedData = JSON.parse(content);
+
+            // バリデーション
+            if (typeof loadedData !== 'object' || loadedData === null) {
+                throw new Error('データ形式が不正です');
+            }
+
+            scheduleData = loadedData;
+            localStorage.setItem(DATA_KEY, JSON.stringify(loadedData));
+
+            if (dot) { dot.className = 'status-dot online'; }
+            if (text) { text.textContent = 'オンライン'; }
+            renderSchedule();
+            showToast('✅ GitHubから読み込みました', 'success');
+        } catch (err) {
+            console.error(err);
+            if (dot) { dot.className = 'status-dot offline'; }
+            if (text) { text.textContent = 'エラー'; }
+            showToast('❌ 読込エラー: ' + err.message, 'error');
+        }
+    }
+
+    // ============================================================
+    //  エクスポート / インポート
+    // ============================================================
+
+    function exportData() {
+        if (!scheduleData) {
+            showToast('❌ データがありません', 'error');
+            return;
+        }
+        const blob = new Blob([JSON.stringify(scheduleData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `schedule_data_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('📁 エクスポートしました', 'success');
+    }
+
+    function importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (typeof imported !== 'object' || imported === null) {
+                    throw new Error('データ形式が不正です');
+                }
+                if (confirm('現在のデータをインポートデータで上書きしますか？')) {
+                    scheduleData = imported;
+                    localStorage.setItem(DATA_KEY, JSON.stringify(imported));
+                    renderSchedule();
+                    showToast('📁 インポートしました', 'success');
+                }
+            } catch (err) {
+                showToast('❌ インポートエラー: ' + err.message, 'error');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    // ============================================================
+    //  デフォルトに戻す
+    // ============================================================
+
+    async function resetToDefault() {
+        if (!confirm('デフォルトデータに戻しますか？（現在のデータは失われます）')) return;
+        try {
+            const resp = await fetch(DEFAULT_DATA_URL);
+            if (!resp.ok) throw new Error('デフォルトデータの読み込みに失敗');
+            const data = await resp.json();
+            scheduleData = data;
+            localStorage.setItem(DATA_KEY, JSON.stringify(data));
+            renderSchedule();
+            showToast('🔄 デフォルトデータに戻しました', 'info');
+        } catch (err) {
+            showToast('❌ エラー: ' + err.message, 'error');
+        }
+    }
+
+    // ============================================================
+    //  トースト表示
+    // ============================================================
+
+    function showToast(msg, type = 'info') {
+        const el = document.getElementById('toast');
+        if (!el) return;
+        el.textContent = msg;
+        el.className = 'toast-msg';
+        if (type === 'error') {
+            el.style.background = '#8f4a4a';
+        } else if (type === 'success') {
+            el.style.background = '#2e7d32';
+        } else if (type === 'info') {
+            el.style.background = '#2c241c';
+        } else {
+            el.style.background = '#2c241c';
+        }
+        el.style.color = '#f0e8de';
+        setTimeout(() => el.classList.add('show'), 10);
+        clearTimeout(el._timer);
+        el._timer = setTimeout(() => el.classList.remove('show'), 3000);
+    }
+
+    // ============================================================
+    //  初期化
+    // ============================================================
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // common.js がナビゲーションとTokenバーを自動生成
+        // ただし、common.js が読み込まれていることが前提
+
+        // データ読み込み
+        loadData();
+
+        // グローバル公開（ボタンからの呼び出し用）
+        window.saveToGitHub = saveToGitHub;
+        window.loadFromGitHub = loadFromGitHub;
+        window.exportData = exportData;
+        window.importData = importData;
+        window.resetToDefault = resetToDefault;
+        window.renderSchedule = renderSchedule;
+        window.showToast = showToast;
+    });
+</script>
+
+<!-- ============================================================ -->
+<!-- common.js を読み込み（ナビゲーション・Tokenバー生成） -->
+<!-- ============================================================ -->
+<script src="../scripts/common.js"></script>
 
 </body>
 </html>
