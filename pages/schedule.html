@@ -122,6 +122,47 @@
         }
 
         /* ===== カード ===== */
+        .card {
+            background: #fffffffa;
+            border-radius: 28px;
+            padding: 22px 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+            border: 1px solid #ede8e0;
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e7dfd5;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .card-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2a221b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-header h2 i {
+            color: #8f735b;
+        }
+
+        .card-header .badge {
+            background: #e7ddd2;
+            border-radius: 40px;
+            padding: 2px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #3d3229;
+        }
+
+        /* ===== 学期カード ===== */
         .semester-card {
             background: #fffffffa;
             border-radius: 28px;
@@ -251,6 +292,7 @@
             font-size: 0.95rem;
         }
 
+        /* ===== トースト ===== */
         .toast-msg {
             background: #2c241c;
             color: #f0e8de;
@@ -579,6 +621,11 @@
         // まずローカル保存
         localStorage.setItem(DATA_KEY, JSON.stringify(scheduleData));
 
+        const dot = document.getElementById('statusDot');
+        const text = document.getElementById('statusText');
+        if (dot) { dot.className = 'status-dot saving'; }
+        if (text) { text.textContent = '保存中...'; }
+
         try {
             const content = JSON.stringify(scheduleData, null, 2);
             const encoded = btoa(unescape(encodeURIComponent(content)));
@@ -606,6 +653,8 @@
             });
 
             if (response.ok) {
+                if (dot) { dot.className = 'status-dot online'; }
+                if (text) { text.textContent = 'オンライン'; }
                 showToast('✅ GitHubに保存しました', 'success');
             } else {
                 const err = await response.json();
@@ -613,6 +662,8 @@
             }
         } catch (err) {
             console.error(err);
+            if (dot) { dot.className = 'status-dot offline'; }
+            if (text) { text.textContent = 'エラー'; }
             showToast('❌ 保存エラー: ' + err.message, 'error');
         }
     }
@@ -624,6 +675,11 @@
             return;
         }
 
+        const dot = document.getElementById('statusDot');
+        const text = document.getElementById('statusText');
+        if (dot) { dot.className = 'status-dot saving'; }
+        if (text) { text.textContent = '読込中...'; }
+
         try {
             const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
             const headers = getHeaders();
@@ -631,6 +687,8 @@
 
             if (response.status === 404) {
                 showToast('📭 GitHubにデータがありません', 'info');
+                if (dot) { dot.className = 'status-dot online'; }
+                if (text) { text.textContent = 'オンライン'; }
                 return;
             }
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -646,10 +704,15 @@
 
             scheduleData = loadedData;
             localStorage.setItem(DATA_KEY, JSON.stringify(loadedData));
+
+            if (dot) { dot.className = 'status-dot online'; }
+            if (text) { text.textContent = 'オンライン'; }
             renderSchedule();
             showToast('✅ GitHubから読み込みました', 'success');
         } catch (err) {
             console.error(err);
+            if (dot) { dot.className = 'status-dot offline'; }
+            if (text) { text.textContent = 'エラー'; }
             showToast('❌ 読込エラー: ' + err.message, 'error');
         }
     }
@@ -725,7 +788,15 @@
         if (!el) return;
         el.textContent = msg;
         el.className = 'toast-msg';
-        el.style.background = type === 'error' ? '#8f4a4a' : type === 'success' ? '#2e7d32' : '#2c241c';
+        if (type === 'error') {
+            el.style.background = '#8f4a4a';
+        } else if (type === 'success') {
+            el.style.background = '#2e7d32';
+        } else if (type === 'info') {
+            el.style.background = '#2c241c';
+        } else {
+            el.style.background = '#2c241c';
+        }
         el.style.color = '#f0e8de';
         setTimeout(() => el.classList.add('show'), 10);
         clearTimeout(el._timer);
