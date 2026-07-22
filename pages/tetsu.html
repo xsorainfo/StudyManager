@@ -515,7 +515,7 @@ function renderTests(area, data) {
       if (hasResult) {
         scoreHtml = `
           <div class="score-info">
-            <span class="num">${item.score}</span> / 100
+            <span class="num">${item.score !== null && item.score !== undefined ? item.score.toFixed(1) : '-'}</span> / 100
             ${item.avg !== null && item.avg !== undefined ? `<span class="avg">平均 ${item.avg !== null && item.avg !== undefined ? item.avg.toFixed(1) : ''}</span>` : ''}
             ${!isCalc && item.deviation !== null && item.deviation !== undefined ? 
               `<span class="dev ${devClass}">偏差値 ${item.deviation.toFixed(1)}</span>` : ''}
@@ -658,8 +658,8 @@ function saveEdit(index) {
   const week = document.getElementById('edit_week')?.value.trim() || '';
   const range = document.getElementById('edit_range')?.value.trim() || '';
   const status = document.getElementById('edit_status')?.value || 'upcoming';
-  const score = parseInt(document.getElementById('edit_score')?.value) || null;
-  const avg = parseInt(document.getElementById('edit_avg')?.value) || null;
+  const score = parseFloat(document.getElementById('edit_score')?.value);
+  const avg = parseFloat(document.getElementById('edit_avg')?.value);
   const note = document.getElementById('edit_note')?.value.trim() || '';
 
   const isCalc = currentFunc === 'calc';
@@ -674,8 +674,8 @@ function saveEdit(index) {
     week,
     range,
     status,
-    score: (score !== null && !isNaN(score) && score >= 0 && score <= 100) ? score : null,
-    avg: (avg !== null && !isNaN(avg) && avg >= 0 && avg <= 100) ? avg : null,
+    score: (!isNaN(score) && score >= 0 && score <= 100) ? score : null,
+    avg: (!isNaN(avg) && avg >= 0 && avg <= 100) ? avg : null,
     deviation: (!isCalc && deviation !== null && !isNaN(deviation)) ? deviation : null,
     note
   };
