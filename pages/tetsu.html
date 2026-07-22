@@ -516,7 +516,7 @@ function renderTests(area, data) {
         scoreHtml = `
           <div class="score-info">
             <span class="num">${item.score}</span> / 100
-            ${item.avg !== null && item.avg !== undefined ? `<span class="avg">平均 ${item.avg !== null && item.avg !== undefined ? item.avg.toFixed(1) : ''}</span>
+            ${item.avg !== null && item.avg !== undefined ? `<span class="avg">平均 ${item.avg !== null && item.avg !== undefined ? item.avg.toFixed(1) : ''}</span>` : ''}
             ${!isCalc && item.deviation !== null && item.deviation !== undefined ? 
               `<span class="dev ${devClass}">偏差値 ${item.deviation.toFixed(1)}</span>` : ''}
             ${warningIcon}
