@@ -592,13 +592,13 @@ function renderEditForm(item, index) {
         <select id="edit_status">
           ${statuses.map(s => `<option value="${s.value}" ${item.status === s.value ? 'selected' : ''}>${s.label}</option>`).join('')}
         </select>
-        <label>得点</label>
-        <input type="number" id="edit_score" value="${item.score !== null && item.score !== undefined ? item.score : ''}" placeholder="0-100" min="0" max="100" style="width:65px;">
-        <label>平均点</label>
-        <input type="number" id="edit_avg" value="${item.avg !== null && item.avg !== undefined ? item.avg : ''}" placeholder="平均" min="0" max="100" style="width:65px;">
+        <label style="min-width:55px; text-align:right;">得点</label>
+        <input type="number" id="edit_score" value="${item.score !== null && item.score !== undefined ? item.score : ''}" placeholder="0-100" min="0" max="100" style="width:85px;">
+        <label style="min-width:55px; text-align:right;">平均点</label>
+        <input type="number" id="edit_avg" value="${item.avg !== null && item.avg !== undefined ? item.avg : ''}" placeholder="平均" min="0" max="100" style="width:85px;">
         ${!isCalc ? `
-          <label>偏差値</label>
-          <input type="number" id="edit_deviation" value="${item.deviation !== null && item.deviation !== undefined ? item.deviation : ''}" placeholder="偏差値" min="0" max="100" step="0.1" style="width:65px;">
+          <label style="min-width:55px; text-align:right;">偏差値</label>
+          <input type="number" id="edit_deviation" value="${item.deviation !== null && item.deviation !== undefined ? item.deviation : ''}" placeholder="偏差値" min="0" max="100" step="0.1" style="width:85px;">
         ` : ''}
       </div>
       <div class="form-row">
