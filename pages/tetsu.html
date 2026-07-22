@@ -441,11 +441,11 @@ function renderTests(area, data) {
 
   let avgScore = null;
   let avgDev = null;
-  if (doneCount > 0) {
-    avgScore = Math.round(doneItems.reduce((s, t) => s + t.score, 0) / doneCount);
+  if (doneCount > 0) {    
+    avgScore = Math.round((doneItems.reduce((s, t) => s + t.score, 0) / doneCount) * 10) / 10;
     const devItems = doneItems.filter(t => t.deviation !== null && t.deviation !== undefined);
     if (devItems.length > 0) {
-      avgDev = Math.round(devItems.reduce((s, t) => s + t.deviation, 0) / devItems.length);
+      avgDev = Math.round((devItems.reduce((s, t) => s + t.deviation, 0) / devItems.length) * 10) / 10;
     }
   }
 
@@ -459,8 +459,8 @@ function renderTests(area, data) {
       <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
         ${doneCount > 0 ? `
           <span style="font-size:0.8rem; background:#ede6dd; padding:3px 14px; border-radius:40px;">
-            平均点: <strong>${avgScore}</strong> 点
-            ${!isCalc && avgDev !== null ? `&nbsp;|&nbsp; 平均偏差値: <strong>${avgDev}</strong>` : ''}
+            平均点: <strong>${avgScore.toFixed(1)}</strong> 点
+            ${!isCalc && avgDev !== null ? `&nbsp;|&nbsp; 平均偏差値: <strong>${avgDev.toFixed(1)}</strong>` : ''}
           </span>
         ` : ''}
         <button class="add-btn" onclick="showAddForm()">
@@ -516,9 +516,9 @@ function renderTests(area, data) {
         scoreHtml = `
           <div class="score-info">
             <span class="num">${item.score}</span> / 100
-            ${item.avg !== null && item.avg !== undefined ? `<span class="avg">平均 ${item.avg}</span>` : ''}
+            ${item.avg !== null && item.avg !== undefined ? `<span class="avg">平均 ${item.avg !== null && item.avg !== undefined ? item.avg.toFixed(1) : ''}</span>
             ${!isCalc && item.deviation !== null && item.deviation !== undefined ? 
-              `<span class="dev ${devClass}">偏差値 ${item.deviation}</span>` : ''}
+              `<span class="dev ${devClass}">偏差値 ${item.deviation.toFixed(1)}</span>` : ''}
             ${warningIcon}
           </div>
           ${item.note ? `<div class="note">${item.note}</div>` : ''}
