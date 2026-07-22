@@ -104,7 +104,7 @@
       grid-column: 1 / -1;
     }
     .edit-form .form-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
-    .edit-form .form-row label { font-weight: 600; font-size: 0.8rem; color: #3d3229; min-width: 65px; }
+    .edit-form .form-row label { font-weight: 600; font-size: 0.8rem; color: #3d3229; min-width: 55px; text-align: right; }
     .edit-form .form-row input, .edit-form .form-row select, .edit-form .form-row textarea {
       padding: 5px 10px;
       border: 2px solid #d8cdbf;
@@ -118,7 +118,7 @@
       border-color: #8f735b;
     }
     .edit-form .form-row input[type="text"] { flex: 1; min-width: 100px; }
-    .edit-form .form-row input[type="number"] { width: 65px; }
+    .edit-form .form-row input[type="number"] { width: 85px; }
     .edit-form .form-row textarea { flex: 1; min-width: 120px; min-height: 36px; resize: vertical; }
     .edit-form .form-actions { display: flex; gap: 8px; margin-top: 8px; }
     .edit-form .form-actions button {
@@ -200,7 +200,9 @@
 
 <div class="app-wrapper">
 
+  <!-- ★ ナビゲーションコンテナ（common.js が自動生成） ★ -->
   <div id="navbarContainer"></div>
+  <!-- ★ Tokenバーコンテナ（common.js が自動生成） ★ -->
   <div id="tokenBarContainer"></div>
 
   <div class="page-title">
@@ -234,6 +236,10 @@
   <div class="toast-msg" id="toast"></div>
 </div>
 
+<!-- ============================================================ -->
+<!-- スクリプト -->
+<!-- ============================================================ -->
+<script src="../scripts/common.js"></script>
 <script>
 // ============================================================
 // 🔧 データボタン表示設定
@@ -242,7 +248,6 @@ window.SHOW_EXPORT = true;
 window.SHOW_IMPORT = true;
 // ============================================================
 </script>
-<script src="../scripts/common.js"></script>
 <script src="../scripts/tetsu-data.js"></script>
 <script>
 // ============================================================
@@ -258,7 +263,7 @@ const GITHUB_PATH = 'data/tetsu_data.json';
 const GITHUB_BRANCH = 'main';
 const TETSU_STORAGE_KEY = 'tetsu_data';
 
-let currentGrade = '2';  // ★ デフォルトを中2に変更
+let currentGrade = '2';
 let currentSubject = 'math';
 let currentFunc = 'curriculum';
 let editingIndex = null;
@@ -574,35 +579,35 @@ function renderEditForm(item, index) {
   return `
     <div class="edit-form">
       <div class="form-row">
-        <label>テスト名</label>
+        <label style="min-width:70px; text-align:right;">テスト名</label>
         <input type="text" id="edit_name" value="${item.name || ''}" placeholder="テスト名">
       </div>
       <div class="form-row">
-        <label>日付</label>
-        <input type="text" id="edit_date" value="${item.date || ''}" placeholder="例: 4/15">
-        <label>週</label>
-        <input type="text" id="edit_week" value="${item.week || ''}" placeholder="例: 1" style="width:60px;">
+        <label style="min-width:70px; text-align:right;">日付</label>
+        <input type="text" id="edit_date" value="${item.date || ''}" placeholder="例: 4/15" style="flex:1; min-width:100px;">
+        <label style="min-width:55px; text-align:right;">週</label>
+        <input type="text" id="edit_week" value="${item.week || ''}" placeholder="例: 1" style="width:80px;">
       </div>
       <div class="form-row">
-        <label>出題範囲</label>
+        <label style="min-width:70px; text-align:right;">出題範囲</label>
         <textarea id="edit_range" placeholder="出題範囲を入力">${item.range || ''}</textarea>
       </div>
-      <div class="form-row">
-        <label>ステータス</label>
-        <select id="edit_status">
+      <div class="form-row" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:6px;">
+        <label style="min-width:70px; text-align:right;">ステータス</label>
+        <select id="edit_status" style="width:120px;">
           ${statuses.map(s => `<option value="${s.value}" ${item.status === s.value ? 'selected' : ''}>${s.label}</option>`).join('')}
         </select>
         <label style="min-width:55px; text-align:right;">得点</label>
-        <input type="number" id="edit_score" value="${item.score !== null && item.score !== undefined ? item.score : ''}" placeholder="0-100" min="0" max="100" style="width:85px;">
+        <input type="number" id="edit_score" value="${item.score !== null && item.score !== undefined ? item.score : ''}" placeholder="0-100" min="0" max="100" step="0.1" style="width:85px;">
         <label style="min-width:55px; text-align:right;">平均点</label>
-        <input type="number" id="edit_avg" value="${item.avg !== null && item.avg !== undefined ? item.avg : ''}" placeholder="平均" min="0" max="100" style="width:85px;">
+        <input type="number" id="edit_avg" value="${item.avg !== null && item.avg !== undefined ? item.avg : ''}" placeholder="平均" min="0" max="100" step="0.1" style="width:85px;">
         ${!isCalc ? `
           <label style="min-width:55px; text-align:right;">偏差値</label>
           <input type="number" id="edit_deviation" value="${item.deviation !== null && item.deviation !== undefined ? item.deviation : ''}" placeholder="偏差値" min="0" max="100" step="0.1" style="width:85px;">
         ` : ''}
       </div>
       <div class="form-row">
-        <label>メモ</label>
+        <label style="min-width:70px; text-align:right;">メモ</label>
         <input type="text" id="edit_note" value="${item.note || ''}" placeholder="メモ">
       </div>
       <div class="form-actions">
@@ -701,7 +706,6 @@ function deleteTest(index) {
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-  // デフォルトデータを初期化
   const saved = localStorage.getItem(TETSU_STORAGE_KEY);
   if (!saved && window.TETSU_DATA) {
     try {
@@ -709,7 +713,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch(e) {}
   }
 
-  // 学年タブ
   document.querySelectorAll('#gradeTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
       document.querySelectorAll('#gradeTabs .tab').forEach(t => t.classList.remove('active'));
@@ -720,7 +723,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 科目タブ
   document.querySelectorAll('#subjectTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
       document.querySelectorAll('#subjectTabs .tab').forEach(t => t.classList.remove('active'));
@@ -731,7 +733,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 機能タブ
   document.querySelectorAll('#funcTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
       document.querySelectorAll('#funcTabs .tab').forEach(t => t.classList.remove('active'));
@@ -920,7 +921,6 @@ function showToast(msg, type = 'info') {
   el._timer = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-// グローバル公開
 window.saveToGitHub = saveToGitHub;
 window.loadFromGitHub = loadFromGitHub;
 window.exportData = exportData;
