@@ -41,7 +41,6 @@
     .curriculum-table .holiday { background: #f5f0e8; color: #b7a086; font-style: italic; }
     .curriculum-table .double { font-size: 0.7rem; color: #8f735b; }
 
-    /* ===== テスト一覧（グリッド：1行に2〜3列） ===== */
     .test-list { 
       display: grid; 
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
@@ -95,7 +94,6 @@
     .test-item .btn-group button.delete-btn:hover { color: #c62828; background: #f5e0e0; }
     .test-item .btn-group button.edit-btn:hover { color: #0d47a1; background: #e3f2fd; }
 
-    /* ===== 編集フォーム ===== */
     .edit-form { 
       background: #fcf9f5; 
       border-radius: 16px; 
@@ -239,7 +237,10 @@
 <!-- ============================================================ -->
 <!-- スクリプト -->
 <!-- ============================================================ -->
+
+<!-- ★ common.js を最初に読み込み（ナビゲーション・Token生成） ★ -->
 <script src="../scripts/common.js"></script>
+
 <script>
 // ============================================================
 // 🔧 データボタン表示設定
@@ -248,7 +249,9 @@ window.SHOW_EXPORT = true;
 window.SHOW_IMPORT = true;
 // ============================================================
 </script>
+
 <script src="../scripts/tetsu-data.js"></script>
+
 <script>
 // ============================================================
 // 鉄律会ページ メインロジック（編集機能付き）
@@ -521,7 +524,7 @@ function renderTests(area, data) {
         scoreHtml = `
           <div class="score-info">
             <span class="num">${item.score !== null && item.score !== undefined ? item.score.toFixed(1) : '-'}</span> / 100
-            ${item.avg !== null && item.avg !== undefined ? `<span class="avg">平均 ${item.avg !== null && item.avg !== undefined ? item.avg.toFixed(1) : ''}</span>` : ''}
+            ${item.avg !== null && item.avg !== undefined ? `<span class="avg">平均 ${item.avg.toFixed(1)}</span>` : ''}
             ${!isCalc && item.deviation !== null && item.deviation !== undefined ? 
               `<span class="dev ${devClass}">偏差値 ${item.deviation.toFixed(1)}</span>` : ''}
             ${warningIcon}
@@ -750,6 +753,19 @@ document.addEventListener('DOMContentLoaded', function() {
 // GitHub連携・エクスポート・インポート
 // ============================================================
 
+function getToken() {
+  // common.js の getToken 関数を使う
+  if (typeof window.getToken === 'function') {
+    return window.getToken();
+  }
+  // フォールバック
+  const tokenInput = document.getElementById('githubTokenInput');
+  if (tokenInput) {
+    return tokenInput.value.trim();
+  }
+  return localStorage.getItem('githubToken') || '';
+}
+
 function getHeaders() {
   const token = getToken();
   if (!token) return null;
@@ -757,13 +773,6 @@ function getHeaders() {
     'Authorization': `token ${token}`,
     'Accept': 'application/vnd.github.v3+json'
   };
-}
-
-function getToken() {
-  if (typeof window.getToken === 'function') return window.getToken();
-  const tokenInput = document.getElementById('githubTokenInput');
-  if (tokenInput) return tokenInput.value.trim();
-  return localStorage.getItem('githubToken') || '';
 }
 
 async function saveToGitHub() {
@@ -921,6 +930,7 @@ function showToast(msg, type = 'info') {
   el._timer = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
+// グローバル公開
 window.saveToGitHub = saveToGitHub;
 window.loadFromGitHub = loadFromGitHub;
 window.exportData = exportData;
