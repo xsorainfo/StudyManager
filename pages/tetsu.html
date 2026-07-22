@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="/StudyManager/favicon.png">
-  <title>鉄律会</title>
+  <title>鉄律会 - 学び航路</title>
   <!-- ★ 共通スタイル ★ -->
   <link rel="stylesheet" href="/StudyManager/scripts/common.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -13,30 +13,25 @@
     body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
     .app-wrapper { max-width: 1400px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
 
-    /* 页面标题 */
     .page-title { font-size: 1.8rem; font-weight: 700; color: #2a221b; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .page-title i { color: #8f735b; }
     .page-title .sub { font-size: 0.9rem; font-weight: 400; color: #6b5d4e; margin-left: 12px; }
 
-    /* ===== 学年タブ ===== */
     .grade-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; }
     .grade-tabs .tab { padding: 8px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
     .grade-tabs .tab:hover { background: #e3d9ce; }
     .grade-tabs .tab.active { background: #2c241c; color: #f0ebe3; }
 
-    /* ===== 科目タブ ===== */
     .subject-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
     .subject-tabs .tab { padding: 6px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
     .subject-tabs .tab:hover { background: #e3d9ce; }
     .subject-tabs .tab.active { background: #8f735b; color: white; }
 
-    /* ===== 機能タブ ===== */
     .func-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 1px solid #e7dfd5; padding-bottom: 12px; }
     .func-tabs .tab { padding: 6px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: 0.15s; background: transparent; color: #6b5d4e; border: none; }
     .func-tabs .tab:hover { background: #f0ebe4; }
     .func-tabs .tab.active { background: #f0ebe4; color: #2c241c; font-weight: 600; }
 
-    /* ===== カリキュラム表 ===== */
     .curriculum-table-wrap { overflow-x: auto; }
     .curriculum-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 700px; }
     .curriculum-table th { background: #2c241c; color: #f0ebe3; padding: 10px 14px; text-align: left; font-weight: 600; }
@@ -47,41 +42,93 @@
     .curriculum-table .double { font-size: 0.7rem; color: #8f735b; }
 
     /* ===== テスト一覧 ===== */
-    .test-list { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .test-item { background: #f6f1ea; border-radius: 16px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .test-item .name { font-weight: 500; }
+    .test-list { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .test-item { background: #f6f1ea; border-radius: 16px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .test-item .left { flex: 1; min-width: 200px; }
+    .test-item .right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .test-item .name { font-weight: 600; font-size: 1rem; }
     .test-item .date { font-size: 0.8rem; color: #6b5d4e; }
-    .test-item .status { font-size: 0.8rem; padding: 2px 14px; border-radius: 40px; }
+    .test-item .status { font-size: 0.75rem; padding: 2px 14px; border-radius: 40px; font-weight: 600; }
     .test-item .status.done { background: #c8e6c9; color: #2e7d32; }
     .test-item .status.pending { background: #fff3e0; color: #e65100; }
     .test-item .status.upcoming { background: #e3f2fd; color: #0d47a1; }
     .test-item .score-info { font-size: 0.85rem; color: #2c241c; margin-top: 4px; }
     .test-item .score-info .num { font-weight: 700; font-size: 1rem; }
     .test-item .score-info .avg { color: #6b5d4e; margin-left: 8px; }
-    .test-item .score-info .dev { color: #8f4a4a; margin-left: 8px; font-weight: 600; }
+    .test-item .score-info .dev { margin-left: 8px; font-weight: 600; }
+    .test-item .score-info .dev-high { color: #c62828; }
+    .test-item .score-info .dev-mid { color: #e65100; }
+    .test-item .score-info .dev-low { color: #0d47a1; }
+    .test-item .score-info .dev-avg { color: #2e7d32; }
     .test-item .note { font-size: 0.75rem; color: #8f735b; margin-top: 2px; }
+    .test-item .range-display { font-size: 0.78rem; color: #8f735b; margin-top: 2px; }
+    .test-item .warning-icon { color: #c62828; font-size: 1.1rem; margin-left: 4px; }
+    .test-item .btn-group { display: flex; gap: 4px; }
+    .test-item .btn-group button { background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: 8px; font-size: 0.8rem; color: #6b5d4e; transition: 0.15s; }
+    .test-item .btn-group button:hover { background: #ede6dd; }
+    .test-item .btn-group button.delete-btn:hover { color: #c62828; background: #f5e0e0; }
 
-    /* ===== 空き状態 ===== */
+    /* ===== 編集フォーム ===== */
+    .edit-form { background: #fcf9f5; border-radius: 16px; padding: 16px 20px; margin-top: 12px; border: 2px solid #8f735b; }
+    .edit-form .form-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
+    .edit-form .form-row label { font-weight: 600; font-size: 0.85rem; color: #3d3229; min-width: 70px; }
+    .edit-form .form-row input, .edit-form .form-row select, .edit-form .form-row textarea {
+      padding: 6px 12px;
+      border: 2px solid #d8cdbf;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      outline: none;
+      background: white;
+      font-family: inherit;
+    }
+    .edit-form .form-row input:focus, .edit-form .form-row select:focus, .edit-form .form-row textarea:focus {
+      border-color: #8f735b;
+    }
+    .edit-form .form-row input[type="text"] { flex: 1; min-width: 120px; }
+    .edit-form .form-row input[type="number"] { width: 70px; }
+    .edit-form .form-row textarea { flex: 1; min-width: 150px; min-height: 40px; resize: vertical; }
+    .edit-form .form-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .edit-form .form-actions button {
+      padding: 6px 18px;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .edit-form .form-actions .save-btn { background: #2e7d32; color: white; }
+    .edit-form .form-actions .save-btn:hover { background: #1b5e20; }
+    .edit-form .form-actions .cancel-btn { background: #8f4a4a; color: white; }
+    .edit-form .form-actions .cancel-btn:hover { background: #6d3838; }
+
+    .add-btn { background: #2c241c; color: white; border: none; padding: 8px 20px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+    .add-btn:hover { background: #4d3b2c; }
+
     .empty-state { text-align: center; padding: 60px 20px; color: #b7a086; }
     .empty-state i { font-size: 3rem; margin-bottom: 16px; }
     .empty-state p { font-size: 1.1rem; }
 
-    .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
+    .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; pointer-events: none; }
     .toast-msg.show { opacity: 1; }
     #fileInput { display: none; }
     .flex { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
-    /* 偏差値の色分け */
-    .dev-high { color: #c62828; font-weight: 700; }
-    .dev-mid { color: #e65100; font-weight: 600; }
-    .dev-low { color: #0d47a1; font-weight: 500; }
-    .dev-avg { color: #2e7d32; font-weight: 500; }
+    .status-badge { display: inline-block; padding: 2px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; }
+    .status-badge.done { background: #c8e6c9; color: #2e7d32; }
+    .status-badge.pending { background: #fff3e0; color: #e65100; }
+    .status-badge.upcoming { background: #e3f2fd; color: #0d47a1; }
 
     @media (max-width: 768px) {
       .test-list { grid-template-columns: 1fr; }
       .grade-tabs .tab { padding: 6px 16px; font-size: 0.8rem; }
       .subject-tabs .tab { padding: 4px 14px; font-size: 0.8rem; }
       .func-tabs .tab { padding: 4px 14px; font-size: 0.75rem; }
+      .test-item { flex-direction: column; align-items: stretch; }
+      .test-item .right { justify-content: flex-start; }
+      .edit-form .form-row { flex-direction: column; align-items: stretch; }
+      .edit-form .form-row input[type="text"] { width: 100%; }
+      .edit-form .form-row input[type="number"] { width: 100%; }
     }
   </style>
 </head>
@@ -89,17 +136,14 @@
 
 <div class="app-wrapper">
 
-  <!-- ===== 导航コンテナ（共通JSで自動生成） ===== -->
   <div id="navbarContainer"></div>
   <div id="tokenBarContainer"></div>
 
-  <!-- ===== 页面标题 ===== -->
   <div class="page-title">
     <i class="fas fa-flag"></i> 鉄律会
     <span class="sub">学習カリキュラム・テスト管理</span>
   </div>
 
-  <!-- ===== 学年タブ ===== -->
   <div class="grade-tabs" id="gradeTabs">
     <button class="tab active" data-grade="1">中1</button>
     <button class="tab" data-grade="2">中2</button>
@@ -109,13 +153,11 @@
     <button class="tab" data-grade="6">高3</button>
   </div>
 
-  <!-- ===== 科目タブ ===== -->
   <div class="subject-tabs" id="subjectTabs">
     <button class="tab active" data-subject="math">数学</button>
     <button class="tab" data-subject="english">英語</button>
   </div>
 
-  <!-- ===== 機能タブ ===== -->
   <div class="func-tabs" id="funcTabs">
     <button class="tab active" data-func="curriculum">📖 カリキュラム</button>
     <button class="tab" data-func="review">📝 総復習テスト</button>
@@ -123,10 +165,7 @@
     <button class="tab" data-func="calc">🧮 計算テスト</button>
   </div>
 
-  <!-- ===== コンテンツ表示領域 ===== -->
-  <div id="contentArea">
-    <!-- JavaScript で動的生成 -->
-  </div>
+  <div id="contentArea"></div>
 
   <div class="toast-msg" id="toast"></div>
 </div>
@@ -143,40 +182,112 @@ window.SHOW_IMPORT = true;
 <script src="../scripts/tetsu-data.js"></script>
 <script>
 // ============================================================
-// 鉄律会ページ メインロジック
+// 鉄律会ページ メインロジック（編集機能付き）
 // ============================================================
 
-const DATA = window.TETSU_DATA || {};
+// ============================================================
+// 設定
+// ============================================================
+const GITHUB_OWNER = 'xsorainfo';
+const GITHUB_REPO = 'StudyManager';
+const GITHUB_PATH = 'data/tetsu_data.json';
+const GITHUB_BRANCH = 'main';
+const TETSU_STORAGE_KEY = 'tetsu_data';
 
 let currentGrade = '1';
 let currentSubject = 'math';
 let currentFunc = 'curriculum';
+let editingIndex = null; // 編集中のテストインデックス
 
-function getData() {
-  const gradeData = DATA[currentGrade];
-  if (!gradeData) return null;
-  return gradeData[currentSubject] || null;
+// ============================================================
+// データ管理
+// ============================================================
+
+function loadTetsuData() {
+  const saved = localStorage.getItem(TETSU_STORAGE_KEY);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === 'object') {
+        // デフォルトデータとマージ（不足分を補充）
+        const defaultData = window.TETSU_DATA || {};
+        for (let g of ['1','2','3','4','5','6']) {
+          if (!parsed[g]) parsed[g] = {};
+          for (let s of ['math', 'english']) {
+            if (!parsed[g][s]) {
+              parsed[g][s] = defaultData[g]?.[s] || { curriculum: [], tests: { review: [], test: [], calc: [] } };
+            }
+          }
+        }
+        return parsed;
+      }
+    } catch(e) {
+      console.error('データ読み込みエラー:', e);
+    }
+  }
+  return JSON.parse(JSON.stringify(window.TETSU_DATA || {}));
 }
 
-// ===== 偏差値の色 =====
-function getDevClass(dev) {
-  if (dev === null || dev === undefined) return '';
-  if (dev >= 65) return 'dev-high';
-  if (dev >= 55) return 'dev-mid';
-  if (dev >= 45) return 'dev-avg';
-  return 'dev-low';
+function saveTetsuData(data) {
+  localStorage.setItem(TETSU_STORAGE_KEY, JSON.stringify(data));
+  if (window.TETSU_DATA) {
+    window.TETSU_DATA = data;
+  }
 }
 
-// ===== レンダリング =====
+function getCurrentData() {
+  const fullData = loadTetsuData();
+  if (!fullData[currentGrade]) {
+    fullData[currentGrade] = {};
+  }
+  if (!fullData[currentGrade][currentSubject]) {
+    fullData[currentGrade][currentSubject] = { curriculum: [], tests: { review: [], test: [], calc: [] } };
+  }
+  return fullData[currentGrade][currentSubject];
+}
+
+function saveCurrentData(data) {
+  const fullData = loadTetsuData();
+  if (!fullData[currentGrade]) fullData[currentGrade] = {};
+  fullData[currentGrade][currentSubject] = data;
+  saveTetsuData(fullData);
+}
+
+// ============================================================
+// データ取得ヘルパー
+// ============================================================
+
+function getTestList() {
+  const data = getCurrentData();
+  const tests = data.tests || { review: [], test: [], calc: [] };
+  if (currentFunc === 'review') return tests.review || [];
+  if (currentFunc === 'test') return tests.test || [];
+  if (currentFunc === 'calc') return tests.calc || [];
+  return [];
+}
+
+function saveTestList(list) {
+  const data = getCurrentData();
+  if (!data.tests) data.tests = { review: [], test: [], calc: [] };
+  if (currentFunc === 'review') data.tests.review = list;
+  else if (currentFunc === 'test') data.tests.test = list;
+  else if (currentFunc === 'calc') data.tests.calc = list;
+  saveCurrentData(data);
+}
+
+// ============================================================
+// レンダリング
+// ============================================================
+
 function renderContent() {
   const area = document.getElementById('contentArea');
-  const data = getData();
+  const data = getCurrentData();
 
-  if (!data) {
+  if (!data || !data.curriculum) {
     area.innerHTML = `
       <div class="empty-state">
         <i class="fas fa-construction"></i>
-        <p>${['1','2'].includes(currentGrade) ? 'データ準備中です' : 'データがありません'}</p>
+        <p>データ準備中です</p>
       </div>
     `;
     return;
@@ -222,7 +333,6 @@ function renderCurriculum(area, data) {
     const double = item.week && (item.week.includes('W1') || item.week.includes('W2'));
     const doubleHtml = double ? `<span class="double">(W1/W2)</span>` : '';
 
-    // 休講期間
     if (item.date === '休講' || item.content === '休講' || !item.date) {
       html += `
         <tr class="holiday">
@@ -233,12 +343,9 @@ function renderCurriculum(area, data) {
       return;
     }
 
-    // 日付が空の場合（英語の週表示など）
-    const displayDate = item.date || '';
-
     html += `
       <tr>
-        <td>${displayDate}</td>
+        <td>${item.date || ''}</td>
         <td>${item.week || ''} ${doubleHtml}</td>
         <td>${item.content || ''}</td>
         <td class="${testClass}">${isTest ? item.test : '—'}</td>
@@ -259,99 +366,293 @@ function renderCurriculum(area, data) {
   area.innerHTML = html;
 }
 
-// ===== テスト表示 =====
+// ===== テスト表示（編集機能付き） =====
 function renderTests(area, data) {
-  const tests = data.tests || {};
-  let testData = [];
-  let funcName = '';
-
-  if (currentFunc === 'review') {
-    testData = tests.review || [];
-    funcName = '総復習テスト';
-  } else if (currentFunc === 'test') {
-    testData = tests.test || [];
-    funcName = '復習テスト';
-  } else if (currentFunc === 'calc') {
-    testData = tests.calc || [];
-    funcName = '計算テスト';
-  }
-
-  if (!testData || testData.length === 0) {
-    area.innerHTML = `
-      <div class="empty-state">
-        <i class="fas fa-clipboard-list"></i>
-        <p>${funcName} データがありません</p>
-      </div>
-    `;
-    return;
-  }
-
-  const statusMap = {
-    done: { label: '済', class: 'done' },
-    pending: { label: '実施予定', class: 'pending' },
-    upcoming: { label: '予定', class: 'upcoming' }
+  const tests = getTestList();
+  const funcNames = {
+    review: '総復習テスト',
+    test: '復習テスト',
+    calc: '計算テスト'
   };
+  const funcName = funcNames[currentFunc] || 'テスト';
+  const isCalc = currentFunc === 'calc';
 
   // 統計情報
-  const doneItems = testData.filter(t => t.status === 'done' && t.score !== null);
+  const doneItems = tests.filter(t => t.status === 'done' && t.score !== null && t.score !== undefined);
   const doneCount = doneItems.length;
-  const avgScore = doneCount > 0 ? Math.round(doneItems.reduce((s, t) => s + t.score, 0) / doneCount) : null;
-  const avgDev = doneCount > 0 ? Math.round(doneItems.reduce((s, t) => s + t.deviation, 0) / doneCount) : null;
+
+  let avgScore = null;
+  let avgDev = null;
+  if (doneCount > 0) {
+    avgScore = Math.round(doneItems.reduce((s, t) => s + t.score, 0) / doneCount);
+    const devItems = doneItems.filter(t => t.deviation !== null && t.deviation !== undefined);
+    if (devItems.length > 0) {
+      avgDev = Math.round(devItems.reduce((s, t) => s + t.deviation, 0) / devItems.length);
+    }
+  }
 
   let html = `
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:16px;">
       <div>
         <span style="font-weight:600; font-size:1.1rem;">${funcName}</span>
-        <span style="margin-left:12px; font-size:0.85rem; color:#6b5d4e;">全 ${testData.length} 件</span>
+        <span style="margin-left:12px; font-size:0.85rem; color:#6b5d4e;">全 ${tests.length} 件</span>
+        ${isCalc ? '<span style="margin-left:12px; font-size:0.75rem; color:#8f735b;">(偏差値なし)</span>' : ''}
       </div>
-      ${doneCount > 0 ? `
-        <div style="font-size:0.85rem; background:#f0ebe4; padding:4px 16px; border-radius:40px;">
-          平均点: <strong>${avgScore}</strong> 点 &nbsp;|&nbsp; 平均偏差値: <strong>${avgDev}</strong>
-        </div>
-      ` : ''}
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        ${doneCount > 0 ? `
+          <span style="font-size:0.85rem; background:#f0ebe4; padding:4px 16px; border-radius:40px;">
+            平均点: <strong>${avgScore}</strong> 点
+            ${!isCalc && avgDev !== null ? `&nbsp;|&nbsp; 平均偏差値: <strong>${avgDev}</strong>` : ''}
+          </span>
+        ` : ''}
+        <button class="add-btn" onclick="showAddForm()">
+          <i class="fas fa-plus"></i> 追加
+        </button>
+      </div>
     </div>
     <div class="test-list">
   `;
 
-  testData.forEach(item => {
-    const status = statusMap[item.status] || statusMap.upcoming;
-    const hasResult = item.status === 'done' && item.score !== null;
-    // ★★★ 出題範囲（range）を表示 ★★★
-    const rangeDisplay = item.range ? `<div style="font-size:0.8rem; color:#8f735b; margin-top:2px;">📖 ${item.range}</div>` : '';
-
-    let scoreHtml = '';
-    if (hasResult) {
-      const devClass = getDevClass(item.deviation);
-      scoreHtml = `
-        <div class="score-info">
-          <span class="num">${item.score}</span> / 100
-          <span class="avg">平均 ${item.avg}</span>
-          <span class="dev ${devClass}">偏差値 ${item.deviation}</span>
-        </div>
-        ${item.note ? `<div class="note">${item.note}</div>` : ''}
-      `;
-    } else {
-      scoreHtml = `<div style="font-size:0.8rem; color:#b7a086; margin-top:4px;">未実施</div>`;
-    }
-
-    // ★ 表示するラベル（テスト名＋週） ★
-    const displayName = item.week ? `${item.name} (第${item.week}週)` : item.name;
-
+  if (tests.length === 0) {
     html += `
-      <div class="test-item">
-        <div>
-          <div class="name">${displayName}</div>
-          <div class="date">${item.date || '日程未定'}</div>
-          ${rangeDisplay}  <!-- ★ 出題範囲を表示 ★ -->
-          ${scoreHtml}
-        </div>
-        <span class="status ${status.class}">${status.label}</span>
+      <div class="empty-state" style="padding:30px;">
+        <i class="fas fa-clipboard-list"></i>
+        <p>${funcName} データがありません</p>
+        <p style="font-size:0.85rem; color:#b7a086;">「追加」ボタンから登録してください</p>
       </div>
     `;
-  });
+  } else {
+    tests.forEach((item, index) => {
+      const isEditing = (editingIndex === index);
+      const statusMap = {
+        done: { label: '済', class: 'done' },
+        pending: { label: '実施予定', class: 'pending' },
+        upcoming: { label: '予定', class: 'upcoming' }
+      };
+      const status = statusMap[item.status] || statusMap.upcoming;
+      const hasResult = item.status === 'done' && item.score !== null && item.score !== undefined;
+
+      // ★ 警告アイコンの判定 ★
+      let warningIcon = '';
+      if (hasResult) {
+        if (isCalc) {
+          // 計算テスト：平均点未満で警告
+          if (item.avg !== null && item.avg !== undefined && item.score < item.avg) {
+            warningIcon = '<span class="warning-icon" title="平均点未満です"><i class="fas fa-exclamation-triangle"></i></span>';
+          }
+        } else {
+          // 偏差値があるテスト：偏差値50未満で警告
+          if (item.deviation !== null && item.deviation !== undefined && item.deviation < 50) {
+            warningIcon = '<span class="warning-icon" title="偏差値50未満です"><i class="fas fa-exclamation-triangle"></i></span>';
+          }
+        }
+      }
+
+      // ★ 偏差値の色クラス ★
+      let devClass = '';
+      if (!isCalc && item.deviation !== null && item.deviation !== undefined) {
+        if (item.deviation >= 65) devClass = 'dev-high';
+        else if (item.deviation >= 55) devClass = 'dev-mid';
+        else if (item.deviation >= 45) devClass = 'dev-avg';
+        else devClass = 'dev-low';
+      }
+
+      let scoreHtml = '';
+      if (hasResult) {
+        scoreHtml = `
+          <div class="score-info">
+            <span class="num">${item.score}</span> / 100
+            ${item.avg !== null && item.avg !== undefined ? `<span class="avg">平均 ${item.avg}</span>` : ''}
+            ${!isCalc && item.deviation !== null && item.deviation !== undefined ? 
+              `<span class="dev ${devClass}">偏差値 ${item.deviation}</span>` : ''}
+            ${warningIcon}
+          </div>
+          ${item.note ? `<div class="note">${item.note}</div>` : ''}
+        `;
+      } else {
+        scoreHtml = `<div style="font-size:0.8rem; color:#b7a086; margin-top:4px;">未実施</div>`;
+      }
+
+      // ★ 出題範囲 ★
+      const rangeHtml = item.range ? `<div class="range-display">📖 ${item.range}</div>` : '';
+
+      // ★ テスト名表示 ★
+      const displayName = item.week ? `${item.name} (第${item.week}週)` : item.name;
+
+      if (isEditing) {
+        // 編集フォーム
+        html += renderEditForm(item, index);
+      } else {
+        html += `
+          <div class="test-item">
+            <div class="left">
+              <div class="name">${displayName}</div>
+              <div class="date">${item.date || '日程未定'}</div>
+              ${rangeHtml}
+              ${scoreHtml}
+            </div>
+            <div class="right">
+              <span class="status ${status.class}">${status.label}</span>
+              <div class="btn-group">
+                <button onclick="startEdit(${index})" title="編集">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="delete-btn" onclick="deleteTest(${index})" title="削除">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    });
+  }
 
   html += `</div>`;
   area.innerHTML = html;
+}
+
+// ===== 編集フォーム =====
+function renderEditForm(item, index) {
+  const isCalc = currentFunc === 'calc';
+  const statuses = [
+    { value: 'done', label: '済' },
+    { value: 'pending', label: '実施予定' },
+    { value: 'upcoming', label: '予定' }
+  ];
+
+  return `
+    <div class="edit-form">
+      <div class="form-row">
+        <label>テスト名</label>
+        <input type="text" id="edit_name" value="${item.name || ''}" placeholder="テスト名">
+      </div>
+      <div class="form-row">
+        <label>日付</label>
+        <input type="text" id="edit_date" value="${item.date || ''}" placeholder="例: 4/15">
+      </div>
+      <div class="form-row">
+        <label>週</label>
+        <input type="text" id="edit_week" value="${item.week || ''}" placeholder="例: 1">
+      </div>
+      <div class="form-row">
+        <label>出題範囲</label>
+        <textarea id="edit_range" placeholder="出題範囲を入力">${item.range || ''}</textarea>
+      </div>
+      <div class="form-row">
+        <label>ステータス</label>
+        <select id="edit_status">
+          ${statuses.map(s => `<option value="${s.value}" ${item.status === s.value ? 'selected' : ''}>${s.label}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row">
+        <label>得点</label>
+        <input type="number" id="edit_score" value="${item.score !== null && item.score !== undefined ? item.score : ''}" placeholder="0-100" min="0" max="100">
+      </div>
+      <div class="form-row">
+        <label>平均点</label>
+        <input type="number" id="edit_avg" value="${item.avg !== null && item.avg !== undefined ? item.avg : ''}" placeholder="平均点" min="0" max="100">
+      </div>
+      ${!isCalc ? `
+        <div class="form-row">
+          <label>偏差値</label>
+          <input type="number" id="edit_deviation" value="${item.deviation !== null && item.deviation !== undefined ? item.deviation : ''}" placeholder="偏差値" min="0" max="100" step="0.1">
+        </div>
+      ` : ''}
+      <div class="form-row">
+        <label>メモ</label>
+        <input type="text" id="edit_note" value="${item.note || ''}" placeholder="メモ">
+      </div>
+      <div class="form-actions">
+        <button class="save-btn" onclick="saveEdit(${index})"><i class="fas fa-check"></i> 保存</button>
+        <button class="cancel-btn" onclick="cancelEdit()"><i class="fas fa-times"></i> キャンセル</button>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// テスト操作関数
+// ============================================================
+
+function showAddForm() {
+  const tests = getTestList();
+  const newItem = {
+    name: '新規テスト',
+    date: '',
+    week: '',
+    range: '',
+    status: 'upcoming',
+    score: null,
+    avg: null,
+    deviation: null,
+    note: ''
+  };
+  tests.push(newItem);
+  saveTestList(tests);
+  editingIndex = tests.length - 1;
+  renderContent();
+}
+
+function startEdit(index) {
+  editingIndex = index;
+  renderContent();
+}
+
+function cancelEdit() {
+  // 空の新規テストを削除
+  const tests = getTestList();
+  if (editingIndex !== null && tests[editingIndex] && !tests[editingIndex].name && !tests[editingIndex].date) {
+    tests.splice(editingIndex, 1);
+    saveTestList(tests);
+  }
+  editingIndex = null;
+  renderContent();
+}
+
+function saveEdit(index) {
+  const tests = getTestList();
+  const name = document.getElementById('edit_name')?.value.trim() || '無題';
+  const date = document.getElementById('edit_date')?.value.trim() || '';
+  const week = document.getElementById('edit_week')?.value.trim() || '';
+  const range = document.getElementById('edit_range')?.value.trim() || '';
+  const status = document.getElementById('edit_status')?.value || 'upcoming';
+  const score = parseInt(document.getElementById('edit_score')?.value) || null;
+  const avg = parseInt(document.getElementById('edit_avg')?.value) || null;
+  const note = document.getElementById('edit_note')?.value.trim() || '';
+
+  const isCalc = currentFunc === 'calc';
+  let deviation = null;
+  if (!isCalc) {
+    deviation = parseFloat(document.getElementById('edit_deviation')?.value) || null;
+  }
+
+  tests[index] = {
+    name,
+    date,
+    week,
+    range,
+    status,
+    score: (score !== null && !isNaN(score) && score >= 0 && score <= 100) ? score : null,
+    avg: (avg !== null && !isNaN(avg) && avg >= 0 && avg <= 100) ? avg : null,
+    deviation: (!isCalc && deviation !== null && !isNaN(deviation)) ? deviation : null,
+    note
+  };
+
+  saveTestList(tests);
+  editingIndex = null;
+  renderContent();
+  showToast('✅ テストを保存しました', 'success');
+}
+
+function deleteTest(index) {
+  if (!confirm('このテストを削除しますか？')) return;
+  const tests = getTestList();
+  tests.splice(index, 1);
+  saveTestList(tests);
+  if (editingIndex === index) editingIndex = null;
+  renderContent();
+  showToast('🗑️ 削除しました', 'info');
 }
 
 // ============================================================
@@ -359,17 +660,12 @@ function renderTests(area, data) {
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-  // ★ 鉄律会データを localStorage に保存（一括出力用） ★
-  if (window.TETSU_DATA) {
-    const saved = localStorage.getItem('tetsu_data');
-    if (!saved) {
-      try {
-        localStorage.setItem('tetsu_data', JSON.stringify(window.TETSU_DATA));
-        console.log('✅ 鉄律会デフォルトデータをlocalStorageに保存しました');
-      } catch(e) {
-        console.error('鉄律会データ保存エラー:', e);
-      }
-    }
+  // デフォルトデータを初期化
+  const saved = localStorage.getItem(TETSU_STORAGE_KEY);
+  if (!saved && window.TETSU_DATA) {
+    try {
+      localStorage.setItem(TETSU_STORAGE_KEY, JSON.stringify(window.TETSU_DATA));
+    } catch(e) {}
   }
 
   // 学年タブ
@@ -378,6 +674,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('#gradeTabs .tab').forEach(t => t.classList.remove('active'));
       this.classList.add('active');
       currentGrade = this.dataset.grade;
+      editingIndex = null;
       renderContent();
     });
   });
@@ -388,6 +685,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('#subjectTabs .tab').forEach(t => t.classList.remove('active'));
       this.classList.add('active');
       currentSubject = this.dataset.subject;
+      editingIndex = null;
       renderContent();
     });
   });
@@ -398,68 +696,16 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('#funcTabs .tab').forEach(t => t.classList.remove('active'));
       this.classList.add('active');
       currentFunc = this.dataset.func;
+      editingIndex = null;
       renderContent();
     });
   });
 
-  // 初期表示
   renderContent();
 });
 
 // ============================================================
-// 共通関数（common.js のものを使用）
-// 以下は削除（common.js に含まれる）
-// - getToken()
-// - setTokenFromInput()
-// - updateStatus()
-// - showToast()
-// ============================================================
-
-// ============================================================
-// 鉄律会データの保存・読込・エクスポート・インポート
-// ============================================================
-
-// ============================================================
-// 設定
-// ============================================================
-const GITHUB_OWNER = 'xsorainfo';
-const GITHUB_REPO = 'StudyManager';
-const GITHUB_PATH = 'data/tetsu_data.json';
-const GITHUB_BRANCH = 'main';
-
-// ============================================================
-// データ管理
-// ============================================================
-
-// 鉄律会データのキー
-const TETSU_STORAGE_KEY = 'tetsu_data';
-
-// データを読み込む（localStorage）
-function loadTetsuData() {
-  const saved = localStorage.getItem(TETSU_STORAGE_KEY);
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch(e) {
-      console.error('データ読み込みエラー:', e);
-    }
-  }
-  // デフォルトデータ（window.TETSU_DATA からコピー）
-  return JSON.parse(JSON.stringify(window.TETSU_DATA || {}));
-}
-
-// データを保存する（localStorage）
-function saveTetsuData(data) {
-  localStorage.setItem(TETSU_STORAGE_KEY, JSON.stringify(data));
-  // グローバルデータも更新
-  if (window.TETSU_DATA) {
-    window.TETSU_DATA = data;
-  }
-  showToast('💾 ローカルに保存しました');
-}
-
-// ============================================================
-// GitHub 保存
+// GitHub連携・エクスポート・インポート
 // ============================================================
 
 function getHeaders() {
@@ -471,6 +717,13 @@ function getHeaders() {
   };
 }
 
+function getToken() {
+  if (typeof window.getToken === 'function') return window.getToken();
+  const tokenInput = document.getElementById('githubTokenInput');
+  if (tokenInput) return tokenInput.value.trim();
+  return localStorage.getItem('githubToken') || '';
+}
+
 async function saveToGitHub() {
   const token = getToken();
   if (!token) {
@@ -478,9 +731,7 @@ async function saveToGitHub() {
     return;
   }
 
-  // 現在のデータを取得
   const data = loadTetsuData();
-  
   const dot = document.getElementById('statusDot');
   const text = document.getElementById('statusText');
   if (dot) dot.className = 'status-dot saving';
@@ -492,7 +743,6 @@ async function saveToGitHub() {
     const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
     const headers = getHeaders();
 
-    // ファイルの存在確認とSHA取得
     let sha = null;
     const checkRes = await fetch(url, { headers });
     if (checkRes.ok) {
@@ -528,10 +778,6 @@ async function saveToGitHub() {
   }
 }
 
-// ============================================================
-// GitHub 読込
-// ============================================================
-
 async function loadFromGitHub() {
   const token = getToken();
   if (!token) {
@@ -561,7 +807,6 @@ async function loadFromGitHub() {
     const content = decodeURIComponent(escape(atob(fileData.content)));
     const loadedData = JSON.parse(content);
 
-    // データを保存
     localStorage.setItem(TETSU_STORAGE_KEY, JSON.stringify(loadedData));
     if (window.TETSU_DATA) {
       window.TETSU_DATA = loadedData;
@@ -569,8 +814,7 @@ async function loadFromGitHub() {
 
     if (dot) dot.className = 'status-dot online';
     if (text) text.textContent = 'オンライン';
-    
-    // 再描画
+    editingIndex = null;
     renderContent();
     showToast('✅ GitHub から読み込みました');
   } catch(e) {
@@ -579,10 +823,6 @@ async function loadFromGitHub() {
     showToast('❌ 読込失敗: ' + e.message);
   }
 }
-
-// ============================================================
-// エクスポート（JSONファイル）
-// ============================================================
 
 function exportData() {
   const data = loadTetsuData();
@@ -597,38 +837,24 @@ function exportData() {
   showToast('📁 エクスポートしました');
 }
 
-// ============================================================
-// インポート（JSONファイル）
-// ============================================================
-
 function importData(event) {
   const file = event.target.files[0];
   if (!file) return;
-  
+
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
       const imported = JSON.parse(e.target.result);
-      
-      // データ構造の簡易チェック
       if (typeof imported !== 'object' || imported === null) {
         showToast('❌ データ形式が正しくありません');
         return;
       }
-      
-      // 少なくとも1つの学年データがあるかチェック
-      const hasValidData = ['1','2','3','4','5','6'].some(g => imported[g]);
-      if (!hasValidData) {
-        showToast('❌ 有効なデータが含まれていません');
-        return;
-      }
-      
       if (confirm('現在のデータをインポートデータで上書きしますか？')) {
         localStorage.setItem(TETSU_STORAGE_KEY, JSON.stringify(imported));
         if (window.TETSU_DATA) {
           window.TETSU_DATA = imported;
         }
-        // 再描画
+        editingIndex = null;
         renderContent();
         showToast('📁 インポートしました');
       }
@@ -638,33 +864,32 @@ function importData(event) {
     }
   };
   reader.readAsText(file);
-  // ファイル入力をリセット
   event.target.value = '';
 }
 
-// ============================================================
-// 初期化時にデータを読み込む
-// ============================================================
+function showToast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'toast-msg';
+  el.style.background = type === 'error' ? '#8f4a4a' : type === 'success' ? '#2e7d32' : '#2c241c';
+  el.style.color = '#f0e8de';
+  setTimeout(() => el.classList.add('show'), 10);
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 3000);
+}
 
-// ページ読み込み時にデータを復元
-(function initTetsuData() {
-  const saved = localStorage.getItem(TETSU_STORAGE_KEY);
-  if (saved) {
-    try {
-      const data = JSON.parse(saved);
-      if (window.TETSU_DATA) {
-        // 既存データにマージ（不足している学年を補充）
-        for (let g of ['1','2','3','4','5','6']) {
-          if (!data[g]) data[g] = {};
-          if (!window.TETSU_DATA[g]) window.TETSU_DATA[g] = {};
-        }
-        window.TETSU_DATA = data;
-      }
-    } catch(e) {
-      console.error('データ復元エラー:', e);
-    }
-  }
-})();
+// グローバル公開
+window.saveToGitHub = saveToGitHub;
+window.loadFromGitHub = loadFromGitHub;
+window.exportData = exportData;
+window.importData = importData;
+window.showAddForm = showAddForm;
+window.startEdit = startEdit;
+window.cancelEdit = cancelEdit;
+window.saveEdit = saveEdit;
+window.deleteTest = deleteTest;
+window.renderContent = renderContent;
 </script>
 </body>
 </html>
