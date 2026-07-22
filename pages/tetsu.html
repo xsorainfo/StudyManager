@@ -753,18 +753,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // GitHub連携・エクスポート・インポート
 // ============================================================
 
-function getToken() {
-  // common.js の getToken 関数を使う
-  if (typeof window.getToken === 'function') {
-    return window.getToken();
-  }
-  // フォールバック
-  const tokenInput = document.getElementById('githubTokenInput');
-  if (tokenInput) {
-    return tokenInput.value.trim();
-  }
-  return localStorage.getItem('githubToken') || '';
-}
+
 
 function getHeaders() {
   const token = getToken();
