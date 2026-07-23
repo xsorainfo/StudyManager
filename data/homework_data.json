@@ -43,6 +43,16 @@
             "createdAt": "2026-07-18T12:10:23.323Z",
             "progress": 0,
             "memo": ""
+          },
+          {
+            "id": "mrwsqi8x5h8w",
+            "title": "夏の生活（日記）",
+            "desc": "",
+            "done": false,
+            "doneDate": null,
+            "createdAt": "2026-07-23T00:51:56.770Z",
+            "progress": 0,
+            "memo": ""
           }
         ],
         "links": []
@@ -150,20 +160,20 @@
             "id": "mrqcandm8k71",
             "title": "①夏の課題テスト　　（①②始業式　提出）",
             "desc": "※p.4 問題 2(3)は未習の内容（2次方程式）を含むのでやらない",
-            "done": false,
-            "doneDate": null,
+            "done": true,
+            "doneDate": "2026-07-23T05:07:59.436Z",
             "createdAt": "2026-07-18T12:25:06.010Z",
-            "progress": 10,
+            "progress": 100,
             "memo": ""
           },
           {
             "id": "mrqcbbl47ne7",
             "title": "②数学にまつわる本の読書感想文　　（①②始業式　提出）",
             "desc": "",
-            "done": false,
-            "doneDate": null,
+            "done": true,
+            "doneDate": "2026-07-23T05:08:00.374Z",
             "createdAt": "2026-07-18T12:25:37.384Z",
-            "progress": 20,
+            "progress": 100,
             "memo": ""
           },
           {
