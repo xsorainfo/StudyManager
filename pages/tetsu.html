@@ -288,8 +288,8 @@
   </div>
 
   <div class="func-tabs" id="funcTabs">
-    <button class="tab active" data-func="learning">📖 学習方法</button>
-    <button class="tab" data-func="curriculum">📚 カリキュラム</button>
+    <button class="tab" data-func="learning">📖 学習方法</button>
+    <button class="tab active" data-func="curriculum">📚 カリキュラム</button>
     <button class="tab" data-func="review">📝 総復習テスト</button>
     <button class="tab" data-func="test">📊 復習テスト</button>
     <button class="tab" data-func="calc">🧮 計算テスト</button>
@@ -399,7 +399,7 @@ function loadTetsuData() {
           if (!parsed[g]) parsed[g] = {};
           for (let s of ['math', 'english']) {
             if (!parsed[g][s]) {
-              // 完全に存在しない場合はデフォルトからコピー
+              // 完全に存在しない場合はデフォルトからディープコピー
               parsed[g][s] = JSON.parse(JSON.stringify(defaultData[g]?.[s] || { 
                 learning_method: '', 
                 curriculum: [], 
@@ -430,9 +430,8 @@ function loadTetsuData() {
     } catch(e) { console.error('データ読み込みエラー:', e); }
   }
   
-  // 2. localStorage にデータがない場合、window.TETSU_DATA からコピー
+  // 2. localStorage にデータがない場合、window.TETSU_DATA からディープコピー
   const defaultData = window.TETSU_DATA || {};
-  // ディープコピーして返す
   return JSON.parse(JSON.stringify(defaultData));
 }
 
@@ -901,11 +900,13 @@ function deleteTest(index) {
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
+  // デフォルトデータを初期化
   const saved = localStorage.getItem(TETSU_STORAGE_KEY);
   if (!saved && window.TETSU_DATA) {
     try { localStorage.setItem(TETSU_STORAGE_KEY, JSON.stringify(window.TETSU_DATA)); } catch(e) {}
   }
 
+  // 学年タブ
   document.querySelectorAll('#gradeTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
       document.querySelectorAll('#gradeTabs .tab').forEach(t => t.classList.remove('active'));
@@ -917,6 +918,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // 科目タブ
   document.querySelectorAll('#subjectTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
       document.querySelectorAll('#subjectTabs .tab').forEach(t => t.classList.remove('active'));
@@ -928,6 +930,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // 機能タブ
   document.querySelectorAll('#funcTabs .tab').forEach(tab => {
     tab.addEventListener('click', function() {
       document.querySelectorAll('#funcTabs .tab').forEach(t => t.classList.remove('active'));
@@ -1113,6 +1116,7 @@ function showToast(msg, type = 'info') {
   el._timer = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
+// グローバル公開
 window.saveToGitHub = saveToGitHub;
 window.loadFromGitHub = loadFromGitHub;
 window.exportData = exportData;
