@@ -387,21 +387,41 @@ function getTestStatus(dateStr, grade) {
 // ============================================================
 
 function loadTetsuData() {
+  // 1. localStorage から読み込み
   const saved = localStorage.getItem(TETSU_STORAGE_KEY);
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
       if (parsed && typeof parsed === 'object') {
+        // デフォルトデータとマージ（不足分を補充）
         const defaultData = window.TETSU_DATA || {};
         for (let g of ['1','2','3','4','5','6']) {
           if (!parsed[g]) parsed[g] = {};
           for (let s of ['math', 'english']) {
             if (!parsed[g][s]) {
-              parsed[g][s] = defaultData[g]?.[s] || { learning_method: '', curriculum: [], tests: { review: [], test: [], calc: [] } };
-            }
-            // learning_method が存在しない場合の対応
-            if (parsed[g][s] && typeof parsed[g][s].learning_method === 'undefined') {
-              parsed[g][s].learning_method = defaultData[g]?.[s]?.learning_method || '';
+              // 完全に存在しない場合はデフォルトからコピー
+              parsed[g][s] = JSON.parse(JSON.stringify(defaultData[g]?.[s] || { 
+                learning_method: '', 
+                curriculum: [], 
+                tests: { review: [], test: [], calc: [] } 
+              }));
+            } else {
+              // learning_method が存在しない場合（旧データからの移行）
+              if (typeof parsed[g][s].learning_method === 'undefined') {
+                parsed[g][s].learning_method = defaultData[g]?.[s]?.learning_method || '';
+              }
+              // curriculum が存在しない場合
+              if (!parsed[g][s].curriculum) {
+                parsed[g][s].curriculum = defaultData[g]?.[s]?.curriculum || [];
+              }
+              // tests が存在しない場合
+              if (!parsed[g][s].tests) {
+                parsed[g][s].tests = defaultData[g]?.[s]?.tests || { review: [], test: [], calc: [] };
+              }
+              // tests 内の各配列が存在しない場合
+              if (!parsed[g][s].tests.review) parsed[g][s].tests.review = [];
+              if (!parsed[g][s].tests.test) parsed[g][s].tests.test = [];
+              if (!parsed[g][s].tests.calc) parsed[g][s].tests.calc = [];
             }
           }
         }
@@ -409,7 +429,11 @@ function loadTetsuData() {
       }
     } catch(e) { console.error('データ読み込みエラー:', e); }
   }
-  return JSON.parse(JSON.stringify(window.TETSU_DATA || {}));
+  
+  // 2. localStorage にデータがない場合、window.TETSU_DATA からコピー
+  const defaultData = window.TETSU_DATA || {};
+  // ディープコピーして返す
+  return JSON.parse(JSON.stringify(defaultData));
 }
 
 function saveTetsuData(data) {
