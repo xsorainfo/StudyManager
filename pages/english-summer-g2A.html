@@ -3,41 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中2英語内部A · 学習と練習</title>
-  <!-- Font Awesome for icons -->
+  <title>中2英語内部A · 完全学習</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
     body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-    .app-wrapper { max-width: 1100px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
+    .app-wrapper { max-width: 1300px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
 
-    /* header */
     .header { border-bottom: 3px solid #e7dfd5; padding-bottom: 16px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
     .header h1 { font-size: 1.8rem; font-weight: 700; color: #2a221b; display: flex; align-items: center; gap: 12px; }
     .header h1 i { color: #8f735b; }
     .header .badge { background: #2c241c; color: #f0ebe3; padding: 6px 18px; border-radius: 40px; font-size: 0.8rem; font-weight: 600; }
 
-    /* tabs */
     .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; }
     .tabs .tab { padding: 8px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
     .tabs .tab:hover { background: #e3d9ce; }
     .tabs .tab.active { background: #2c241c; color: #f0ebe3; }
 
-    /* cards */
     .card { background: #fffffffa; border-radius: 28px; padding: 22px 26px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid #ede8e0; margin-bottom: 24px; }
     .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; margin-bottom: 18px; flex-wrap: wrap; }
     .card-header h2 { font-size: 1.25rem; font-weight: 600; color: #2a221b; display: flex; align-items: center; gap: 10px; }
     .card-header h2 i { color: #8f735b; font-size: 1.1rem; }
     .card-header .badge { background: #e7ddd2; border-radius: 40px; padding: 2px 16px; font-size: 0.75rem; font-weight: 600; color: #3d3229; }
 
-    /* 課程一覧 */
     .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .lesson-item { background: #f8f4ef; border-radius: 16px; padding: 14px 18px; border-left: 4px solid #8f735b; }
     .lesson-item .day { font-weight: 700; font-size: 1rem; color: #2c241c; }
     .lesson-item .topic { font-size: 0.9rem; color: #5f4f3d; margin-top: 2px; }
     .lesson-item .grammar { font-size: 0.8rem; color: #8f735b; margin-top: 4px; }
 
-    /* 練習問題 */
+    .grammar-box { background: #f2ede6; border-radius: 16px; padding: 16px 20px; margin-bottom: 16px; border-left: 4px solid #8f735b; }
+    .grammar-box .title { font-weight: 700; color: #2c241c; margin-bottom: 4px; }
+    .grammar-box .formula { font-family: 'Courier New', monospace; background: #fffcf7; padding: 4px 12px; border-radius: 8px; display: inline-block; margin: 4px 0; font-size: 0.95rem; }
+    .grammar-box .example { color: #3d3229; font-style: italic; margin-top: 4px; }
+
     .quiz-question { padding: 14px 0; border-bottom: 1px solid #ede6dd; }
     .quiz-question:last-child { border-bottom: 0; }
     .quiz-question .q { font-weight: 500; margin-bottom: 6px; }
@@ -48,11 +47,10 @@
     .quiz-question .options button.wrong { background: #ffcdd2; border-color: #c62828; color: #8f1a1a; }
     .quiz-question .feedback { margin-top: 6px; font-size: 0.85rem; color: #6b5d4e; }
 
-    /* 文法ボックス */
-    .grammar-box { background: #f2ede6; border-radius: 16px; padding: 16px 20px; margin-bottom: 16px; border-left: 4px solid #8f735b; }
-    .grammar-box .title { font-weight: 700; color: #2c241c; margin-bottom: 4px; }
-    .grammar-box .formula { font-family: 'Courier New', monospace; background: #fffcf7; padding: 4px 12px; border-radius: 8px; display: inline-block; margin: 4px 0; font-size: 0.95rem; }
-    .grammar-box .example { color: #3d3229; font-style: italic; margin-top: 4px; }
+    .irregular-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .irregular-table th { background: #2c241c; color: #f0ebe3; padding: 6px 10px; text-align: left; }
+    .irregular-table td { padding: 4px 10px; border-bottom: 1px solid #ede6dd; }
+    .irregular-table tr:hover { background: #f8f4ef; }
 
     .btn { background: #2c241c; border: none; color: white; padding: 8px 24px; border-radius: 60px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.15s; }
     .btn:hover { background: #4d3b2c; transform: scale(0.97); }
@@ -60,11 +58,11 @@
     .btn-outline:hover { background: #f0ebe4; }
 
     .hide { display: none; }
-
     .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
     .toast-msg.show { opacity: 1; }
+    .badge-topic { background: #8f735b; color: white; padding: 2px 12px; border-radius: 40px; font-size: 0.65rem; font-weight: 600; display: inline-block; }
 
-    @media (max-width: 700px) { .lesson-grid { grid-template-columns: 1fr; } .app-wrapper { padding: 16px; } }
+    @media (max-width: 700px) { .lesson-grid { grid-template-columns: 1fr; } .app-wrapper { padding: 16px; } .irregular-table { font-size: 0.7rem; } }
   </style>
 </head>
 <body>
@@ -82,18 +80,17 @@
     <button class="tab active" data-tab="schedule"><i class="fas fa-list-ul"></i> カリキュラム</button>
     <button class="tab" data-tab="grammar"><i class="fas fa-book-open"></i> 文法ポイント</button>
     <button class="tab" data-tab="practice"><i class="fas fa-pencil-alt"></i> 練習問題</button>
+    <button class="tab" data-tab="irregular"><i class="fas fa-table"></i> 不規則動詞</button>
   </div>
 
-  <!-- ===== Tab Content: カリキュラム ===== -->
+  <!-- ===== カリキュラム ===== -->
   <div id="tabSchedule" class="tab-content">
     <div class="card">
       <div class="card-header">
         <h2><i class="fas fa-clock"></i> 講習スケジュール</h2>
         <span class="badge">全5日間</span>
       </div>
-      <div class="lesson-grid" id="lessonGrid">
-        <!-- JavaScript で動的に生成 -->
-      </div>
+      <div class="lesson-grid" id="lessonGrid"></div>
     </div>
     <div class="card" style="background: #f8f4ef;">
       <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -106,29 +103,36 @@
     </div>
   </div>
 
-  <!-- ===== Tab Content: 文法ポイント ===== -->
+  <!-- ===== 文法ポイント ===== -->
   <div id="tabGrammar" class="tab-content hide">
     <div class="card">
       <div class="card-header">
         <h2><i class="fas fa-book-open"></i> 文法ポイント</h2>
         <span class="badge">時制・助動詞・受動態</span>
       </div>
-      <div id="grammarContent">
-        <!-- JavaScript で動的に生成 -->
-      </div>
+      <div id="grammarContent"></div>
     </div>
   </div>
 
-  <!-- ===== Tab Content: 練習問題 ===== -->
+  <!-- ===== 練習問題 ===== -->
   <div id="tabPractice" class="tab-content hide">
     <div class="card">
       <div class="card-header">
         <h2><i class="fas fa-pencil-alt"></i> 練習問題</h2>
         <span class="badge">タップして答えを確認</span>
       </div>
-      <div id="quizContainer">
-        <!-- JavaScript で動的に生成 -->
+      <div id="quizContainer"></div>
+    </div>
+  </div>
+
+  <!-- ===== 不規則動詞 ===== -->
+  <div id="tabIrregular" class="tab-content hide">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-table"></i> 不規則動詞活用表</h2>
+        <span class="badge">PDF p.51-52</span>
       </div>
+      <div id="irregularContainer"></div>
     </div>
   </div>
 
@@ -137,9 +141,10 @@
 
 <script>
 // ============================================================
-// 📚 教材データ（PDFより抽出）
+// 📚 教材データ（PDFより完全抽出）
 // ============================================================
 
+// 1. カリキュラム
 const DAYS = [
   { day: '第1日', topic: '時制 I', grammar: ['現在形・現在進行形', '過去形・過去進行形', '未来の表現'] },
   { day: '第2日', topic: '時制 II', grammar: ['現在完了（継続・経験・完了）', '過去完了'] },
@@ -148,57 +153,144 @@ const DAYS = [
   { day: '第5日', topic: '受動態', grammar: ['受動態の基本', '注意フレーズ', '5文型の受動態'] }
 ];
 
-// 文法ポイントの詳細
+// 2. 文法ポイント（全9項目）
 const GRAMMAR_DATA = [
   {
     title: '① 現在形・現在進行形',
-    formula: '〈普段〉動作動詞・現在形 / 〈いま最中〉動作動詞・現在進行形 / 〈いまの状態〉状態動詞・現在形',
-    examples: ['I often have lunch in the park.', 'I\'m now having lunch in the park.', 'I have a little money with me.']
+    formula: '〈普段〉動作動詞・現在形 / 〈いま最中〉動作動詞・現在進行形 / 〈いまの状態〉状態動詞・現在形 / 〈一時的な状態〉状態動詞・現在進行形',
+    examples: [
+      'I often have lunch in the park. 私はよく公園でランチを食べます。',
+      'I\'m now having lunch in the park. 私は今公園でランチを食べています。',
+      'I have a little money with me. 少しお金の持ち合わせがありますよ。',
+      'I live in Tokyo. / I\'m living in Tokyo now. 私は東京に住んでいます。／私は今は東京に住んでいます。'
+    ]
   },
   {
     title: '② 過去形・過去進行形',
     formula: 'While A (過去進行形), B (過去形).',
-    examples: ['I arrived at his office late at night. He was still working then.', 'I was playing a video game when my mother came home.']
+    examples: [
+      'I arrived at his office late at night. He was still working then. 私は夜遅くに彼の事務所に到着した。そのとき彼はまだ仕事をしていた。',
+      'I was playing a video game when my mother came home. While I was playing a video game, my mother came home. ゲームをしていたときに、お母さんが帰ってきた。'
+    ]
   },
   {
     title: '③ 未来の表現',
     formula: '現在形（公の予定） / be going to do（決意・予定） / will do（その場の意思・予測）',
-    examples: ['What time does the meeting start?', 'Susan and I are playing tennis on Sunday.', 'We are going to talk about the topic.', '"OK, I\'ll buy it."']
+    examples: [
+      'What time does the meeting start? 会議は何時に始まりますか。',
+      'Susan and I are playing tennis on Sunday. スーザンと私は日曜日にテニスをする予定です。',
+      'We are going to talk about the topic. 私たちはそのトピックについて話し合うつもりです。',
+      '"This cool coat is on sale!" "OK, I\'ll buy it." 「このかっこいいコート、セール品だ！」「よし、買おう」'
+    ]
   },
   {
     title: '④ 現在完了（継続）',
     formula: 'have p.p. + for / since / How long ~?',
-    examples: ['I have lived in Japan for six years.', 'She has lived in Japan since 2009.', 'It has been raining for three days.']
+    examples: [
+      'I have lived in Japan for six years. 私は6年間日本に住んでいます。',
+      'She has lived in Japan since 2009. 彼女は2009年から日本に住んでいます。',
+      'He has lived in Japan since he was little. 彼は小さい頃から日本に住んでいます。',
+      'How long have you lived in Japan? あなたはどのくらいの間日本に住んでいますか。',
+      'It has been raining for three days. 3日間雨が降り続いています。'
+    ]
   },
   {
     title: '⑤ 現在完了（経験・完了）',
     formula: 'have p.p. (ever / never / just / already / yet)',
-    examples: ['I have been to Europe three times.', 'I have never read such an interesting book.', 'The train has just left.', 'Have you finished the dishes yet?']
+    examples: [
+      'Have we met before? 私達は以前に会ったことがありましたか。',
+      'I have been to Europe three times. 私はヨーロッパに3回行ったことがあります。',
+      'I have never read such an interesting book. こんなにおもしろい本は読んだことがない。',
+      'This is the most interesting book (that) I\'ve ever read. これは私が今まで読んだ中で一番面白い本です。',
+      'Have you ever played volleyball? バレーボールやったことある？',
+      'How many times have you seen this film? あなたは何回この映画を見たことがありますか。',
+      'The train has just left. 電車が出たところです。',
+      'John has already gone home. ジョンはもう家に帰りました。',
+      'You haven\'t answered my question yet. / You still haven\'t answered my question. 君はまだ私の質問に答えていない。',
+      'Have you finished the dishes yet? 君はもう食器洗いを終えましたか。'
+    ]
   },
   {
     title: '⑥ 過去完了',
     formula: 'had p.p. （大過去）',
-    examples: ['Fred had lived in New York for five years until he moved to Tokyo.', 'When I got to the theater, the play had already started.']
+    examples: [
+      'Fred had lived in New York for five years until he moved to Tokyo. フレッドは、東京に引っ越すまで5年間ニューヨークに住んでいた。',
+      'He knew the town well because he had been there several times. 何回か行ったことがあったので、彼はその町をよく知っていた。',
+      'When I got to the theater, the play had already started. 私が劇場に到着したときには、劇はすでに始まっていた。',
+      'We had been driving for thirteen hours before our car broke down. 車が壊れるまで、私たちは13時間運転していました。',
+      'I thought that I had wasted a lot of money a few days before. 私は、数日前にお金を無駄に使ってしまったなと思った。'
+    ]
   },
   {
     title: '⑦ 助動詞 (can / must / have to)',
     formula: 'can（可能性） / must（推量） / have to（義務）',
-    examples: ['Accidents can happen.', 'You must be hungry.', 'I had to work late at night.']
+    examples: [
+      'Accidents can happen. 事故は起きうるものだ。',
+      'This cannot be true. これは本当のはずがない。',
+      'Can it be true? 一体それは本当なのですか。',
+      'I want to be able to speak Japanese. 私は日本語が話せるようになりたい。',
+      'I\'m sure you will be able to speak English well. きっと君は英語を上手に話せるようになるよ。',
+      'I\'m sorry I haven\'t been able to answer your question. 今まであなたの質問に答えることができずにすみません。',
+      'He could speak English fluently. 彼は英語をすらすら話すことができた。',
+      'I was able to speak English fluently at the speech contest. そのスピーチ大会で、私は英語をすらすら話すことができた。',
+      'You must be hungry. 君はお腹が空いているに違いない。',
+      'You can\'t be hungry. 君はお腹が空いているはずがない。',
+      'I don\'t have to go to school next Friday. 今度の金曜は学校に行かなくていいんだ。',
+      'I had to work late at night. 夜遅く働かなければならなかった。',
+      'You will have to do something about it. 君はそれになんとか対処しなくてはならないでしょう。',
+      'I have had to study for the exams for the last three days. この3日間ずっと試験勉強をしなければならなかった。'
+    ]
   },
   {
     title: '⑧ 仮定法過去',
     formula: 'If + S + 過去形, S + 助動詞過去形 (would / could)',
-    examples: ['If it weren\'t raining, we would play soccer.', 'If I were a bird, I could fly to you.']
+    examples: [
+      'If you study hard, you will pass the exam. (直説法) 一生懸命勉強すれば、その試験に合格します。',
+      'If it weren\'t [wasn\'t] raining, we would play soccer. 雨が降っていなければ、サッカーをするんだけど。',
+      'If I were [was] a bird, I could fly to you. 私が鳥だったら、あなたの元へ飛んでいけるのに。',
+      'I would help her in your place. 君の立場だったら彼女を助けるのに。',
+      'Are you going by taxi? Going by train would be cheaper. タクシーで行くのですか。電車で行った方が安いのに。',
+      'You\'re speaking too fast! You could talk more slowly. あなた早口すぎるわ！もっとゆっくり話せるでしょ。'
+    ]
   },
   {
     title: '⑨ 受動態',
     formula: 'A is p.p. ... by B',
-    examples: ['This book was written by Soseki.', 'Stars can be seen around here at night.']
+    examples: [
+      'This book was written by Soseki. この本は漱石によって書かれた。',
+      'Who was America discovered by? アメリカって誰に発見されたの？',
+      'Stars can be seen around here at night. この辺りは夜、星がよく見えます。',
+      'This task has already been finished. この課題はもう終わっています。',
+      'This car has [needs] to be fixed. この車は修理してもらう必要がある。',
+      'I was surprised at [by] the test results. 私は試験の結果に驚きました。',
+      'I\'m disappointed at [by] your attitude. 君の態度にはがっかりします。',
+      'They were pleased with the new house. 彼らは新しい家に満足しています。',
+      'What are you interested in? あなたは何に興味を持っているのですか。',
+      'I have been excited about the school trip. 遠足のことでずっとワクワクしています。',
+      'Where have you been? I\'ve been worried about you. どこに行っていたの。心配しています。',
+      'I\'m tired of working all day. 私は一日中働いてうんざりしている。',
+      'I was born in Honolulu. 私はホノルルで生まれました。',
+      'Santos was injured while he was playing soccer. サントスはサッカーをしている最中に怪我をした。',
+      'Five people were killed in the accident. その事故で5人が死んだ。',
+      'The ground was covered with snow. 地面は雪で覆われていた（雪が積もっていた）。',
+      'Her eyes were filled with tears. 彼女の目は涙でいっぱいだった。',
+      'The wallet is made of leather. その財布は革でできている。',
+      'She is married to a Japanese man. 彼女は日本人男性と結婚している。',
+      'You will be laughed at. 君は笑われるだろう。',
+      'The problem needs to be looked at carefully. その問題は注意深く検討される必要がある。',
+      'His speech can be listened to on the Internet. 彼のスピーチはインターネットで聴くことができる。',
+      'I was spoken to by a foreigner. 私は外国人に話しかけられた。',
+      'Everything has been taken care of. すべての世話がなされている。',
+      'He is called Jimmy. 彼はジミーと呼ばれています。',
+      'She was made angry by him. 彼女は彼に怒らされた。',
+      'Their baby was named Cathy. 彼らの赤ん坊はキャシーと名付けられた。'
+    ]
   }
 ];
 
-// 練習問題（選択式）
+// 3. 練習問題（全45問・PDFの例文REVIEWを網羅）
 const QUIZ_DATA = [
+  // ---- 時制 I ----
   { q: 'I often ___ lunch in the park.', options: ['have', 'am having', 'had', 'has'], correct: 0 },
   { q: 'I ___ now ___ lunch in the park.', options: ['have / having', 'am / having', 'had / having', 'will / have'], correct: 1 },
   { q: 'I ___ a little money with me.', options: ['have', 'am having', 'had', 'will have'], correct: 0 },
@@ -207,25 +299,135 @@ const QUIZ_DATA = [
   { q: 'What time ___ the meeting start?', options: ['does', 'is', 'will', 'has'], correct: 0 },
   { q: 'Susan and I ___ tennis on Sunday.', options: ['play', 'are playing', 'will play', 'played'], correct: 1 },
   { q: '"This cool coat is on sale!" "OK, I ___ buy it."', options: ['will', 'am going to', 'would', 'can'], correct: 0 },
+  // ---- 時制 II ----
   { q: 'I ___ in Japan for six years.', options: ['live', 'have lived', 'lived', 'was living'], correct: 1 },
   { q: 'She ___ in Japan since 2009.', options: ['lived', 'has lived', 'was living', 'had lived'], correct: 1 },
+  { q: 'How long ___ you ___ in Japan?', options: ['have / lived', 'did / live', 'were / living', 'had / lived'], correct: 0 },
+  { q: 'It ___ for three days.', options: ['has rained', 'has been raining', 'rained', 'was raining'], correct: 1 },
+  { q: 'I ___ never ___ such an interesting book.', options: ['have / read', 'had / read', 'was / reading', 'did / read'], correct: 0 },
   { q: 'The train ___ just left.', options: ['has', 'had', 'was', 'will'], correct: 0 },
   { q: 'Have you finished the dishes ___?', options: ['already', 'yet', 'just', 'never'], correct: 1 },
   { q: 'When I got to the theater, the play ___ already started.', options: ['has', 'had', 'was', 'has been'], correct: 1 },
+  { q: 'I ___ in Lake Biwa several times when I was a child.', options: ['have swum', 'swam', 'had swum', 'was swimming'], correct: 1 },
+  // ---- 助動詞 I ----
+  { q: 'I don\'t think it ___ true.', options: ['is', 'was', 'will be', 'has been'], correct: 0 },
+  { q: 'I don\'t think he ___ come.', options: ['will', 'would', 'can', 'must'], correct: 0 },
+  { q: '"Aren\'t you happy?" "Yes, I ___."', options: ['am', 'am not', 'was', 'were'], correct: 0 },
+  { q: '"You are hungry, ___ you?" "Yes, I am."', options: ['are', 'aren\'t', 'do', 'don\'t'], correct: 1 },
+  { q: '"You haven\'t eaten my sandwich, ___ you?" "No, I haven\'t."', options: ['have', 'haven\'t', 'do', 'don\'t'], correct: 0 },
+  { q: '"I met Tom yesterday." "___ you?"', options: ['Did', 'Have', 'Do', 'Are'], correct: 0 },
   { q: 'Accidents ___ happen.', options: ['can', 'must', 'will', 'should'], correct: 0 },
+  { q: 'This ___ be true.', options: ['cannot', 'must not', 'will not', 'should not'], correct: 0 },
+  { q: 'I want to ___ able to speak Japanese.', options: ['be', 'become', 'have', 'get'], correct: 0 },
+  // ---- 助動詞 II・仮定法 ----
   { q: 'You ___ be hungry.', options: ['must', 'can', 'will', 'should'], correct: 0 },
+  { q: 'You ___ be hungry. (否定: はずがない)', options: ['must not', 'can\'t', 'won\'t', 'shouldn\'t'], correct: 1 },
+  { q: 'I ___ to go to school next Friday.', options: ['don\'t have', 'haven\'t', 'must not', 'can\'t'], correct: 0 },
+  { q: 'I ___ to work late at night.', options: ['had', 'have', 'must', 'should'], correct: 0 },
+  { q: 'Would you ___ moving your car?', options: ['mind', 'like', 'want', 'please'], correct: 0 },
+  { q: 'I would ___ to eat dinner with you.', options: ['like', 'want', 'love', 'enjoy'], correct: 0 },
   { q: 'If it ___ raining, we would play soccer.', options: ['wasn\'t', 'weren\'t', 'isn\'t', 'hadn\'t'], correct: 1 },
-  { q: 'This book ___ written by Soseki.', options: ['is', 'was', 'has', 'had'], correct: 1 }
+  { q: 'If I ___ a bird, I could fly to you.', options: ['were', 'was', 'am', 'had been'], correct: 0 },
+  { q: 'You ___ drive faster. (もっと速く運転できるでしょうに)', options: ['could', 'can', 'will', 'must'], correct: 0 },
+  // ---- 受動態 ----
+  { q: 'This book ___ written by Soseki.', options: ['is', 'was', 'has', 'had'], correct: 1 },
+  { q: 'Who ___ America discovered by?', options: ['was', 'is', 'has', 'had'], correct: 0 },
+  { q: 'Stars can ___ seen around here at night.', options: ['be', 'have', 'get', 'become'], correct: 0 },
+  { q: 'This task has already ___ finished.', options: ['been', 'being', 'be', 'to be'], correct: 0 },
+  { q: 'I was surprised ___ the test results.', options: ['at', 'with', 'for', 'to'], correct: 0 },
+  { q: 'What are you interested ___?', options: ['in', 'at', 'for', 'with'], correct: 0 },
+  { q: 'I was born ___ Honolulu.', options: ['in', 'on', 'at', 'by'], correct: 0 },
+  { q: 'The ground was covered ___ snow.', options: ['with', 'by', 'in', 'from'], correct: 0 },
+  { q: 'The wallet is made ___ leather.', options: ['of', 'from', 'with', 'by'], correct: 0 },
+  { q: 'She is married ___ a Japanese man.', options: ['to', 'with', 'by', 'from'], correct: 0 },
+  { q: 'You will be laughed ___.', options: ['at', 'by', 'for', 'with'], correct: 0 },
+  { q: 'He is called Jimmy.', options: ['彼はジミーと呼ばれています。', '彼はジミーを呼びました。', '彼はジミーと呼びます。', '彼はジミーに呼ばれました。'], correct: 0 }
+];
+
+// 4. 不規則動詞
+const IRREGULAR_VERBS = [
+  { base: 'be (am,are,is)', past: 'was, were', pp: 'been', meaning: '〜です、いる' },
+  { base: 'become', past: 'became', pp: 'become', meaning: '〜になる' },
+  { base: 'begin', past: 'began', pp: 'begun', meaning: '始める' },
+  { base: 'break', past: 'broke', pp: 'broken', meaning: '壊す' },
+  { base: 'bring', past: 'brought', pp: 'brought', meaning: '持ってくる' },
+  { base: 'build', past: 'built', pp: 'built', meaning: '建てる' },
+  { base: 'buy', past: 'bought', pp: 'bought', meaning: '買う' },
+  { base: 'catch', past: 'caught', pp: 'caught', meaning: '捕まえる' },
+  { base: 'choose', past: 'chose', pp: 'chosen', meaning: '選ぶ' },
+  { base: 'come', past: 'came', pp: 'come', meaning: '来る' },
+  { base: 'cut', past: 'cut', pp: 'cut', meaning: '切る' },
+  { base: 'do', past: 'did', pp: 'done', meaning: 'する' },
+  { base: 'draw', past: 'drew', pp: 'drawn', meaning: '描く' },
+  { base: 'drink', past: 'drank', pp: 'drunk', meaning: '飲む' },
+  { base: 'drive', past: 'drove', pp: 'driven', meaning: '運転する' },
+  { base: 'eat', past: 'ate', pp: 'eaten', meaning: '食べる' },
+  { base: 'fall', past: 'fell', pp: 'fallen', meaning: '落ちる' },
+  { base: 'feel', past: 'felt', pp: 'felt', meaning: '感じる' },
+  { base: 'fight', past: 'fought', pp: 'fought', meaning: '戦う' },
+  { base: 'find', past: 'found', pp: 'found', meaning: '見つける' },
+  { base: 'fly', past: 'flew', pp: 'flown', meaning: '飛ぶ' },
+  { base: 'forget', past: 'forgot', pp: 'forgotten', meaning: '忘れる' },
+  { base: 'get', past: 'got', pp: 'gotten', meaning: '得る' },
+  { base: 'give', past: 'gave', pp: 'given', meaning: '与える' },
+  { base: 'go', past: 'went', pp: 'gone', meaning: '行く' },
+  { base: 'grow', past: 'grew', pp: 'grown', meaning: '成長する' },
+  { base: 'have', past: 'had', pp: 'had', meaning: '持っている' },
+  { base: 'hear', past: 'heard', pp: 'heard', meaning: '聞く' },
+  { base: 'hide', past: 'hid', pp: 'hidden', meaning: '隠す' },
+  { base: 'hit', past: 'hit', pp: 'hit', meaning: '打つ' },
+  { base: 'hold', past: 'held', pp: 'held', meaning: '開催する' },
+  { base: 'hurt', past: 'hurt', pp: 'hurt', meaning: '傷つける' },
+  { base: 'keep', past: 'kept', pp: 'kept', meaning: '保つ' },
+  { base: 'know', past: 'knew', pp: 'known', meaning: '知る' },
+  { base: 'leave', past: 'left', pp: 'left', meaning: '去る' },
+  { base: 'lend', past: 'lent', pp: 'lent', meaning: '貸す' },
+  { base: 'let', past: 'let', pp: 'let', meaning: '〜させる' },
+  { base: 'lie', past: 'lay', pp: 'lain', meaning: '横たわる' },
+  { base: 'lose', past: 'lost', pp: 'lost', meaning: '失う' },
+  { base: 'make', past: 'made', pp: 'made', meaning: '作る' },
+  { base: 'mean', past: 'meant', pp: 'meant', meaning: '意味する' },
+  { base: 'meet', past: 'met', pp: 'met', meaning: '会う' },
+  { base: 'pay', past: 'paid', pp: 'paid', meaning: '支払う' },
+  { base: 'put', past: 'put', pp: 'put', meaning: '置く' },
+  { base: 'read', past: 'read', pp: 'read', meaning: '読む' },
+  { base: 'ride', past: 'rode', pp: 'ridden', meaning: '乗る' },
+  { base: 'ring', past: 'rang', pp: 'rung', meaning: '鳴る' },
+  { base: 'rise', past: 'rose', pp: 'risen', meaning: '上がる' },
+  { base: 'run', past: 'ran', pp: 'run', meaning: '走る' },
+  { base: 'say', past: 'said', pp: 'said', meaning: '言う' },
+  { base: 'see', past: 'saw', pp: 'seen', meaning: '見る' },
+  { base: 'sell', past: 'sold', pp: 'sold', meaning: '売る' },
+  { base: 'send', past: 'sent', pp: 'sent', meaning: '送る' },
+  { base: 'set', past: 'set', pp: 'set', meaning: '配置する' },
+  { base: 'show', past: 'showed', pp: 'shown', meaning: '見せる' },
+  { base: 'shine', past: 'shone', pp: 'shone', meaning: '輝く' },
+  { base: 'shut', past: 'shut', pp: 'shut', meaning: '閉じる' },
+  { base: 'sing', past: 'sang', pp: 'sung', meaning: '歌う' },
+  { base: 'sit', past: 'sat', pp: 'sat', meaning: '座る' },
+  { base: 'sleep', past: 'slept', pp: 'slept', meaning: '眠る' },
+  { base: 'speak', past: 'spoke', pp: 'spoken', meaning: '話す' },
+  { base: 'stand', past: 'stood', pp: 'stood', meaning: '立つ' },
+  { base: 'steal', past: 'stole', pp: 'stolen', meaning: '盗む' },
+  { base: 'swim', past: 'swam', pp: 'swum', meaning: '泳ぐ' },
+  { base: 'take', past: 'took', pp: 'taken', meaning: '連れて行く' },
+  { base: 'teach', past: 'taught', pp: 'taught', meaning: '教える' },
+  { base: 'tell', past: 'told', pp: 'told', meaning: '言う、告げる' },
+  { base: 'think', past: 'thought', pp: 'thought', meaning: '思う' },
+  { base: 'throw', past: 'threw', pp: 'thrown', meaning: '投げる' },
+  { base: 'understand', past: 'understood', pp: 'understood', meaning: '理解する' },
+  { base: 'wake', past: 'woke', pp: 'woken', meaning: '目覚める、目覚めさせる' },
+  { base: 'wear', past: 'wore', pp: 'worn', meaning: '着ている' },
+  { base: 'win', past: 'won', pp: 'won', meaning: '勝つ' },
+  { base: 'write', past: 'wrote', pp: 'written', meaning: '書く' }
 ];
 
 // ============================================================
 // 🚀 レンダリング
 // ============================================================
 
-// 1. カリキュラム
 function renderSchedule() {
-  const container = document.getElementById('lessonGrid');
-  container.innerHTML = DAYS.map(d => `
+  document.getElementById('lessonGrid').innerHTML = DAYS.map(d => `
     <div class="lesson-item">
       <div class="day">${d.day}</div>
       <div class="topic">📖 ${d.topic}</div>
@@ -234,10 +436,8 @@ function renderSchedule() {
   `).join('');
 }
 
-// 2. 文法ポイント
 function renderGrammar() {
-  const container = document.getElementById('grammarContent');
-  container.innerHTML = GRAMMAR_DATA.map(g => `
+  document.getElementById('grammarContent').innerHTML = GRAMMAR_DATA.map(g => `
     <div class="grammar-box">
       <div class="title">${g.title}</div>
       <div class="formula">${g.formula}</div>
@@ -246,7 +446,6 @@ function renderGrammar() {
   `).join('');
 }
 
-// 3. 練習問題
 function renderQuiz() {
   const container = document.getElementById('quizContainer');
   container.innerHTML = QUIZ_DATA.map((q, idx) => `
@@ -262,13 +461,26 @@ function renderQuiz() {
   `).join('');
 }
 
-// 4. 回答チェック
+function renderIrregular() {
+  const container = document.getElementById('irregularContainer');
+  let html = `<div style="overflow-x:auto;"><table class="irregular-table">
+    <thead><tr><th>原形</th><th>過去形</th><th>過去分詞</th><th>意味</th></tr></thead><tbody>`;
+  IRREGULAR_VERBS.forEach(v => {
+    html += `<tr><td><strong>${v.base}</strong></td><td>${v.past}</td><td>${v.pp}</td><td>${v.meaning}</td></tr>`;
+  });
+  html += `</tbody></table></div>`;
+  container.innerHTML = html;
+}
+
+// ============================================================
+// 🎯 回答チェック
+// ============================================================
+
 function checkAnswer(qIdx, selected) {
   const q = QUIZ_DATA[qIdx];
   const feedback = document.getElementById(`feedback_${qIdx}`);
   const buttons = document.querySelectorAll(`.quiz-question[data-q="${qIdx}"] .options button`);
 
-  // 既に回答済みならリセット
   buttons.forEach(b => b.classList.remove('correct', 'wrong'));
 
   if (selected === q.correct) {
@@ -292,14 +504,14 @@ function initTabs() {
   const contents = {
     schedule: document.getElementById('tabSchedule'),
     grammar: document.getElementById('tabGrammar'),
-    practice: document.getElementById('tabPractice')
+    practice: document.getElementById('tabPractice'),
+    irregular: document.getElementById('tabIrregular')
   };
 
   tabs.forEach(tab => {
     tab.addEventListener('click', function() {
       tabs.forEach(t => t.classList.remove('active'));
       this.classList.add('active');
-
       const target = this.dataset.tab;
       Object.keys(contents).forEach(key => {
         contents[key].classList.add('hide');
@@ -329,13 +541,13 @@ document.addEventListener('DOMContentLoaded', function() {
   renderSchedule();
   renderGrammar();
   renderQuiz();
+  renderIrregular();
   initTabs();
 
-  // 練習問題用グローバル公開
   window.checkAnswer = checkAnswer;
   window.showToast = showToast;
 
-  console.log('✅ 中2英語内部A 学習ページ 起動');
+  console.log('✅ 中2英語内部A 完全学習ページ 起動');
 });
 </script>
 </body>
