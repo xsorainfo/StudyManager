@@ -152,6 +152,75 @@
     .empty-state i { font-size: 2.5rem; margin-bottom: 12px; }
     .empty-state p { font-size: 1rem; }
 
+    /* ===== 学習方法表示 ===== */
+    .learning-method {
+      background: #fcf9f5;
+      border-radius: 20px;
+      padding: 24px 28px;
+      border: 1px solid #ede8e0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.9;
+      font-size: 0.95rem;
+      color: #2a221b;
+    }
+    .learning-method .edit-area {
+      width: 100%;
+      min-height: 400px;
+      padding: 16px;
+      border: 2px solid #d8cdbf;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.9;
+      font-family: inherit;
+      resize: vertical;
+      outline: none;
+      background: white;
+    }
+    .learning-method .edit-area:focus {
+      border-color: #8f735b;
+    }
+    .learning-method .method-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .learning-method .method-actions button {
+      padding: 6px 20px;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .learning-method .method-actions .edit-btn {
+      background: #2c241c;
+      color: white;
+    }
+    .learning-method .method-actions .edit-btn:hover {
+      background: #4d3b2c;
+    }
+    .learning-method .method-actions .save-btn {
+      background: #2e7d32;
+      color: white;
+    }
+    .learning-method .method-actions .save-btn:hover {
+      background: #1b5e20;
+    }
+    .learning-method .method-actions .cancel-btn {
+      background: #8f4a4a;
+      color: white;
+    }
+    .learning-method .method-actions .cancel-btn:hover {
+      background: #6d3838;
+    }
+    .learning-method .empty-method {
+      color: #b7a086;
+      font-style: italic;
+    }
+
     .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; pointer-events: none; }
     .toast-msg.show { opacity: 1; }
     #fileInput { display: none; }
@@ -177,6 +246,8 @@
       .edit-form .form-row input[type="text"] { width: 100%; }
       .edit-form .form-row input[type="number"] { width: 100%; }
       .stats-bar { flex-direction: column; align-items: stretch; text-align: center; }
+      .learning-method { padding: 16px; font-size: 0.88rem; }
+      .learning-method .edit-area { min-height: 250px; font-size: 0.88rem; }
     }
 
     @media (min-width: 769px) and (max-width: 1024px) {
@@ -217,7 +288,8 @@
   </div>
 
   <div class="func-tabs" id="funcTabs">
-    <button class="tab active" data-func="curriculum">📖 カリキュラム</button>
+    <button class="tab active" data-func="learning">📖 学習方法</button>
+    <button class="tab" data-func="curriculum">📚 カリキュラム</button>
     <button class="tab" data-func="review">📝 総復習テスト</button>
     <button class="tab" data-func="test">📊 復習テスト</button>
     <button class="tab" data-func="calc">🧮 計算テスト</button>
@@ -264,12 +336,13 @@ let currentGrade = '2';
 let currentSubject = 'math';
 let currentFunc = 'curriculum';
 let editingIndex = null;
+let isEditingMethod = false;
 
 // ============================================================
 // 日付関連関数
 // ============================================================
 
-// 学年の基準年（中1:2025, 中2:2026, 中3:2027, ...）
+中1:2025, 中2:2026, 中3:2027, ...）
 function getBaseYear(grade) {
   const baseYear = 2025;
   const gradeNum = parseInt(grade);
@@ -324,7 +397,11 @@ function loadTetsuData() {
           if (!parsed[g]) parsed[g] = {};
           for (let s of ['math', 'english']) {
             if (!parsed[g][s]) {
-              parsed[g][s] = defaultData[g]?.[s] || { curriculum: [], tests: { review: [], test: [], calc: [] } };
+              parsed[g][s] = defaultData[g]?.[s] || { learning_method: '', curriculum: [], tests: { review: [], test: [], calc: [] } };
+            }
+            // learning_method が存在しない場合の対応
+            if (parsed[g][s] && typeof parsed[g][s].learning_method === 'undefined') {
+              parsed[g][s].learning_method = defaultData[g]?.[s]?.learning_method || '';
             }
           }
         }
@@ -344,7 +421,7 @@ function getCurrentData() {
   const fullData = loadTetsuData();
   if (!fullData[currentGrade]) fullData[currentGrade] = {};
   if (!fullData[currentGrade][currentSubject]) {
-    fullData[currentGrade][currentSubject] = { curriculum: [], tests: { review: [], test: [], calc: [] } };
+    fullData[currentGrade][currentSubject] = { learning_method: '', curriculum: [], tests: { review: [], test: [], calc: [] } };
   }
   return fullData[currentGrade][currentSubject];
 }
@@ -382,7 +459,7 @@ function renderContent() {
   const area = document.getElementById('contentArea');
   const data = getCurrentData();
 
-  if (!data || !data.curriculum) {
+  if (!data) {
     area.innerHTML = `
       <div class="empty-state">
         <i class="fas fa-construction"></i>
@@ -392,13 +469,71 @@ function renderContent() {
     return;
   }
 
-  if (currentFunc === 'curriculum') {
+  if (currentFunc === 'learning') {
+    renderLearningMethod(area, data);
+  } else if (currentFunc === 'curriculum') {
     renderCurriculum(area, data);
   } else {
     renderTests(area, data);
   }
 }
 
+// ===== 学習方法表示 =====
+function renderLearningMethod(area, data) {
+  const method = data.learning_method || '';
+
+  let html = `
+    <div class="learning-method">
+  `;
+
+  if (isEditingMethod) {
+    html += `
+      <textarea class="edit-area" id="methodEditArea">${method}</textarea>
+      <div class="method-actions">
+        <button class="save-btn" onclick="saveLearningMethod()"><i class="fas fa-check"></i> 保存</button>
+        <button class="cancel-btn" onclick="cancelEditMethod()"><i class="fas fa-times"></i> キャンセル</button>
+      </div>
+    `;
+  } else {
+    if (method) {
+      html += `<div>${method}</div>`;
+    } else {
+      html += `<div class="empty-method">学習方法のテキストがありません。編集ボタンから追加してください。</div>`;
+    }
+    html += `
+      <div class="method-actions">
+        <button class="edit-btn" onclick="startEditMethod()"><i class="fas fa-edit"></i> 編集</button>
+      </div>
+    `;
+  }
+
+  html += `</div>`;
+  area.innerHTML = html;
+}
+
+function startEditMethod() {
+  isEditingMethod = true;
+  renderContent();
+}
+
+function cancelEditMethod() {
+  isEditingMethod = false;
+  renderContent();
+}
+
+function saveLearningMethod() {
+  const textarea = document.getElementById('methodEditArea');
+  if (!textarea) return;
+  const method = textarea.value;
+  const data = getCurrentData();
+  data.learning_method = method;
+  saveCurrentData(data);
+  isEditingMethod = false;
+  renderContent();
+  showToast('✅ 学習方法を保存しました', 'success');
+}
+
+// ===== カリキュラム表示 =====
 function renderCurriculum(area, data) {
   const curriculum = data.curriculum || [];
   if (!curriculum || curriculum.length === 0) {
@@ -753,6 +888,7 @@ document.addEventListener('DOMContentLoaded', function() {
       this.classList.add('active');
       currentGrade = this.dataset.grade;
       editingIndex = null;
+      isEditingMethod = false;
       renderContent();
     });
   });
@@ -763,6 +899,7 @@ document.addEventListener('DOMContentLoaded', function() {
       this.classList.add('active');
       currentSubject = this.dataset.subject;
       editingIndex = null;
+      isEditingMethod = false;
       renderContent();
     });
   });
@@ -773,6 +910,7 @@ document.addEventListener('DOMContentLoaded', function() {
       this.classList.add('active');
       currentFunc = this.dataset.func;
       editingIndex = null;
+      isEditingMethod = false;
       renderContent();
     });
   });
@@ -886,6 +1024,7 @@ async function loadFromGitHub() {
     if (dot) dot.className = 'status-dot online';
     if (text) text.textContent = 'オンライン';
     editingIndex = null;
+    isEditingMethod = false;
     renderContent();
     showToast('✅ GitHub から読み込みました');
   } catch(e) {
@@ -925,6 +1064,7 @@ function importData(event) {
           window.TETSU_DATA = imported;
         }
         editingIndex = null;
+        isEditingMethod = false;
         renderContent();
         showToast('📁 インポートしました');
       }
@@ -959,6 +1099,9 @@ window.cancelEdit = cancelEdit;
 window.saveEdit = saveEdit;
 window.deleteTest = deleteTest;
 window.renderContent = renderContent;
+window.startEditMethod = startEditMethod;
+window.cancelEditMethod = cancelEditMethod;
+window.saveLearningMethod = saveLearningMethod;
 </script>
 </body>
 </html>
