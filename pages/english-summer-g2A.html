@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中2英語内部A · 学習と練習</title>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', system-ui, sans-serif; }
+    body { background: #f5f2ec; color: #1e1a16; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .app-wrapper { max-width: 1100px; width: 100%; background: #fcf9f5; border-radius: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); padding: 24px 30px 40px; }
+
+    /* header */
+    .header { border-bottom: 3px solid #e7dfd5; padding-bottom: 16px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    .header h1 { font-size: 1.8rem; font-weight: 700; color: #2a221b; display: flex; align-items: center; gap: 12px; }
+    .header h1 i { color: #8f735b; }
+    .header .badge { background: #2c241c; color: #f0ebe3; padding: 6px 18px; border-radius: 40px; font-size: 0.8rem; font-weight: 600; }
+
+    /* tabs */
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; }
+    .tabs .tab { padding: 8px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.15s; background: #f0ebe4; color: #5f4f3d; border: none; }
+    .tabs .tab:hover { background: #e3d9ce; }
+    .tabs .tab.active { background: #2c241c; color: #f0ebe3; }
+
+    /* cards */
+    .card { background: #fffffffa; border-radius: 28px; padding: 22px 26px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid #ede8e0; margin-bottom: 24px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e7dfd5; padding-bottom: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .card-header h2 { font-size: 1.25rem; font-weight: 600; color: #2a221b; display: flex; align-items: center; gap: 10px; }
+    .card-header h2 i { color: #8f735b; font-size: 1.1rem; }
+    .card-header .badge { background: #e7ddd2; border-radius: 40px; padding: 2px 16px; font-size: 0.75rem; font-weight: 600; color: #3d3229; }
+
+    /* 課程一覧 */
+    .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .lesson-item { background: #f8f4ef; border-radius: 16px; padding: 14px 18px; border-left: 4px solid #8f735b; }
+    .lesson-item .day { font-weight: 700; font-size: 1rem; color: #2c241c; }
+    .lesson-item .topic { font-size: 0.9rem; color: #5f4f3d; margin-top: 2px; }
+    .lesson-item .grammar { font-size: 0.8rem; color: #8f735b; margin-top: 4px; }
+
+    /* 練習問題 */
+    .quiz-question { padding: 14px 0; border-bottom: 1px solid #ede6dd; }
+    .quiz-question:last-child { border-bottom: 0; }
+    .quiz-question .q { font-weight: 500; margin-bottom: 6px; }
+    .quiz-question .options { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+    .quiz-question .options button { background: #f0ebe4; border: 2px solid #d8cdbf; border-radius: 40px; padding: 6px 18px; cursor: pointer; font-size: 0.85rem; transition: 0.15s; font-weight: 500; }
+    .quiz-question .options button:hover { background: #e3d9ce; border-color: #b7a086; }
+    .quiz-question .options button.correct { background: #c8e6c9; border-color: #2e7d32; color: #1e4a22; }
+    .quiz-question .options button.wrong { background: #ffcdd2; border-color: #c62828; color: #8f1a1a; }
+    .quiz-question .feedback { margin-top: 6px; font-size: 0.85rem; color: #6b5d4e; }
+
+    /* 文法ボックス */
+    .grammar-box { background: #f2ede6; border-radius: 16px; padding: 16px 20px; margin-bottom: 16px; border-left: 4px solid #8f735b; }
+    .grammar-box .title { font-weight: 700; color: #2c241c; margin-bottom: 4px; }
+    .grammar-box .formula { font-family: 'Courier New', monospace; background: #fffcf7; padding: 4px 12px; border-radius: 8px; display: inline-block; margin: 4px 0; font-size: 0.95rem; }
+    .grammar-box .example { color: #3d3229; font-style: italic; margin-top: 4px; }
+
+    .btn { background: #2c241c; border: none; color: white; padding: 8px 24px; border-radius: 60px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.15s; }
+    .btn:hover { background: #4d3b2c; transform: scale(0.97); }
+    .btn-outline { background: transparent; color: #2c241c; border: 2px solid #d8cdbf; }
+    .btn-outline:hover { background: #f0ebe4; }
+
+    .hide { display: none; }
+
+    .toast-msg { background: #2c241c; color: #f0e8de; padding: 6px 18px; border-radius: 60px; font-size: 0.8rem; position: fixed; bottom: 30px; right: 30px; z-index: 999; opacity: 0; transition: 0.2s; }
+    .toast-msg.show { opacity: 1; }
+
+    @media (max-width: 700px) { .lesson-grid { grid-template-columns: 1fr; } .app-wrapper { padding: 16px; } }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ===== Header ===== -->
+  <div class="header">
+    <h1><i class="fas fa-flag"></i> 中2英語内部A</h1>
+    <span class="badge"><i class="fas fa-calendar-alt"></i> 夏期講習 2026</span>
+  </div>
+
+  <!-- ===== Tabs ===== -->
+  <div class="tabs" id="tabContainer">
+    <button class="tab active" data-tab="schedule"><i class="fas fa-list-ul"></i> カリキュラム</button>
+    <button class="tab" data-tab="grammar"><i class="fas fa-book-open"></i> 文法ポイント</button>
+    <button class="tab" data-tab="practice"><i class="fas fa-pencil-alt"></i> 練習問題</button>
+  </div>
+
+  <!-- ===== Tab Content: カリキュラム ===== -->
+  <div id="tabSchedule" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-clock"></i> 講習スケジュール</h2>
+        <span class="badge">全5日間</span>
+      </div>
+      <div class="lesson-grid" id="lessonGrid">
+        <!-- JavaScript で動的に生成 -->
+      </div>
+    </div>
+    <div class="card" style="background: #f8f4ef;">
+      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <i class="fas fa-lightbulb" style="color: #8f735b; font-size: 1.6rem;"></i>
+        <div>
+          <strong>📌 学習の鉄則</strong>
+          <p style="font-size: 0.9rem; color: #5f4f3d; margin-top: 2px;">口頭練習を先に行い、文法ポイントを理解してから英文を組み立てよう。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Tab Content: 文法ポイント ===== -->
+  <div id="tabGrammar" class="tab-content hide">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-book-open"></i> 文法ポイント</h2>
+        <span class="badge">時制・助動詞・受動態</span>
+      </div>
+      <div id="grammarContent">
+        <!-- JavaScript で動的に生成 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Tab Content: 練習問題 ===== -->
+  <div id="tabPractice" class="tab-content hide">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-pencil-alt"></i> 練習問題</h2>
+        <span class="badge">タップして答えを確認</span>
+      </div>
+      <div id="quizContainer">
+        <!-- JavaScript で動的に生成 -->
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-msg" id="toast"></div>
+</div>
+
+<script>
+// ============================================================
+// 📚 教材データ（PDFより抽出）
+// ============================================================
+
+const DAYS = [
+  { day: '第1日', topic: '時制 I', grammar: ['現在形・現在進行形', '過去形・過去進行形', '未来の表現'] },
+  { day: '第2日', topic: '時制 II', grammar: ['現在完了（継続・経験・完了）', '過去完了'] },
+  { day: '第3日', topic: '文の種類・助動詞 I', grammar: ['転移否定', '否定疑問', '付加疑問', 'canの可能性'] },
+  { day: '第4日', topic: '助動詞 II・仮定法', grammar: ['must / have to', 'would 丁寧表現', '仮定法過去'] },
+  { day: '第5日', topic: '受動態', grammar: ['受動態の基本', '注意フレーズ', '5文型の受動態'] }
+];
+
+// 文法ポイントの詳細
+const GRAMMAR_DATA = [
+  {
+    title: '① 現在形・現在進行形',
+    formula: '〈普段〉動作動詞・現在形 / 〈いま最中〉動作動詞・現在進行形 / 〈いまの状態〉状態動詞・現在形',
+    examples: ['I often have lunch in the park.', 'I\'m now having lunch in the park.', 'I have a little money with me.']
+  },
+  {
+    title: '② 過去形・過去進行形',
+    formula: 'While A (過去進行形), B (過去形).',
+    examples: ['I arrived at his office late at night. He was still working then.', 'I was playing a video game when my mother came home.']
+  },
+  {
+    title: '③ 未来の表現',
+    formula: '現在形（公の予定） / be going to do（決意・予定） / will do（その場の意思・予測）',
+    examples: ['What time does the meeting start?', 'Susan and I are playing tennis on Sunday.', 'We are going to talk about the topic.', '"OK, I\'ll buy it."']
+  },
+  {
+    title: '④ 現在完了（継続）',
+    formula: 'have p.p. + for / since / How long ~?',
+    examples: ['I have lived in Japan for six years.', 'She has lived in Japan since 2009.', 'It has been raining for three days.']
+  },
+  {
+    title: '⑤ 現在完了（経験・完了）',
+    formula: 'have p.p. (ever / never / just / already / yet)',
+    examples: ['I have been to Europe three times.', 'I have never read such an interesting book.', 'The train has just left.', 'Have you finished the dishes yet?']
+  },
+  {
+    title: '⑥ 過去完了',
+    formula: 'had p.p. （大過去）',
+    examples: ['Fred had lived in New York for five years until he moved to Tokyo.', 'When I got to the theater, the play had already started.']
+  },
+  {
+    title: '⑦ 助動詞 (can / must / have to)',
+    formula: 'can（可能性） / must（推量） / have to（義務）',
+    examples: ['Accidents can happen.', 'You must be hungry.', 'I had to work late at night.']
+  },
+  {
+    title: '⑧ 仮定法過去',
+    formula: 'If + S + 過去形, S + 助動詞過去形 (would / could)',
+    examples: ['If it weren\'t raining, we would play soccer.', 'If I were a bird, I could fly to you.']
+  },
+  {
+    title: '⑨ 受動態',
+    formula: 'A is p.p. ... by B',
+    examples: ['This book was written by Soseki.', 'Stars can be seen around here at night.']
+  }
+];
+
+// 練習問題（選択式）
+const QUIZ_DATA = [
+  { q: 'I often ___ lunch in the park.', options: ['have', 'am having', 'had', 'has'], correct: 0 },
+  { q: 'I ___ now ___ lunch in the park.', options: ['have / having', 'am / having', 'had / having', 'will / have'], correct: 1 },
+  { q: 'I ___ a little money with me.', options: ['have', 'am having', 'had', 'will have'], correct: 0 },
+  { q: 'I arrived at his office late at night. He ___ still working then.', options: ['is', 'was', 'has been', 'had been'], correct: 1 },
+  { q: 'I ___ a video game when my mother came home.', options: ['played', 'was playing', 'have played', 'had played'], correct: 1 },
+  { q: 'What time ___ the meeting start?', options: ['does', 'is', 'will', 'has'], correct: 0 },
+  { q: 'Susan and I ___ tennis on Sunday.', options: ['play', 'are playing', 'will play', 'played'], correct: 1 },
+  { q: '"This cool coat is on sale!" "OK, I ___ buy it."', options: ['will', 'am going to', 'would', 'can'], correct: 0 },
+  { q: 'I ___ in Japan for six years.', options: ['live', 'have lived', 'lived', 'was living'], correct: 1 },
+  { q: 'She ___ in Japan since 2009.', options: ['lived', 'has lived', 'was living', 'had lived'], correct: 1 },
+  { q: 'The train ___ just left.', options: ['has', 'had', 'was', 'will'], correct: 0 },
+  { q: 'Have you finished the dishes ___?', options: ['already', 'yet', 'just', 'never'], correct: 1 },
+  { q: 'When I got to the theater, the play ___ already started.', options: ['has', 'had', 'was', 'has been'], correct: 1 },
+  { q: 'Accidents ___ happen.', options: ['can', 'must', 'will', 'should'], correct: 0 },
+  { q: 'You ___ be hungry.', options: ['must', 'can', 'will', 'should'], correct: 0 },
+  { q: 'If it ___ raining, we would play soccer.', options: ['wasn\'t', 'weren\'t', 'isn\'t', 'hadn\'t'], correct: 1 },
+  { q: 'This book ___ written by Soseki.', options: ['is', 'was', 'has', 'had'], correct: 1 }
+];
+
+// ============================================================
+// 🚀 レンダリング
+// ============================================================
+
+// 1. カリキュラム
+function renderSchedule() {
+  const container = document.getElementById('lessonGrid');
+  container.innerHTML = DAYS.map(d => `
+    <div class="lesson-item">
+      <div class="day">${d.day}</div>
+      <div class="topic">📖 ${d.topic}</div>
+      <div class="grammar">${d.grammar.map(g => `🔹 ${g}`).join(' ')}</div>
+    </div>
+  `).join('');
+}
+
+// 2. 文法ポイント
+function renderGrammar() {
+  const container = document.getElementById('grammarContent');
+  container.innerHTML = GRAMMAR_DATA.map(g => `
+    <div class="grammar-box">
+      <div class="title">${g.title}</div>
+      <div class="formula">${g.formula}</div>
+      ${g.examples.map(e => `<div class="example">📌 ${e}</div>`).join('')}
+    </div>
+  `).join('');
+}
+
+// 3. 練習問題
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = QUIZ_DATA.map((q, idx) => `
+    <div class="quiz-question" data-q="${idx}">
+      <div class="q">${idx+1}. ${q.q}</div>
+      <div class="options">
+        ${q.options.map((opt, oi) => `
+          <button data-opt="${oi}" onclick="checkAnswer(${idx}, ${oi})">${opt}</button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="feedback_${idx}"></div>
+    </div>
+  `).join('');
+}
+
+// 4. 回答チェック
+function checkAnswer(qIdx, selected) {
+  const q = QUIZ_DATA[qIdx];
+  const feedback = document.getElementById(`feedback_${qIdx}`);
+  const buttons = document.querySelectorAll(`.quiz-question[data-q="${qIdx}"] .options button`);
+
+  // 既に回答済みならリセット
+  buttons.forEach(b => b.classList.remove('correct', 'wrong'));
+
+  if (selected === q.correct) {
+    buttons[selected].classList.add('correct');
+    feedback.innerHTML = '✅ 正解！';
+    feedback.style.color = '#2e7d32';
+  } else {
+    buttons[selected].classList.add('wrong');
+    buttons[q.correct].classList.add('correct');
+    feedback.innerHTML = `❌ 不正解。正解は「${q.options[q.correct]}」です。`;
+    feedback.style.color = '#c62828';
+  }
+}
+
+// ============================================================
+// 🗂️ タブ切り替え
+// ============================================================
+
+function initTabs() {
+  const tabs = document.querySelectorAll('#tabContainer .tab');
+  const contents = {
+    schedule: document.getElementById('tabSchedule'),
+    grammar: document.getElementById('tabGrammar'),
+    practice: document.getElementById('tabPractice')
+  };
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      tabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+
+      const target = this.dataset.tab;
+      Object.keys(contents).forEach(key => {
+        contents[key].classList.add('hide');
+      });
+      contents[target].classList.remove('hide');
+    });
+  });
+}
+
+// ============================================================
+// 🔔 Toast
+// ============================================================
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// 🚀 初期化
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderSchedule();
+  renderGrammar();
+  renderQuiz();
+  initTabs();
+
+  // 練習問題用グローバル公開
+  window.checkAnswer = checkAnswer;
+  window.showToast = showToast;
+
+  console.log('✅ 中2英語内部A 学習ページ 起動');
+});
+</script>
+</body>
+</html>
