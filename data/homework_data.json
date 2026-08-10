@@ -8,10 +8,10 @@
             "id": "mrqbqx8dxckc",
             "title": "① **『あのころはフリードリヒがいた』学習プリント**",
             "desc": "- ハンス・ペーター・リヒター作『あのころはフリードリヒがいた』（岩波少年文庫）を1冊購入し、学習プリント（ワークシート）に取り組む。  \n- 2学期始業式に提出。  \n- 2学期の授業でこの作品を扱う。",
-            "done": false,
-            "doneDate": null,
+            "done": true,
+            "doneDate": "2026-08-10T01:29:52.111Z",
             "createdAt": "2026-07-18T12:09:45.661Z",
-            "progress": 0,
+            "progress": 100,
             "memo": ""
           },
           {
@@ -21,7 +21,7 @@
             "done": false,
             "doneDate": null,
             "createdAt": "2026-07-18T12:09:58.976Z",
-            "progress": 0,
+            "progress": 70,
             "memo": ""
           },
           {
@@ -51,7 +51,7 @@
             "done": false,
             "doneDate": null,
             "createdAt": "2026-07-23T00:51:56.770Z",
-            "progress": 0,
+            "progress": 30,
             "memo": ""
           }
         ],
@@ -79,7 +79,9 @@
             "desc": "- リスニング音声はQRコード/URLから\n  - 答え合わせを丁寧に",
             "done": false,
             "doneDate": null,
-            "createdAt": "2026-07-18T06:47:54.454Z"
+            "createdAt": "2026-07-18T06:47:54.454Z",
+            "memo": "リスニングまだ",
+            "progress": 90
           },
           {
             "id": "mrq3fqqj9ey8",
@@ -95,7 +97,9 @@
             "desc": "- Chapter読む → WORKBOOK問題 → Activities → Grammar(pp.45-51) → 復習テスト\n  - 答え合わせ必須\n  - 音声・解答はTeams\n  - Project B-4(p.44)は自由課題",
             "done": false,
             "doneDate": null,
-            "createdAt": "2026-07-18T08:17:49.069Z"
+            "createdAt": "2026-07-18T08:17:49.069Z",
+            "memo": "",
+            "progress": 10
           },
           {
             "id": "mrq3hd8lm4sa",
@@ -213,8 +217,8 @@
             "done": false,
             "doneDate": null,
             "createdAt": "2026-07-18T12:28:16.943Z",
-            "progress": 30,
-            "memo": ""
+            "progress": 80,
+            "memo": "旧国名　＋　社会遺産　まだ"
           },
           {
             "id": "mrqcf6cl37id",
@@ -238,7 +242,7 @@
             "done": false,
             "doneDate": null,
             "createdAt": "2026-07-18T12:29:05.135Z",
-            "progress": 0,
+            "progress": 50,
             "memo": ""
           }
         ],
