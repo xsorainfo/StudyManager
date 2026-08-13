@@ -95,11 +95,11 @@
             "id": "mrq3gn4drpld",
             "title": "④ The Blue Diamond      (9/1提出)",
             "desc": "- Chapter読む → WORKBOOK問題 → Activities → Grammar(pp.45-51) → 復習テスト\n  - 答え合わせ必須\n  - 音声・解答はTeams\n  - Project B-4(p.44)は自由課題",
-            "done": false,
-            "doneDate": null,
+            "done": true,
+            "doneDate": "2026-08-13T04:37:17.346Z",
             "createdAt": "2026-07-18T08:17:49.069Z",
             "memo": "",
-            "progress": 10
+            "progress": 100
           },
           {
             "id": "mrq3hd8lm4sa",
@@ -261,7 +261,18 @@
             "memo": ""
           }
         ],
-        "links": []
+        "links": [
+          {
+            "id": "msr45lgoty22",
+            "label": "ヒートドームMD",
+            "url": "https://xsorainfo.github.io/StudyManager/pages/md-heatdome.html"
+          },
+          {
+            "id": "msr463nqhu6k",
+            "label": "ヒートドーム現象",
+            "url": "https://xsorainfo.github.io/StudyManager/pages/view-heatdome.html"
+          }
+        ]
       },
       "技術・家庭": {
         "tasks": [
@@ -276,6 +287,10 @@
             "memo": ""
           }
         ],
+        "links": []
+      },
+      "理科": {
+        "tasks": [],
         "links": []
       }
     }
