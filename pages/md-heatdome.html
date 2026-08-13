@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ヒートドーム現象 - MD表示</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+            background: #f5f2ec;
+            color: #1e1a16;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #fcf9f5;
+            border-radius: 40px;
+            padding: 40px 48px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #8f735b;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            padding: 6px 16px;
+            background: #f0ebe4;
+            border-radius: 40px;
+            border: 1px solid #d8cdbf;
+            transition: 0.15s;
+        }
+
+        .back-link:hover {
+            background: #e3d9ce;
+        }
+
+        .markdown-body {
+            line-height: 1.9;
+            font-size: 1rem;
+            color: #2a221b;
+        }
+
+        .markdown-body h1 {
+            font-size: 2.0rem;
+            font-weight: 700;
+            color: #1e1a16;
+            border-bottom: 3px solid #e7dfd5;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .markdown-body h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e1a16;
+            margin-top: 28px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #e7dfd5;
+            padding-bottom: 6px;
+        }
+
+        .markdown-body h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #1e1a16;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        .markdown-body p {
+            margin-bottom: 12px;
+            line-height: 1.9;
+        }
+
+        .markdown-body ul, .markdown-body ol {
+            padding-left: 24px;
+            margin-bottom: 14px;
+        }
+
+        .markdown-body li {
+            margin-bottom: 4px;
+            line-height: 1.8;
+        }
+
+        .markdown-body strong {
+            color: #1e1a16;
+        }
+
+        .markdown-body blockquote {
+            border-left: 5px solid #c62828;
+            padding: 12px 20px;
+            background: #f8f4ef;
+            border-radius: 8px;
+            margin: 14px 0;
+        }
+
+        .markdown-body blockquote p {
+            margin-bottom: 0;
+        }
+
+        .markdown-body hr {
+            border: none;
+            border-top: 2px solid #e7dfd5;
+            margin: 24px 0;
+        }
+
+        .markdown-body code {
+            background: #f0ebe4;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .markdown-body pre {
+            background: #f0ebe4;
+            padding: 16px 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+
+        .markdown-body pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+        }
+
+        .markdown-body th, .markdown-body td {
+            border: 1px solid #ede8e0;
+            padding: 8px 14px;
+            text-align: left;
+        }
+
+        .markdown-body th {
+            background: #f0ebe4;
+            font-weight: 600;
+        }
+
+        .markdown-body img {
+            max-width: 100%;
+            border-radius: 12px;
+            border: 1px solid #ede8e0;
+            margin: 12px 0;
+        }
+
+        .footer-note {
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid #ede8e0;
+            font-size: 0.8rem;
+            color: #b7a086;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 18px;
+                border-radius: 28px;
+            }
+
+            .markdown-body h1 {
+                font-size: 1.5rem;
+            }
+
+            .markdown-body h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 戻るリンク -->
+    <a href="heatdome.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> 観察レポートに戻る
+    </a>
+
+    <!-- Markdown コンテンツ -->
+    <div class="markdown-body" id="markdownContent">
+        <!-- ここに Markdown の内容を HTML として記述 -->
+        <h1>🌞 大連で観察したヒートドーム現象</h1>
+
+        <p><strong>場所・日時：</strong> 2026年7月中旬 〜 8月上旬、中国・大連市</p>
+
+        <hr>
+
+        <h2>📋 観察内容</h2>
+        <p>毎日気温が <strong>35℃以上</strong> になり、夜になっても気温が下がらず、風が弱くてとても蒸し暑かった。この異常な暑さが続いたことを観察しました。</p>
+
+        <hr>
+
+        <h2>🔬 理論：ヒートドームとは？</h2>
+
+        <p><strong>ヒートドーム</strong>とは、高気圧がまるでドーム（円蓋）のように地上を覆い、その中に熱が閉じ込められる現象です。</p>
+
+        <h3>仕組み</h3>
+        <ol>
+            <li><strong>高気圧の形成：</strong> 上空に強い高気圧ができると、空気が下に押し下げられます（<strong>下沉气流</strong>）。</li>
+            <li><strong>断熱圧縮：</strong> 押し下げられた空気は圧縮されて温度が上がります（<strong>断熱圧縮</strong>）。</li>
+            <li><strong>蓋の効果：</strong> この高気圧の蓋のせいで、上昇気流が発生せず、雲もできにくくなります。</li>
+            <li><strong>熱の滞留：</strong> その結果、地面からの熱が逃げられず、高温が何日も続きます。</li>
+        </ol>
+
+        <blockquote>
+            <p><strong>☝️ 補足：</strong> ここでの核心は「高気圧が鍋蓋（ドーム）のように覆いかぶさる」というイメージ。この比喩で説明できると、先生にも「理解が深い」と評価されます。</p>
+        </blockquote>
+
+        <hr>
+
+        <h2>📊 結果・考察・感想</h2>
+
+        <h3>観察結果</h3>
+        <p><strong>7月29日〜8月7日の10日間</strong>、1日の最高気温が連日 <strong>33℃を超え</strong>、夜間も気温が <strong>28℃を下回らず</strong>、湿度は常に <strong>80％以上</strong> でした。風はほとんどなく、体感的にはもっと暑く感じられた。</p>
+
+        <h3>考察</h3>
+        <p>過去の大連の夏は、海風が入りやすく、最高気温が30℃を超えること自体が珍しく、<strong>「エアコンがいらない避暑地」</strong>とも言われていました。</p>
+        <p>しかし今年は、上空の強い高気圧が <strong>ドーム状に大連全体を覆い</strong>、海からの涼しい風の流入も遮断し、地面の熱が逃げられない状態が続いたと考えられます。</p>
+        <p>つまり、従来の「大連の夏」の常識が、この <strong>ヒートドーム</strong> によって大きく覆されたのです。</p>
+
+        <h3>感想</h3>
+        <p>気象はただの「天気」ではなく、人間の生活に直接影響する現象だと実感した。地球温暖化の影響で、このような現象がこれからもっと増えるかもしれないと心配になった。</p>
+
+        <hr>
+
+        <p style="text-align:right; color:#6b5d4e; font-size:0.85rem;">
+            <i class="fas fa-pen"></i> 2026年8月10日 記
+        </p>
+    </div>
+
+    <div class="footer-note">
+        <i class="fas fa-dome"></i> ヒートドーム現象 観察レポート（MD版） ｜ 大連市 2026年夏
+    </div>
+</div>
+
+</body>
+</html>
