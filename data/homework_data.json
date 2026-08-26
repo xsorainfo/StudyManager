@@ -18,10 +18,10 @@
             "id": "mrqbr7i882c6",
             "title": "② **読書リスト**",
             "desc": "- 『あのころはフリードリヒがいた』、数学の宿題の本、を含めて合計5冊（リストからは3冊以上）を読む。  \n- 2学期始業式に提出。",
-            "done": false,
-            "doneDate": null,
+            "done": true,
+            "doneDate": "2026-08-26T12:47:17.772Z",
             "createdAt": "2026-07-18T12:09:58.976Z",
-            "progress": 70,
+            "progress": 100,
             "memo": ""
           },
           {
@@ -51,7 +51,7 @@
             "done": false,
             "doneDate": null,
             "createdAt": "2026-07-23T00:51:56.770Z",
-            "progress": 30,
+            "progress": 80,
             "memo": ""
           }
         ],
@@ -87,9 +87,11 @@
             "id": "mrq3fqqj9ey8",
             "title": "③ Diary（絵日記） (9/1提出)",
             "desc": "- 夏休みの1日を英語で絵日記\n  - 適切な大きさの字で最後の行まで\n  - 上部に絵や写真\n  - 文法・スペルを見直す\n  - クラスで回し読みあり",
-            "done": false,
-            "doneDate": null,
-            "createdAt": "2026-07-18T08:17:07.099Z"
+            "done": true,
+            "doneDate": "2026-08-26T12:47:59.989Z",
+            "createdAt": "2026-07-18T08:17:07.099Z",
+            "memo": "",
+            "progress": 100
           },
           {
             "id": "mrq3gn4drpld",
@@ -131,7 +133,9 @@
             "desc": "- 正しく書けるよう練習\n  - 休み明けテスト範囲",
             "done": false,
             "doneDate": null,
-            "createdAt": "2026-07-18T08:19:19.701Z"
+            "createdAt": "2026-07-18T08:19:19.701Z",
+            "memo": "",
+            "progress": 70
           },
           {
             "id": "mrq3kap5xztn",
@@ -254,10 +258,10 @@
             "id": "mrqcg41gl9ra",
             "title": "気象現象の観察（プリント1枚）　　（始業式　提出）",
             "desc": "",
-            "done": false,
-            "doneDate": null,
+            "done": true,
+            "doneDate": "2026-08-26T12:48:47.267Z",
             "createdAt": "2026-07-18T12:29:20.884Z",
-            "progress": 0,
+            "progress": 100,
             "memo": ""
           }
         ],
@@ -280,10 +284,10 @@
             "id": "mrqcgnzdmiji",
             "title": "家の仕事をする・記録や感想の入力",
             "desc": "提出：PowerPointの指示通り",
-            "done": false,
-            "doneDate": null,
+            "done": true,
+            "doneDate": "2026-08-26T12:48:53.662Z",
             "createdAt": "2026-07-18T12:29:46.729Z",
-            "progress": 0,
+            "progress": 100,
             "memo": ""
           }
         ],
