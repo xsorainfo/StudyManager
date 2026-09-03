@@ -2063,13 +2063,11 @@
             "note": ""
           },
           {
-            "id": "c18",
             "name": "計算テスト 前期⑱",
-            "week": 18,
             "date": "8月27日",
+            "week": "18",
             "range": "数と式",
-            "status": "pending",
-            "score": null,
+            "score": 65,
             "avg": null,
             "deviation": null,
             "note": ""
