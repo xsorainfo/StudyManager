@@ -203,10 +203,10 @@
             "id": "mrqcdqmv0vjv",
             "title": "仮名手本忠臣蔵・歌舞伎に関する課題　　（初回授業　提出）",
             "desc": "（B4プリント1枚）\n※PDFデータは中2歴史のTeamsにあり。なくしたと申告しないこと。",
-            "done": false,
-            "doneDate": null,
+            "done": true,
+            "doneDate": "2026-08-27T01:03:59.596Z",
             "createdAt": "2026-07-18T12:27:30.199Z",
-            "progress": 0,
+            "progress": 100,
             "memo": ""
           }
         ],
@@ -218,10 +218,10 @@
             "id": "mrqceqpbhez0",
             "title": "①地名ドリル　　（初回授業　提出）",
             "desc": "中国・四国地方～北海道まで",
-            "done": false,
-            "doneDate": null,
+            "done": true,
+            "doneDate": "2026-08-27T01:03:45.950Z",
             "createdAt": "2026-07-18T12:28:16.943Z",
-            "progress": 80,
+            "progress": 100,
             "memo": "旧国名　＋　社会遺産　まだ"
           },
           {
@@ -243,10 +243,10 @@
             "id": "mrqcfrvzb216",
             "title": "夏休み宿題（冊子）　　（始業式　提出）",
             "desc": "",
-            "done": false,
-            "doneDate": null,
+            "done": true,
+            "doneDate": "2026-08-27T01:04:09.254Z",
             "createdAt": "2026-07-18T12:29:05.135Z",
-            "progress": 50,
+            "progress": 100,
             "memo": ""
           }
         ],
