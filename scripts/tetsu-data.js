@@ -488,7 +488,7 @@ const TETSU_DATA = {
           { id: 'c18', name: '計算テスト 前期⑱', week: 18, date: '8月27日', range: '数と式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
           { id: 'c19', name: '計算テスト 前期⑲', week: 19, date: '9月3日', range: '2次関数', status: 'pending', score: null, avg: null, deviation: null, note: '' },
           { id: 'c20', name: '計算テスト 前期⑳', week: 20, date: '9月10日', range: '2次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
-          { id: 'c21', name: '計算テスト 前期㉑', week: 21, date: '9月17日', range: '数と式', status: 'pending', score: null, avg: null, deviation: null, note: '' }
+          { id: 'c21', name: '計算テスト 前期㉑', week: 21, date: '9月17日', range: '数と式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
           { id: 'c22', name: '計算テスト 前期㉒', week: 22, date: '9月24日', range: '2次方程式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
           // ---- 後期 ----
           { id: 'c23', name: '計算テスト 後期①', week: 1, date: '10月1日', range: '数と式', status: 'pending', score: null, avg: null, deviation: null, note: '' },
