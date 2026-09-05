@@ -1,0 +1,631 @@
+[
+  {
+    "subject": "理科2",
+    "score": 87,
+    "total": 100,
+    "avg": 80.6,
+    "deviation": null,
+    "note": "",
+    "key": "2_1_middle"
+  },
+  {
+    "subject": "理科1",
+    "score": 73,
+    "total": 100,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "2_1_middle"
+  },
+  {
+    "subject": "歴史",
+    "score": 69,
+    "total": 100,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "2_1_middle"
+  },
+  {
+    "subject": "英語",
+    "score": 78,
+    "total": 100,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "2_1_middle"
+  },
+  {
+    "subject": "文法",
+    "score": 18,
+    "total": 30,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "2_1_middle"
+  },
+  {
+    "subject": "地理",
+    "score": 46,
+    "total": 100,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "2_1_middle"
+  },
+  {
+    "subject": "幾何",
+    "score": 78,
+    "total": 100,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "2_1_middle"
+  },
+  {
+    "subject": "代数",
+    "score": 85,
+    "total": 100,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "2_1_middle"
+  },
+  {
+    "subject": "国語",
+    "score": 46,
+    "total": 80,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "2_1_middle"
+  },
+  {
+    "subject": "英語英語ｻｲﾄﾞﾘｰﾀﾞ",
+    "score": 34,
+    "total": 40,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "2_1_middle"
+  },
+  {
+    "subject": "国語",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "地理",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 6,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "歴史",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "代数",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 9,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "理科1",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "音楽",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "美術",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "保健体育",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "技術・家庭",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 6,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "英語",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "礼法",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 9,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "書写",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 9,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "平均",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7.5,
+    "note": "",
+    "key": "1_2_regular"
+  },
+  {
+    "subject": "国語",
+    "score": 45,
+    "total": 100,
+    "avg": 70.9,
+    "deviation": 6,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "地理",
+    "score": 29,
+    "total": 100,
+    "avg": null,
+    "deviation": 6,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "歴史",
+    "score": 73,
+    "total": 100,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "代数",
+    "score": 86,
+    "total": 100,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "幾何",
+    "score": 64,
+    "total": 100,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "理科1",
+    "score": 59,
+    "total": 100,
+    "avg": null,
+    "deviation": null,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "理科2",
+    "score": 72,
+    "total": 100,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "音楽",
+    "score": 73,
+    "total": 100,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "技術・家庭",
+    "score": 53,
+    "total": 100,
+    "avg": null,
+    "deviation": 6,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "美術",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "保健体育",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "英語",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "礼法",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 9,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "書写",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "平均",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7.4,
+    "note": "",
+    "key": "1_3_final"
+  },
+  {
+    "subject": "国語",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "書写",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "地理",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "歴史",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 6,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "代数",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "理科1",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "音楽",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "美術",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "保健体育",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "技術・家庭",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "英語",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 9,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "礼法",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 10,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "平均",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7.7,
+    "note": "",
+    "key": "1_1_regular"
+  },
+  {
+    "subject": "国語",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "書写",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "地理",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 6,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "数学",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "理科",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "音楽",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "美術",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "保健体育",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "技術・家庭",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 6,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "英語",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "礼法",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 9,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "平均",
+    "score": null,
+    "total": null,
+    "avg": null,
+    "deviation": 7.4,
+    "note": "",
+    "isDevOnly": true,
+    "key": "1_year_avg"
+  },
+  {
+    "subject": "代数",
+    "score": 68,
+    "total": 100,
+    "avg": 76.9,
+    "deviation": null,
+    "note": "",
+    "isDevOnly": false,
+    "key": "2_1_regular"
+  },
+  {
+    "subject": "音楽",
+    "score": 63,
+    "total": 100,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "isDevOnly": false,
+    "key": "2_1_regular"
+  },
+  {
+    "subject": "幾何",
+    "score": 94,
+    "total": 100,
+    "avg": null,
+    "deviation": 8,
+    "note": "",
+    "isDevOnly": false,
+    "key": "2_1_regular"
+  },
+  {
+    "subject": "技術・家庭",
+    "score": 70,
+    "total": 100,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "isDevOnly": false,
+    "key": "2_1_regular"
+  },
+  {
+    "subject": "美術",
+    "score": 40,
+    "total": 100,
+    "avg": null,
+    "deviation": 7,
+    "note": "",
+    "isDevOnly": false,
+    "key": "2_1_regular"
+  }
+]
