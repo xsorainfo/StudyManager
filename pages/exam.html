@@ -478,6 +478,7 @@ async function loadFromGitHub() {
     const content = decodeURIComponent(escape(atob(fileData.content)));
     const loadedData = JSON.parse(content);
 
+    // ★ キーが存在しない場合の補完処理を追加 ★
     const keys = ['1','2','3','4','5','6'];
     for (let key of keys) {
       if (!loadedData[key]) loadedData[key] = {};
@@ -486,9 +487,24 @@ async function loadFromGitHub() {
     examData = loadedData;
     localStorage.setItem('exam_data', JSON.stringify(examData));
 
+    // ★ ここでタブの状態を再設定してから renderContent() を呼ぶ ★
+    // 現在の currentGrade, currentSemester, currentType は保持されたまま
+    // タブの active 状態を更新
+    document.querySelectorAll('#gradeTabs .tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.grade === currentGrade);
+    });
+    document.querySelectorAll('#semesterTabs .tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.semester === currentSemester);
+    });
+    
+    // テスト種別タブを再生成
+    renderExamTypeTabs();
+    
+    // コンテンツを再描画
+    renderContent();
+
     dot.className = 'status-dot online';
     text.textContent = 'オンライン';
-    renderContent();
     showToast('✅ GitHub から読み込みました');
   } catch(e) {
     dot.className = 'status-dot offline';
