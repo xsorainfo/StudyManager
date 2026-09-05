@@ -405,20 +405,11 @@ async function saveToGitHub() {
     return;
   }
 
-  // ★ localStorage からデータを読み込む（最新の状態を保証） ★
-  const saved = localStorage.getItem('exam_data');
-  if (!saved) {
-    showToast('❌ ローカルにデータがありません');
-    return;
-  }
+  // 1. 試験データを保存
+  saveExamData();
   
-  let data;
-  try {
-    data = JSON.parse(saved);
-  } catch(e) {
-    showToast('❌ データ形式が不正です');
-    return;
-  }
+  // 2. 成績データを取得
+  const scoresData = JSON.parse(localStorage.getItem('exam_scores') || '[]');
 
   const dot = document.getElementById('statusDot');
   const text = document.getElementById('statusText');
@@ -426,43 +417,59 @@ async function saveToGitHub() {
   text.textContent = '保存中...';
 
   try {
-    const content = JSON.stringify(data, null, 2);
-    const encoded = btoa(unescape(encodeURIComponent(content)));
-    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
-    const headers = getHeaders();
+    // ===== ファイル1: exam_data.json =====
+    const content1 = JSON.stringify(examData, null, 2);
+    const encoded1 = btoa(unescape(encodeURIComponent(content1)));
+    await uploadToGitHub(GITHUB_EXAM_PATH, encoded1, '📝 試験データ更新');
 
-    let sha = null;
-    const checkRes = await fetch(url, { headers });
-    if (checkRes.ok) {
-      const fileData = await checkRes.json();
-      sha = fileData.sha;
-    }
+    // ===== ファイル2: exam_scores.json =====
+    const content2 = JSON.stringify(scoresData, null, 2);
+    const encoded2 = btoa(unescape(encodeURIComponent(content2)));
+    await uploadToGitHub(GITHUB_SCORES_PATH, encoded2, '📊 成績データ更新');
 
-    const body = {
-      message: `📝 試験データ更新: ${new Date().toISOString()}`,
-      content: encoded,
-      branch: GITHUB_BRANCH
-    };
-    if (sha) body.sha = sha;
-
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: headers,
-      body: JSON.stringify(body)
-    });
-
-    if (response.ok) {
-      dot.className = 'status-dot online';
-      text.textContent = 'オンライン';
-      showToast('✅ GitHub に保存しました');
-    } else {
-      const err = await response.json();
-      throw new Error(err.message || `HTTP ${response.status}`);
-    }
+    dot.className = 'status-dot online';
+    text.textContent = 'オンライン';
+    showToast('✅ GitHub に保存しました（試験データ + 成績）');
   } catch(e) {
     dot.className = 'status-dot offline';
     text.textContent = 'エラー';
     showToast('❌ 保存失敗: ' + e.message);
+  }
+}
+
+// ★ 共通アップロード関数 ★
+async function uploadToGitHub(path, encodedContent, commitMessage) {
+  const token = getToken();
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
+  const headers = {
+    'Authorization': `token ${token}`,
+    'Accept': 'application/vnd.github.v3+json'
+  };
+
+  // SHA を取得（既存ファイルの上書き用）
+  let sha = null;
+  const checkRes = await fetch(url, { headers });
+  if (checkRes.ok) {
+    const fileData = await checkRes.json();
+    sha = fileData.sha;
+  }
+
+  const body = {
+    message: `${commitMessage}: ${new Date().toISOString()}`,
+    content: encodedContent,
+    branch: GITHUB_BRANCH
+  };
+  if (sha) body.sha = sha;
+
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: headers,
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(`${path}: ${err.message || response.status}`);
   }
 }
 
