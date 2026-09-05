@@ -319,8 +319,12 @@ const DEFAULT_EXAM_TYPE = 'regular';
 // ============================================================
 const GITHUB_OWNER = 'xsorainfo';
 const GITHUB_REPO = 'StudyManager';
-const GITHUB_PATH = 'data/exam_data.json';
+//const GITHUB_PATH = 'data/exam_data.json';
 const GITHUB_BRANCH = 'main';
+
+// ★ 2つのファイルを管理 ★
+const GITHUB_EXAM_PATH = 'data/exam_data.json';        // 試験範囲・リンク
+const GITHUB_SCORES_PATH = 'data/exam_scores.json';    // 成績データ
 
 // 全科目リスト
 const ALL_SUBJECTS = ['国語', '文法', '代数', '幾何', '英語', '英語ｻｲﾄﾞﾘｰﾀﾞ', '地理', '歴史', '理科1', '理科2', '音楽', '美術', '技術・家庭', '保健体育', '礼法', '公民', '書写', '平均', '数学', '理科'];
@@ -475,34 +479,31 @@ async function loadFromGitHub() {
   text.textContent = '読込中...';
 
   try {
-    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
-    const headers = getHeaders();
-    const response = await fetch(url, { headers });
-
-    if (response.status === 404) {
-      showToast('📭 GitHub にデータがありません');
-      dot.className = 'status-dot online';
-      text.textContent = 'オンライン';
-      return;
-    }
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const fileData = await response.json();
-    const content = decodeURIComponent(escape(atob(fileData.content)));
-    const loadedData = JSON.parse(content);
-
-    // ★ キーが存在しない場合の補完処理を追加 ★
-    const keys = ['1','2','3','4','5','6'];
-    for (let key of keys) {
-      if (!loadedData[key]) loadedData[key] = {};
+    // ===== ファイル1: exam_data.json を読込 =====
+    const data1 = await downloadFromGitHub(GITHUB_EXAM_PATH);
+    if (data1) {
+      // キー補完
+      const keys = ['1','2','3','4','5','6'];
+      for (let key of keys) {
+        if (!data1[key]) data1[key] = {};
+      }
+      examData = data1;
+      localStorage.setItem('exam_data', JSON.stringify(examData));
     }
 
-    examData = loadedData;
-    localStorage.setItem('exam_data', JSON.stringify(examData));
+    // ===== ファイル2: exam_scores.json を読込 =====
+    const data2 = await downloadFromGitHub(GITHUB_SCORES_PATH);
+    if (data2 !== null) {
+      // 空でなければ保存
+      if (Array.isArray(data2)) {
+        localStorage.setItem('exam_scores', JSON.stringify(data2));
+      } else if (data2 && typeof data2 === 'object') {
+        // オブジェクトの場合は配列に変換（互換性）
+        localStorage.setItem('exam_scores', JSON.stringify(Object.values(data2)));
+      }
+    }
 
-    // ★ ここでタブの状態を再設定してから renderContent() を呼ぶ ★
-    // 現在の currentGrade, currentSemester, currentType は保持されたまま
-    // タブの active 状態を更新
+    // タブ状態を更新
     document.querySelectorAll('#gradeTabs .tab').forEach(t => {
       t.classList.toggle('active', t.dataset.grade === currentGrade);
     });
@@ -510,15 +511,12 @@ async function loadFromGitHub() {
       t.classList.toggle('active', t.dataset.semester === currentSemester);
     });
     
-    // テスト種別タブを再生成
     renderExamTypeTabs();
-    
-    // コンテンツを再描画
     renderContent();
 
     dot.className = 'status-dot online';
     text.textContent = 'オンライン';
-    showToast('✅ GitHub から読み込みました');
+    showToast('✅ GitHub から読み込みました（試験データ + 成績）');
   } catch(e) {
     dot.className = 'status-dot offline';
     text.textContent = 'エラー';
@@ -526,36 +524,111 @@ async function loadFromGitHub() {
   }
 }
 
+// ★ 共通ダウンロード関数 ★
+async function downloadFromGitHub(path) {
+  const token = getToken();
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
+  const headers = {
+    'Authorization': `token ${token}`,
+    'Accept': 'application/vnd.github.v3+json'
+  };
+
+  try {
+    const response = await fetch(url, { headers });
+    if (response.status === 404) {
+      console.log(`📭 ${path} は存在しません（新規作成）`);
+      return null;
+    }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const fileData = await response.json();
+    const content = decodeURIComponent(escape(atob(fileData.content)));
+    return JSON.parse(content);
+  } catch(e) {
+    if (e.message.includes('404')) return null;
+    throw e;
+  }
+}
 // ============================================================
 // インポート/エクスポート（JSONファイル）
 // ============================================================
 
 function exportData() {
-  const blob = new Blob([JSON.stringify(examData, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `exam_data_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showToast('📁 エクスポートしました');
+  // 1. 試験データ
+  const examBlob = new Blob([JSON.stringify(examData, null, 2)], { type: 'application/json' });
+  const examUrl = URL.createObjectURL(examBlob);
+  
+  // 2. 成績データ
+  const scores = JSON.parse(localStorage.getItem('exam_scores') || '[]');
+  const scoresBlob = new Blob([JSON.stringify(scores, null, 2)], { type: 'application/json' });
+  const scoresUrl = URL.createObjectURL(scoresBlob);
+  
+  // 3. ZIP のようにまとめてダウンロード（2ファイル同時）
+  // または別々にダウンロード
+  const a1 = document.createElement('a');
+  a1.href = examUrl;
+  a1.download = `exam_data_${new Date().toISOString().slice(0,10)}.json`;
+  a1.click();
+  
+  setTimeout(() => {
+    const a2 = document.createElement('a');
+    a2.href = scoresUrl;
+    a2.download = `exam_scores_${new Date().toISOString().slice(0,10)}.json`;
+    a2.click();
+  }, 300);
+  
+  setTimeout(() => {
+    URL.revokeObjectURL(examUrl);
+    URL.revokeObjectURL(scoresUrl);
+  }, 500);
+  
+  showToast('📁 2ファイルをエクスポートしました');
 }
 
 function importData(event) {
   const file = event.target.files[0];
   if (!file) return;
+  
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
       const imported = JSON.parse(e.target.result);
-      const keys = ['1','2','3','4','5','6'];
-      for (let key of keys) {
-        if (!imported[key]) imported[key] = {};
-      }
-      if (confirm('現在のデータをインポートデータで上書きしますか？')) {
-        examData = imported;
-        localStorage.setItem('exam_data', JSON.stringify(examData));
-        renderContent();
-        showToast('📁 インポートしました');
+      
+      // ファイル名で判断（簡易版）
+      const fileName = file.name.toLowerCase();
+      
+      if (fileName.includes('exam_data')) {
+        // 試験データ
+        const keys = ['1','2','3','4','5','6'];
+        for (let key of keys) {
+          if (!imported[key]) imported[key] = {};
+        }
+        if (confirm('試験データをインポートしますか？')) {
+          examData = imported;
+          localStorage.setItem('exam_data', JSON.stringify(examData));
+          renderContent();
+          showToast('📁 試験データをインポートしました');
+        }
+      } else if (fileName.includes('exam_scores')) {
+        // 成績データ
+        if (confirm('成績データをインポートしますか？')) {
+          localStorage.setItem('exam_scores', JSON.stringify(imported));
+          renderContent();
+          showToast('📁 成績データをインポートしました');
+        }
+      } else {
+        // 両方含まれている可能性がある場合（自動判別）
+        if (imported.exam_data && imported.exam_scores) {
+          if (confirm('両方のデータをインポートしますか？')) {
+            examData = imported.exam_data;
+            localStorage.setItem('exam_data', JSON.stringify(examData));
+            localStorage.setItem('exam_scores', JSON.stringify(imported.exam_scores));
+            renderContent();
+            showToast('📁 両方のデータをインポートしました');
+          }
+        } else {
+          showToast('❌ 認識できないファイル形式です');
+        }
       }
     } catch(err) {
       showToast('❌ ファイル読み込み失敗');
