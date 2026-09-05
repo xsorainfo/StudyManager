@@ -401,7 +401,20 @@ async function saveToGitHub() {
     return;
   }
 
-  saveExamData();
+  // ★ localStorage からデータを読み込む（最新の状態を保証） ★
+  const saved = localStorage.getItem('exam_data');
+  if (!saved) {
+    showToast('❌ ローカルにデータがありません');
+    return;
+  }
+  
+  let data;
+  try {
+    data = JSON.parse(saved);
+  } catch(e) {
+    showToast('❌ データ形式が不正です');
+    return;
+  }
 
   const dot = document.getElementById('statusDot');
   const text = document.getElementById('statusText');
@@ -409,7 +422,7 @@ async function saveToGitHub() {
   text.textContent = '保存中...';
 
   try {
-    const content = JSON.stringify(examData, null, 2);
+    const content = JSON.stringify(data, null, 2);
     const encoded = btoa(unescape(encodeURIComponent(content)));
     const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
     const headers = getHeaders();
